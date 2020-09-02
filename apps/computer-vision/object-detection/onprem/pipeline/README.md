@@ -25,7 +25,7 @@
 
 ## <a name='ProblemDefinition'></a>**Problem Definition**
 
-To train, serve using Kubeflow pipeline and perform prediction for client request through Jupyter-notebook.
+Train an object detection model using Darknet, convert the darknet model/weights to tflite, serve using Kubeflow pipeline; and perform prediction for client request through Jupyter-notebook.
 
 ![Object Detection Pipeline](pictures/0-object-detection-graph.PNG)
 
