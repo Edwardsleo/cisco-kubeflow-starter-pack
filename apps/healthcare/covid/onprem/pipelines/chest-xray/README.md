@@ -59,6 +59,11 @@ Pipeline components execution can be viewed as below
 Logs of chest-xray katib hyperparameter component
 ![TF-Chest Xray Pipeline](pictures/katib.PNG)
 
+Results of katib dashboard
+![TF-Chest Xray Pipeline](pictures/kat1.PNG)
+![TF-Chest Xray Pipeline](pictures/kat2.PNG)
+![TF-Chest Xray Pipeline](pictures/kat3.PNG)
+
 Logs of chest-xray training component
 ![TF-Chest Xray Pipeline](pictures/6-pipeline-completed.PNG)
 

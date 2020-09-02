@@ -91,7 +91,7 @@ def main():
 
     # Trialtemplate
     go_template = V1alpha3GoTemplate(
-        raw_template = "apiVersion: batch/v1\nkind: Job\nmetadata:\n  name: {{.Trial}}\n  namespace: {{.NameSpace}}\nspec:\n  template:\n    spec:\n      containers:\n      - name: {{.Trial}}\n        image: %s\n        command:\n        - \"python\"\n        - \"/opt/covid-xray-katib.py\"\n        {{- with .HyperParameters}}\n        {{- range .}}\n        - \"{{.Name}}={{.Value}}\"\n        {{- end}}\n        {{- end}}\n        resources:\n          limits:\n            nvidia.com/gpu: 4\n        volumeMounts:\n          - mountPath: \"/mnt\"\n            name: \"nfsvolume\"\n      volumes:\n         - name: \"nfsvolume\"\n           persistentVolumeClaim:\n             claimName: \"nfs1\"\n      restartPolicy: Never"%args.image
+        raw_template = "apiVersion: batch/v1\nkind: Job\nmetadata:\n  name: {{.Trial}}\n  namespace: {{.NameSpace}}\nspec:\n  template:\n    spec:\n      containers:\n      - name: {{.Trial}}\n        image: %s\n        command:\n        - \"python\"\n        - \"/opt/covid-xray-katib.py\"\n        {{- with .HyperParameters}}\n        {{- range .}}\n        - \"{{.Name}}={{.Value}}\"\n        {{- end}}\n        {{- end}}\n        resources:\n          limits:\n            nvidia.com/gpu: 1\n        volumeMounts:\n          - mountPath: \"/mnt\"\n            name: \"nfsvolume\"\n      volumes:\n         - name: \"nfsvolume\"\n           persistentVolumeClaim:\n             claimName: \"nfs1\"\n      restartPolicy: Never"%args.image
         )
 
     trial_template= V1alpha3TrialTemplate(go_template=go_template)
@@ -106,9 +106,9 @@ def main():
         spec=V1alpha3ExperimentSpec(
              algorithm = algorithm,
              max_failed_trial_count=3,
-             max_trial_count=5,
+             max_trial_count=3,
              objective = objective,
-             parallel_trial_count=5,
+             parallel_trial_count=3,
              parameters = parameters ,
              trial_template = trial_template
         )
@@ -131,6 +131,10 @@ def main():
 
     if not os.path.exists('/mnt/Model_Covid'):
         os.makedirs('/mnt/Model_Covid')
+
+    if not os.path.exists('/mnt/Model_Covid/models'):
+        os.makedirs('/mnt/Model_Covid/models')
+
     filename = "/mnt/Model_Covid/hpv-"+timestamp+".txt"
     f = open(filename, "w")
     f.write(batchsize + "\n")

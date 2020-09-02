@@ -89,7 +89,7 @@ spec:
       - args:
         - --port=9000
         - --rest_api_port=8500
-        - --model_base_path=/mnt/Model_Covid
+        - --model_base_path=/mnt/Model_Covid/models
         env:
         - name: MODEL_NAME
           value: "Model_Covid"

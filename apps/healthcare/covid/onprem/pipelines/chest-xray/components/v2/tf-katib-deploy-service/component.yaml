@@ -8,7 +8,7 @@ outputs:
 
 implementation:
   container:
-    image: docker.io/edward1723/katib:0.2
+    image: docker.io/edward1723/deploy-katib:0.1
     command: ["python", "/opt/chest-xray-katib.py"]
     args: [
       --timestamp, {inputValue: timestamp},

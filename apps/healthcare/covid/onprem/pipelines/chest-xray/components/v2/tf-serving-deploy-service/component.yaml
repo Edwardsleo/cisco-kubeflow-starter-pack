@@ -6,7 +6,7 @@ inputs:
 
 implementation:
   container:
-    image: docker.io/edward1723/kf-covid-image-serving:0.1
+    image: docker.io/edward1723/kf-covid-image-serving:0.2
     command: ["/bin/deploy.sh"]
     args: [
       --timestamp, {inputValue: timestamp},
