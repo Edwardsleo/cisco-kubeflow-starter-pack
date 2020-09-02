@@ -172,9 +172,9 @@ Create volume claims & volume mounts
 
 ## **Note**:
 
-### Generate your custom inference service image
+### Build custom inference service image
 
-Custom inference service is required as a parameter while inferencing your model.
+The serving component of pipeline needs custom inference docker image for inferencing using tflite model.
 
 To [build](./components/v2/model-server) the docker image and push into your Docker Hub. It will be used when adding a new inference server.
 
