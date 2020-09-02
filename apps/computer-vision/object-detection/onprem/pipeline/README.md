@@ -25,7 +25,7 @@
 
 ## <a name='ProblemDefinition'></a>**Problem Definition**
 
-Train an object detection model using Darknet, convert the darknet model/weights to tflite, serve using Kubeflow pipeline; and perform prediction for client request through Jupyter-notebook.
+Download datasets, darknet config from a S3 bucket, train an object detection model using darknet, convert the darknet model/weights to tflite, serve using Kubeflow pipeline; and perform prediction for client request through Jupyter-notebook.
 
 ![Object Detection Pipeline](pictures/0-object-detection-graph.PNG)
 
@@ -38,13 +38,25 @@ Train an object detection model using Darknet, convert the darknet model/weights
 * UCS machine with [Kubeflow](https://www.kubeflow.org/) 1.0 installed
 * AWS account with appropriate permissions
 
-## <a name='AWSSetup'></a>**AWS Setup**
+## <a name='AWSSetup'></a>**S3 Bucket file organization**
 
-### <a name='CreateBucket'></a>**Create AWS Bucket**
+### <a name='CreateBucket'></a>**Create S3 Bucket**
 
 Create S3 Bucket
 
 ![AWS-S3-bucket](pictures/1-create-bucket.PNG)
+
+### File hierarchy within S3 bucket
+
+Ensure that required darknet configuration files ( .cfg & .data ) are present in cfg directory, dataset files in the datasets directory, trained weights files in pre-trained weights directory of the S3 bucket as shown below, for successful training and subsequent inferencing
+
+![AWS-S3-bucket](pictures/7-bucket-folders.png)
+
+![AWS-S3-bucket](pictures/8-s3-cfg.PNG)
+
+![AWS-S3-bucket](pictures/9-s3_datasets.PNG)
+
+![AWS-S3-bucket](pictures/10-s3-pre_trained-weights.PNG)
 
 ## <a name='UCSSetup'></a>**UCS Setup**
 
@@ -85,9 +97,9 @@ Follow the [steps](./../install/) to install NFS server, PVs and PVCs.
 
 Follow the [steps](./../notebook#create--connect-to-jupyter-notebook-server) to create & connect to Jupyter Notebook Server in Kubeflow
 
-### <a name='KubernetesSecret'></a>**Create Kubernetes secret**
+### <a name='KubernetesSecret'></a>**Create Kubernetes secret to access S3**
 
-AWS doesn't create secret for AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY along with kubeflow deployment and it requires users to manually create credential secret with proper permissions.
+Create secret for AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY along with kubeflow deployment with S3 bucket read/write permissions.
 
 It is a one time creation and will be used by dataset download & model conversion components of the pipeline.
 
@@ -132,7 +144,7 @@ kubectl get secrets -n kubeflow | grep aws-secret
 
 ### <a name='CreateLabel'></a>**Create Label for Kubeflow namespace**
 
-A namespace label 'serving.kubeflow.org/inferenceservice=enabled' is set to Kubeflow namespace for serving
+A namespace label 'serving.kubeflow.org/inferenceservice=enabled' is set to Kubeflow namespace for inference purpose.
 
 ```
 kubectl label namespace seldon serving.kubeflow.org/inferenceservice=enabled
@@ -173,20 +185,6 @@ Define pipeline function
 Create experiment
 
 ![Object Detection Pipeline](pictures/6-create-experiment.png)
-
-## **Double-check**:
-
-### File hierarchy within your S3 bucket
-
-Verify whether the required configuration files ( with .cfg & .data extensions) & dataset files are present in the desired locations within S3 bucket as shown below, for successful training and subsequent inferencing
-
-![AWS-S3-bucket](pictures/7-bucket-folders.png)
-
-![AWS-S3-bucket](pictures/8-s3-cfg.PNG)
-
-![AWS-S3-bucket](pictures/9-s3-datasets.PNG)
-
-![AWS-S3-bucket](pictures/10-s3-pre_trained-weights.PNG)
 
 Run pipeline
 
