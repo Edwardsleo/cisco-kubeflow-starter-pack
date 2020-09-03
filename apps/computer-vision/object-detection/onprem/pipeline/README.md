@@ -1,7 +1,7 @@
 # **Object Detection Workflow using Kubeflow Pipeline**
 
 <!-- vscode-markdown-toc -->
-* [Workflow](#Workflow)
+* [Object Detection Workflow](#Workflow)
 * [Infrastructure Used](#InfrastructureUsed)
 * [Prerequisites](#Prerequisites)
 * [S3 Bucket Layout](#AWSSetup)
@@ -199,7 +199,8 @@ Pipeline components screenshots & logs can be viewed as below
 
 ### <a name='Inferencing'></a>**Model Inference**
 
-Create an inference service & check whether it is ready. Note that this will be ready only after the pipeline complete.
+Create an inference service & check whether it is ready. 
+*Note that this will be ready only after the pipeline complete*.
 
 
 ![Object Detection Pipeline](pictures/18-inferenceservice.png)
