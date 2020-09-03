@@ -153,11 +153,7 @@ Clone required git repositories
 
 ![Object Detection Pipeline](pictures/2-clone.png)
 
-Load Components
-
 ![Object Detection Pipeline](pictures/3-load-components.png)
-
-Create volume claims & volume mounts
 
 ![Object Detection Pipeline](pictures/4-vol-mounts.png)
 
@@ -169,15 +165,10 @@ The serving component of pipeline needs custom inference docker image for infere
 
 To [build](./components/v2/model-server) the docker image and push into your Docker Hub. It will be used when adding a new inference server.
 
-Define pipeline function
 
 ![Object Detection Pipeline](pictures/5-pipeline-func.png)
 
-Create experiment
-
 ![Object Detection Pipeline](pictures/6-create-experiment.png)
-
-Run pipeline
 
 ![Object Detection Pipeline](pictures/11-run-pipeline.png)
 
@@ -187,26 +178,15 @@ Click on the latest experiment which is created
 
 ![Object Detection Pipeline](pictures/12-experiment.png)
 
-Pipeline components execution can be viewed as below
+Pipeline components execution & logs can be viewed as below
 
 ![Object Detection Pipeline](pictures/13-pipeline-execution.PNG)
 
-
-Logs of download component
-
 ![Object Detection Pipeline](pictures/14-download-logs.PNG)
-
-Logs of training component
 
 ![Object Detection Pipeline](pictures/15-training-logs.PNG)
 
-
-Logs of model conversion component
-
 ![Object Detection Pipeline](pictures/16-conversion-logs.PNG)
-
-
-Logs of kfserving component
 
 ![Object Detection Pipeline](pictures/17-kfserving-logs.PNG)
 
@@ -214,10 +194,8 @@ Create an inferenceservice & check whether it is ready
 
 ![Object Detection Pipeline](pictures/18-inferenceservice.png)
 
-Define functions for dataset pre-processing & prediction
+Define data pre-processing methods & get prediction
 
 ![Object Detection Pipeline](pictures/19-predict-func.png)
-
-Make prediction
 
 ![Object Detection Pipeline](pictures/20-predict.png)
