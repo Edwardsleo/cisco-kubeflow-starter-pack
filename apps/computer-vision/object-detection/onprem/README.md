@@ -15,11 +15,12 @@
 
 ## <a name='overview'></a>**Overview**
 
-Object detection is a computer vision technique that allows us to identify and locate objects in an image or video. With this kind of recognizition, object detection helps in counting objects in a scene and determine and track their precise locations, all while accurately labeling them.
 
-<img src="./pictures/detection-sample1.gif" width="500" align="middle"/>
+ Object detection is a computer vision technique that allows us to identify and locate objects in an image or video. With this kind of recognizition, object detection helps in counting objects in a scene and determine and track their precise locations, all while accurately labeling them.
+	       
+<img src="./pictures/sample-detection1.gif" width="500" align="middle"/>
 
-<img src="./pictures/detection-sample2.gif" width="500" align="middle"/>
+<img src="./pictures/sample-detection2.gif" width="500" align="middle"/>
 
 ## <a name='objectdetection'></a>**Object Detection**
 
