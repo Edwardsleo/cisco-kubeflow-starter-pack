@@ -178,8 +178,6 @@ Click on the latest experiment which is created
 
 Pipeline components screenshots & logs can be viewed as below
 
-![Object Detection Pipeline](pictures/13-pipeline-execution.PNG)
-
 ![Object Detection Pipeline](pictures/14-download-logs.PNG)
 
 ![Object Detection Pipeline](pictures/15-training-logs.PNG)
