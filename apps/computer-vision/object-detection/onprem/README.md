@@ -35,11 +35,11 @@ It can recognize objects from about 20 object classes (such as person, bird, cat
 
 Model is trained with a set of 16551 annotated images from the PASCAL VOC Dataset.
 
-[Darknet](https://pjreddie.com/darknet/) which is an open-sourced neural network framework is used for real-time object detection. It is fast as it is written in CUDA & C. Along with it, [YOLO (You Only Look Once)](https://pjreddie.com/darknet/yolo/) which is a state-of-the-art real-time object detection algorithm is implemented.
+[Darknet](https://pjreddie.com/darknet/) which is an open-sourced neural network framework is used for real-time object detection. It is fast as it is written in CUDA & C. [YOLO (You Only Look Once)](https://pjreddie.com/darknet/yolo/) which is a state-of-the-art real-time object detection algorithm is implemented for model training.
 
 ### <a name='workflowimplementation'></a>***Workflow Implementation***
 
 Object detection workflow is implemented on [Kubeflow](https://www.kubeflow.org/) as follows:
 
-* [Kubeflow Pipeline](./pipelines/)
+* [Kubeflow Pipeline](./pipeline/)
 
