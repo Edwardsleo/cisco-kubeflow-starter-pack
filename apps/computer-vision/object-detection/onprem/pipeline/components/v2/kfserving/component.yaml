@@ -1,0 +1,18 @@
+name: kfserving deploy
+description: kfserving deployment
+inputs:
+  - {name: inferenceservice name, type: String, default: 'object_detection', description: 'Name of the inferenceservice'}
+  - {name: storage uri, type: String, default: 'pvc://nfs/object_detection/model', description: 'storage uri path'}
+  - {name: image, type: String, default: '', description: 'Inferenceservice custom image'}
+  - {name: namespace, type: String, default: "kbueflow", description: 'In which namespace you want to deploy kfserving'}
+
+implementation:
+  container:
+    image: docker.io/samba07/object-detection-kfserving:0.1
+    command: ["python", "/opt/kfservingdeployer.py"]
+    args: [
+      --inference-name, {inputValue: inferenceservice name},
+      --storage-uri, {inputValue: storage uri},
+      --image, {inputValue: image},
+      --namespace, {inputValue: namespace},
+    ]

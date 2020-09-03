@@ -1,0 +1,20 @@
+name: Training
+description: train object detection and save model from weights
+inputs:
+  - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
+  - {name: weights, type: String, default: "yolov3-voc_50176.weights", description: "pre-trained weights for training"}
+  - {name: cfg_data, type: String, default: "voc.data", description: "data file"}
+  - {name: cfg_file, type: String, default: "yolov3-voc.cfg", description: "cfg file"}
+  - {name: gpus, type: String, default: "0,1,2,3", description: "No of gpus "}
+
+implementation:
+  container:
+    image: docker.io/samba07/object-detection-train:0.1
+    command: ["/opt/deploy.sh"]
+    args: [
+      --nfs-path, {inputValue: nfs path},
+      --weights, {inputValue: weights},
+      --cfg_data, {inputValue: cfg_data},
+      --cfg_file, {inputValue: cfg_file},
+      --gpus, {inputValue: gpus},
+    ]
