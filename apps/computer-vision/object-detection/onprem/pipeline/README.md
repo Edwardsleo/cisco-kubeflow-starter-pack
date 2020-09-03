@@ -1,7 +1,7 @@
-# **Object Detection using Kubeflow Pipeline**
+# **Object Detection Workflow using Kubeflow Pipeline**
 
 <!-- vscode-markdown-toc -->
-* [Problem Definition](#ProblemDefinition)
+* [Workflow](#Workflow)
 * [Infrastructure Used](#InfrastructureUsed)
 * [Prerequisites](#Prerequisites)
 * [S3 Bucket Layout](#AWSSetup)
@@ -22,9 +22,13 @@
 	/vscode-markdown-toc-config -->
 <!-- /vscode-markdown-toc -->
 
-## <a name='ProblemDefinition'></a>**Problem Definition**
+## <a name='Workflow'></a>**Object Detection Workflow**
 
-Download datasets, darknet config/weights from S3 bucket, train an object detection model using darknet, convert the darknet model/weights to tflite, serve using Kubeflow pipeline; and perform prediction for client image request through Jupyter-notebook.
+* Download datasets, darknet config/weights from object storage.  
+* Train an object detection model using darknet.  
+* Convert the darknet model/weights to tflite and upload to object storage.  
+* Serve tflite model using Kubeflow pipeline.  
+* Perform prediction for a client image request through Jupyter-notebook.
 
 ![Object Detection Pipeline](pictures/0-object-detection-graph.PNG)
 
@@ -35,7 +39,7 @@ Download datasets, darknet config/weights from S3 bucket, train an object detect
 ## <a name='Prerequisites'></a>**Prerequisites**
 
 * UCS machine with [Kubeflow](https://www.kubeflow.org/) 1.0 installed
-* S3 bucket with appropriate permissions
+* S3 bucket with read/write permissions
 
 ## <a name='AWSSetup'></a>**S3 Bucket Layout**
 
