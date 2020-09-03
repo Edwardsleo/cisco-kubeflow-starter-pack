@@ -40,7 +40,7 @@
 ## <a name='Prerequisites'></a>**Prerequisites**
 
 * UCS machine with [Kubeflow](https://www.kubeflow.org/) 1.0 installed
-* S3 bucket with read/write permissions
+* S3 bucket with read/write permissions & with specified layout
 
 ## <a name='AWSSetup'></a>**S3 Bucket Layout**
 
@@ -95,7 +95,7 @@ Follow the [steps](./../notebook#create--connect-to-jupyter-notebook-server) to 
 
 ### <a name='KubernetesSecret'></a>**Create Kubernetes secret to access S3**
 
-Create secret for AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY along with kubeflow deployment with S3 bucket read/write permissions.
+Create secret for AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY along with kubeflow deployment to access S3 bucket.
 
 It is a one time creation and will be used by dataset download & model conversion components of the pipeline.
 
@@ -152,22 +152,13 @@ Upload [object-detection-pipeline-deployment.ipynb](object-detection-pipeline-de
 
 ### <a name='RunPipeline'></a>**Run Object Detection Pipeline**
 
-Open the Object-Detection-Pipeline-Deployment.ipynb file and start executing cells. 
-Notebook screenshots of which is captured below.
+Open the uploaded notebook and start executing cells, screenshots of which are captured below.
 
 ![Object Detection Pipeline](pictures/2-clone.png)
 
 ![Object Detection Pipeline](pictures/3-load-components.png)
 
 ![Object Detection Pipeline](pictures/4-vol-mounts.png)
-
-## **Note**:
-
-### Build custom inference service image
-
-The serving component of pipeline needs custom inference docker image for inferencing using tflite model.
-
-To [build](./components/v2/model-server) the docker image and push into your Docker Hub. It will be used when adding a new inference server.
 
 
 ![Object Detection Pipeline](pictures/5-pipeline-func.png)
@@ -197,7 +188,7 @@ Pipeline components screenshots & logs can be viewed as below
 
 ![Object Detection Pipeline](pictures/17-kfserving-logs.PNG)
 
-### <a name='Inferencing'></a>**Model Inference**
+### <a name='Inferencing'></a>**Model Inference from Notebook**
 
 Create an inference service & check whether it is ready. 
 *Note that this will be ready only after the pipeline complete*.
@@ -208,3 +199,11 @@ Create an inference service & check whether it is ready.
 ![Object Detection Pipeline](pictures/19-predict-func.png)
 
 ![Object Detection Pipeline](pictures/20-predict.png)
+
+
+## **Note**:
+
+### How to build component's Docker image 
+To build any component docker image in general, go to the [components folder](./components/v2/) and build the respective component's docker image and push into your Docker Hub
+
+
