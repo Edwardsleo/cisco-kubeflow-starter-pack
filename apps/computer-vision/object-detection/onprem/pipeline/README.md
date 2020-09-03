@@ -5,7 +5,6 @@
 * [Infrastructure Used](#InfrastructureUsed)
 * [Prerequisites](#Prerequisites)
 * [S3 Bucket Layout](#AWSSetup)
-    * [File Organization](#FileOrganization)
 * [UCS Setup](#UCSSetup)
     * [Install Kubeflow](#InstallKubeflow)
 	* [Install NFS server (if not installed)](#InstallNFS)
@@ -25,7 +24,7 @@
 
 ## <a name='ProblemDefinition'></a>**Problem Definition**
 
-Download datasets, darknet config, weights from S3 bucket; train an object detection model using darknet, convert the darknet model/weights to tflite, serve using Kubeflow pipeline; and perform prediction for client request through Jupyter-notebook.
+Download datasets, darknet config/weights from S3 bucket, train an object detection model using darknet, convert the darknet model/weights to tflite, serve using Kubeflow pipeline; and perform prediction for client image request through Jupyter-notebook.
 
 ![Object Detection Pipeline](pictures/0-object-detection-graph.PNG)
 
@@ -36,13 +35,11 @@ Download datasets, darknet config, weights from S3 bucket; train an object detec
 ## <a name='Prerequisites'></a>**Prerequisites**
 
 * UCS machine with [Kubeflow](https://www.kubeflow.org/) 1.0 installed
-* AWS account with appropriate permissions
+* S3 bucket with appropriate permissions
 
 ## <a name='AWSSetup'></a>**S3 Bucket Layout**
 
-### <a name='FileOrganization'></a>**File Organization**
-
-Ensure that required darknet configuration files ( .cfg & .data ) are present in cfg directory, dataset files in the datasets directory, trained weights files in pre-trained weights directory of the S3 bucket as shown below, for successful training and subsequent inferencing
+Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* directory, dataset files in the *datasets* directory, trained weights files in *pre-trained-weights* directory of the S3 bucket as shown below, for successful training and subsequent inferencing
 
 ![AWS-S3-bucket](pictures/7-bucket-folders.png)
 
