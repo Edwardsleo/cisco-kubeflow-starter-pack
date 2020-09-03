@@ -86,12 +86,12 @@ This IP will be referred to as INGRESS_IP from here on.
 
 #### <a name='InstallNFSserverPV'></a>*Install NFS server, PVs and PVCs*
 
-Follow the [steps](./../install/) to install NFS server, PVs and PVCs.
+Follow the [steps](./../../../../networking/ble-localization/onprem/install) to install NFS server, PVs and PVCs.
 
 
 ### <a name='CreateJupyterNotebookServer'></a>**Create Jupyter Notebook Server**
 
-Follow the [steps](./../notebook#create--connect-to-jupyter-notebook-server) to create & connect to Jupyter Notebook Server in Kubeflow
+Follow the [steps](https://github.com/CiscoAI/cisco-kubeflow-starter-pack/tree/master/apps/networking/ble-localization/onprem/notebook#create--connect-to-jupyter-notebook-server) to create & connect to Jupyter Notebook Server in Kubeflow
 
 ### <a name='KubernetesSecret'></a>**Create Kubernetes secret to access S3**
 
