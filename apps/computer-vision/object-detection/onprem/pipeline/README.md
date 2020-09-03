@@ -151,9 +151,7 @@ Upload [object-detection-pipeline-deployment.ipynb](object-detection-pipeline-de
 
 ### <a name='RunPipeline'></a>**Run Object Detection Pipeline**
 
-Open the Object-Detection-Pipeline-Deployment.ipynb file and start executing cells
-
-Clone required git repositories
+Open the Object-Detection-Pipeline-Deployment.ipynb file and start executing cells, screenshots of which is captured below.
 
 ![Object Detection Pipeline](pictures/2-clone.png)
 
