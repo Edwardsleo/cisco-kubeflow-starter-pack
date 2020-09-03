@@ -15,7 +15,8 @@
 	* [Create Label for Kubeflow namespace](#CreateLabel)
 	* [Upload Object Detection Pipeline Notebook file](#UploadNotebookfile)
 	* [Run Object Detection Pipeline](#RunPipeline)
-
+	* [KF Pipeline Dashboard](#PipelineDashboard)
+	* [Model Inference](#Inferencing)
 <!-- vscode-markdown-toc-config
 	numbering=false
 	autoSave=true
@@ -151,7 +152,8 @@ Upload [object-detection-pipeline-deployment.ipynb](object-detection-pipeline-de
 
 ### <a name='RunPipeline'></a>**Run Object Detection Pipeline**
 
-Open the Object-Detection-Pipeline-Deployment.ipynb file and start executing cells, screenshots of which is captured below.
+Open the Object-Detection-Pipeline-Deployment.ipynb file and start executing cells. 
+Notebook screenshots of which is captured below.
 
 ![Object Detection Pipeline](pictures/2-clone.png)
 
@@ -174,13 +176,16 @@ To [build](./components/v2/model-server) the docker image and push into your Doc
 
 ![Object Detection Pipeline](pictures/11-run-pipeline.png)
 
-Once the pipeline is executed, a run link will be generated and displayed as output.
+*Once the pipeline is executed, a run link will be generated and displayed. 
+If you click the link, you will directed to Kubeflow Pipeline Dashboard*
 
-Click on the latest experiment which is created 
+### <a name='PipelineDashboard'></a>**KF Pipeline Dashboard**
+
+Click on the latest experiment which is created
 
 ![Object Detection Pipeline](pictures/12-experiment.png)
 
-Pipeline components execution & logs can be viewed as below
+Pipeline components screenshots & logs can be viewed as below
 
 ![Object Detection Pipeline](pictures/13-pipeline-execution.PNG)
 
@@ -192,11 +197,12 @@ Pipeline components execution & logs can be viewed as below
 
 ![Object Detection Pipeline](pictures/17-kfserving-logs.PNG)
 
-Create an inferenceservice & check whether it is ready
+### <a name='Inferencing'></a>**Model Inference**
+
+Create an inference service & check whether it is ready. Note that this will be ready only after the pipeline complete.
+
 
 ![Object Detection Pipeline](pictures/18-inferenceservice.png)
-
-Define data pre-processing methods & get prediction
 
 ![Object Detection Pipeline](pictures/19-predict-func.png)
 
