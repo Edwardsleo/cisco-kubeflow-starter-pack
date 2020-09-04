@@ -143,7 +143,7 @@ kubectl get secrets -n kubeflow | grep aws-secret
 A namespace label 'serving.kubeflow.org/inferenceservice=enabled' is set to Kubeflow namespace for inference purpose.
 
 ```
-kubectl label namespace seldon serving.kubeflow.org/inferenceservice=enabled
+kubectl label namespace kubeflow serving.kubeflow.org/inferenceservice=enabled
 ```
 
 ### <a name='UploadNotebookfile'></a>**Upload Object Detection Pipeline Notebook file**
