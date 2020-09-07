@@ -136,8 +136,6 @@ Logs of chest X-ray serving component
 
 ![TF-Chest Xray Pipeline](pictures/3-serving.PNG)
 
-![TF-Network Traffic Pipeline](pictures/8-show-table.PNG)
-
 ### <a name='Inferencing'></a>**Model inference from notebook**
 
 An inference service is created during the serving component execution of the pipeline. Note that inference service will become ready only after the pipeline completes.
@@ -158,24 +156,24 @@ Python based visualizations are a new method of generating visualizations within
    
  ### <a name='AddEnvVariables'>**Add environment variable**
    
- - If you have not yet deployed Kubeflow pipeline to your cluster, you can edit the frontend deployment YAML file to include the following YAML that specifies that custom visualizations are allowed via environment variables.
+ If you have not yet deployed Kubeflow pipeline to your cluster, you can edit the frontend deployment YAML file to include the following YAML that specifies that custom visualizations are allowed via environment variables.
 
         - env:
           - name: ALLOW_CUSTOM_VISUALIZATIONS
             value: true
 
 ### <a name='AddPatches'>**Add patches**
- - If you already have Kubeflow pipeline deployed within a cluster, you can edit the frontend deployment YAML to specify that custom visualizations are allowed in the same way described above. Details about updating deployments can be found in the Kubernetes documentation about updating a deployment.
+ If you already have Kubeflow pipeline deployed within a cluster, you can edit the frontend deployment YAML to specify that custom visualizations are allowed in the same way described above. Details about updating deployments can be found in the Kubernetes documentation about updating a deployment.
 
         kubectl patch deployment ml-pipeline-ui --patch '{"spec": {"template": {"spec": {"containers": [{"name": "ml-pipeline-ui", "env":[{"name": "ALLOW_CUSTOM_VISUALIZATIONS", "value": "true"}]}]}}}}' -n kubeflow
 
 ### <a name='UpdatePipelineVisImage'>**Update pipeline visualization image**
- - Update ml-pipeline-visualizationserver deployment with latest docker image
+ Update ml-pipeline-visualizationserver deployment with latest docker image
 
         kubectl patch deployment ml-pipeline-ml-pipeline-visualizationserver --patch '{"spec": {"template": {"spec": {"containers": [{"name": "ml-pipeline-visualizationserver", "image": "gcr.io/ml-pipeline/visualization-server:0.1.35"}]}}}}' -n kubeflow
 
  ### <a name='InstallLibraries'>**Install libraries in pipeline visualization pod**
- - Install require python packages and libraries in ml-pipeline-visualizationserver.
+ Install required python packages and libraries in ml-pipeline-visualizationserver.
 
         Usage: kubectl exec -it <<POD-NAME>> -n <<NAMESPACE>> bash
         EX: kubectl exec -it ml-pipeline-ml-pipeline-visualizationserver-6d744dd449-x96cp -n kubeflow bash
