@@ -140,7 +140,7 @@ Logs of chest X-ray serving component
 
 ### <a name='Inferencing'></a>**Model inference from notebook**
 
-An inference service is created & will be up. Note that this will be ready only after the pipeline complete.
+An inference service is created during the serving component execution of the pipeline. Note that inference service ready only after the pipeline completes.
 
 ![TF-Chest Xray Pipeline](pictures/get-serving-ip.png)
 
