@@ -14,6 +14,7 @@
     * [Upload Jupyter notebook for chest X-ray pipeline deployment](#UploadPipelinenb)
     * [Run chest X-ray pipeline](#RunPipeline)
     * [KF pipeline dashboard](#PipelineDashboard)
+    * [Katib dashboard](#KatibDashboard)
     * [Model Inference](#Inferencing)
 * [Visualizations from Kubeflow Pipeline](#VisualizationfromKFpipeline)
     * [Prerequisites](#visprerequisites)
@@ -89,13 +90,6 @@ Follow the [steps](./../../../../networking/ble-localization/onprem/install) to 
 
 Follow the [steps](https://github.com/CiscoAI/cisco-kubeflow-starter-pack/tree/master/apps/networking/ble-localization/onprem/notebook#create--connect-to-jupyter-notebook-server) to create & connect to Jupyter Notebook Server in Kubeflow
 
-### <a name='UploadDatasetBuildernb'></a>**Upload Jupyter notebook for dataset preparation & minIO upload**
-
-Upload dataset-builder-minio-store.ipynb file from [here](./dataset-builder-minio-store.ipynb) and run all the cells to download and generate image dataset and store it in Kubeflow minIO object storage.
-
-#### ***Note***:
-
-dataset-builder-minio-store.ipynb notebook needs to be run only once.
 
 ### <a name='UploadPipelinenb'></a>**Upload Jupyter notebook for chest X-ray pipeline deployment**
 
@@ -111,7 +105,7 @@ Open the above uploaded notebook and start executing cells, screenshots of which
 ![TF-BLERSSI Pipeline](pictures/2-load-components.png)
 
 
-![TF-Chest Xray Pipeline](pictures/2-run-pipeline.PNG)
+![TF-Chest Xray Pipeline](pictures/2-run-pipeline.png)
 
 Once chest X-ray pipeline is executed Experiment and Run link will generate and displayed as output.
 If you click Run link, you will be directed to Kubeflow Pipeline Dashboard
@@ -135,6 +129,14 @@ Logs of chest X-ray training component
 Logs of chest X-ray serving component
 
 ![TF-Chest Xray Pipeline](pictures/3-serving.PNG)
+
+### <a name='KatibDashboard'></a>**Katib dashboard**
+
+Screenshots of Katib dashboard & Hyperparameter(HP) tuning results are shown below.
+
+![TF-Chest Xray Pipeline](pictures/exp-monitor.PNG)
+![TF-Chest Xray Pipeline](pictures/katib-graph.png)
+![TF-Chest Xray Pipeline](pictures/optimal-params.PNG)
 
 ### <a name='Inferencing'></a>**Model inference from notebook**
 
@@ -260,3 +262,9 @@ View generated visualization by scrolling down.
    ![COVID Plot](pictures/covid_plot.PNG)
    
    ![COVID Plot](pictures/covid_plot1.PNG)
+
+## **Note**:
+
+### How to gather dataset from various sources before pipeline execution
+
+To download & generate image dataset from various sources and store it in Kubeflow minIO object storage (from which datasets are downloaded during pipeline execution), upload dataset-builder-minio-store.ipynb file from [here](./dataset-builder-minio-store.ipynb) to your working directory and execute the notebook only once.
