@@ -12,7 +12,7 @@
     * [Create Jupyter notebook server](#CreateJupyterNotebookServer)
     * [Upload Jupyter notebook for dataset preparation & minIO upload](#UploadDatasetBuildernb)
     * [Upload Jupyter notebook for chest X-ray pipeline deployment](#UploadPipelinenb)
-    * [Run Chest X-ray pipeline](#RunPipeline)
+    * [Run chest X-ray pipeline](#RunPipeline)
     * [KF pipeline dashboard](#PipelineDashboard)
     * [Model Inference](#Inferencing)
 * [Visualizations from Kubeflow Pipeline](#VisualizationfromKFpipeline)
