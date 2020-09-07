@@ -114,7 +114,7 @@ Open the above uploaded notebook and start executing cells, screenshots of which
 ![TF-Chest Xray Pipeline](pictures/2-run-pipeline.PNG)
 
 Once chest X-ray pipeline is executed Experiment and Run link will generate and displayed as output.
-If you click Run link, you will directed to Kubeflow Pipeline Dashboard
+If you click Run link, you will be directed to Kubeflow Pipeline Dashboard
 
 ![TF-Chest Xray Pipeline](pictures/3-exp-link.PNG)
 
@@ -140,7 +140,7 @@ Logs of chest X-ray serving component
 
 ### <a name='Inferencing'></a>**Model inference from notebook**
 
-An inference service is created during the serving component execution of the pipeline. Note that inference service ready only after the pipeline completes.
+An inference service is created during the serving component execution of the pipeline. Note that inference service will become ready only after the pipeline completes.
 
 ![TF-Chest Xray Pipeline](pictures/get-serving-ip.png)
 
