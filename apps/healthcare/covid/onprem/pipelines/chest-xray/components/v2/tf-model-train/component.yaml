@@ -7,7 +7,7 @@ inputs:
 
 implementation:
   container:
-    image: docker.io/edward1723/chest-train:0.2
+    image: docker.io/edward1723/chest-xray-train:0.2
     command: ["python", "/opt/covid-xray-model.py"]
     args: [
       --timestamp, {inputValue: timestamp},

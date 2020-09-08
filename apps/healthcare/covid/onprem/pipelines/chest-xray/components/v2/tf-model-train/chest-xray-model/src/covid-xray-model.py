@@ -83,9 +83,6 @@ def main(unused_args):
     data = []
     labels = []
 
-    if not os.path.exists('/mnt/Model_Covid'):
-        os.makedirs('/mnt/Model_Covid')
-
     for imagePath in imagePaths:
         label = imagePath.split(os.path.sep)[-2]
         image = cv2.imread(imagePath)
@@ -101,7 +98,6 @@ def main(unused_args):
     labels = to_categorical(labels)
     
     (trainX, testX, trainY, testY) = train_test_split(data, labels, test_size=.2)
-    print(trainX.shape,trainY.shape)
     # load the VGG16 network, ensuring the head FC layer sets are left off
     baseModel = VGG16(weights="imagenet", include_top=False,
                       input_tensor=Input(shape=(224, 224, 3)))
@@ -127,6 +123,7 @@ def main(unused_args):
     parallel_model.compile(loss='binary_crossentropy', optimizer=tf.train.AdamOptimizer(learning_rate=learningrate), metrics=['acc',f1_m,precision_m, recall_m])
     
     history=parallel_model.fit(trainX,trainY,batch_size=batchsize,epochs=5, validation_split=0.1)
+    print ("Katib learning rate : {} ||||  Batchsize :  {}".format(str(learningrate), str(batchsize))) 
     # make predictions on the testing set
     print("[INFO] evaluating network...")
     predIdxs = parallel_model.predict(testX, batch_size=args.batchsize)
@@ -147,20 +144,21 @@ def main(unused_args):
 
     '''Model save - tensorflow pb format'''
     inputs = {"image": t for t in parallel_model.inputs}
-    outputs = {t.name: t for t in parallel_model.outputs}
-    MODEL_EXPORT_PATH = '/mnt/Model_Covid'
-
-    dirFiles = os.listdir(MODEL_EXPORT_PATH)
-    modelno = 0
-    if len(dirFiles) > 0:
+    outputs = {t.name: t for t in parallel_model.outputs}    
+    MODEL_EXPORT_PATH = '/mnt/Model_Covid/models/'
+    
+    dirFiles = os.listdir(MODEL_EXPORT_PATH) 
+    modelno = 1
+    if len(dirFiles) >=0:
         for i in dirFiles:
             if i == '.ipynb_checkpoints':
                 dirFiles.remove(i)
                 dirFiles.append(0)
-        
-        if not i.endswith('.txt'):
-           test_list = [int(i) for i in dirFiles]
-           modelno = max(test_list) + 1
+                test_list = [int(i) for i in dirFiles]
+                modelno = max(test_list) + 1
+            else:
+                test_list = [int(i) for i in dirFiles]
+                modelno = max(test_list) + 1
     else:
         modelno = 1
 
@@ -169,6 +167,8 @@ def main(unused_args):
         os.path.join(MODEL_EXPORT_PATH, str(modelno)),
         inputs=inputs,
         outputs={t.name: t for t in parallel_model.outputs})
+
+    print(os.path.join(MODEL_EXPORT_PATH, str(modelno)))
 
     '''Writing values to Visualization'''
     df1 = pd.DataFrame({'actual': testY.argmax(axis=1), 'pred': predIdxs})
