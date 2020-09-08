@@ -34,12 +34,12 @@
 * Download Chest X-ray datasets from minIO object storage  
 * Train Chest X-ray model using Tensorflow
 * Serve tensorflow model using Kubeflow pipeline 
-* Perform prediction for a client X-ray request through Jupyter notebook
+* Predict diagnosis on a client X-ray request through Jupyter notebook
 
 
 ### What we're going to build
 
-Train and serve chest X-ray model using Kubeflow pipeline, and predict X-ray result from Jupyter notebook.
+Train and serve chest X-ray model using Kubeflow pipeline, and predict diagnosis for a X-ray image from Jupyter notebook.
 
 ![TF-Chest X-ray Pipeline](pictures/0-xray-graph.PNG)
 
