@@ -61,6 +61,23 @@ For FAQ Bot implemented as a Kubeflow pipeline, please refer [COVID-19 FAQ Bot](
   This app develops a chest X-ray model to understand and identify the covid infection from X-ray images.
 
   This would give physicians an edge and allow them to act with more confidence while they wait for the analysis of a radiologist by having a digital second opinion to confirm their assessment of a patient's condition.
+  
+ ### <a name='Dataset'></a>*Dataset*
+The dataset involved here is publicly avaiable at
+* [ieee8023-covid-chestxray-dataset](https://github.com/ieee8023/covid-chestxray-dataset)
+* [agchung-figure1-covid-chestxray-dataset](https://github.com/agchung/Figure1-COVID-chestxray-dataset)
+* [agchung-actualmed-covid-chestxray-dataset](https://github.com/agchung/Actualmed-COVID-chestxray-dataset)
+* [covid19-radiography-database](https://www.kaggle.com/tawsifurrahman/covid19-radiography-database)
+* [Radiological Society of North America](https://www.kaggle.com/c/rsna-pneumonia-detection-challenge (which came from: https://nihcc.app.box.com/v/ChestXray-NIHCC))
+
+
+### <a name='Model'></a>*Model*
+
+ Model Training is implemented using tensorflow's keras & VGG16 (Visual Geometry Group) architecture..
+
+   * VGG16 architecture are a special kind of convolution neural network with 16 convolutional layers applied to analyzing visual imagery.
+
+   * VGG16 are fully connected networks that has connectivity patterns between neurons and learns the filters of an image with reducing its dimensionality and detecting the image edges, outliers etc with the help of 16 layers and makes a prediction.
 
 ### <a name='DiagnosisImplementation'></a>*Implementation*   
 
