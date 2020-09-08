@@ -74,7 +74,7 @@ The dataset involved here is built from publicly available data sources at
 
 ### <a name='XrayModel'></a>*Model*
 
- Model Training is implemented using Tensorflow's keras VGG16 (Visual Geometry Group) architecture.
+ Model Training is implemented using Tensorflow's Keras VGG16 (Visual Geometry Group) architecture.
 
    * VGG16 architecture are a special kind of convolution neural network with 16 convolutional layers applied to analyzing visual imagery.
 
