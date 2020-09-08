@@ -85,7 +85,7 @@ This IP will be referred to as INGRESS_IP from here on.
 
 Follow the [steps](./../../../../networking/ble-localization/onprem/install) to install NFS server, PVs and PVCs.
 
-## <a name='Notebook'></a>**Pipeline Notebook**
+## <a name='Notebook'></a>**Chest X-ray Pipeline Notebook**
 ### <a name='CreateJupyterNotebookServer'></a>**Create Jupyter notebook server**
 
 Follow the [steps](https://github.com/CiscoAI/cisco-kubeflow-starter-pack/tree/master/apps/networking/ble-localization/onprem/notebook#create--connect-to-jupyter-notebook-server) to create & connect to Jupyter Notebook Server in Kubeflow
