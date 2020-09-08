@@ -49,7 +49,7 @@ Train and serve chest X-ray model using Kubeflow pipeline, and predict diagnosis
 
 ### <a name='InstallKubeflow'></a>**Install Kubeflow**
 
-To install Kubeflow, follow the instructions from [here](../../../../../install)
+To install Kubeflow, follow the instructions from [here](../../../../../../install)
 
 ### <a name='InstallNFS'></a>**Install NFS server (if not installed)**
 
@@ -77,7 +77,7 @@ This IP will be referred to as INGRESS_IP from here on.
 
 #### <a name='InstallNFSserverPV'></a>***Install NFS server, PVs and PVCs***
 
-Follow the [steps](./../../../../networking/ble-localization/onprem/install) to install NFS server, PVs and PVCs.
+Follow the [steps](./../../../../../networking/ble-localization/onprem/install) to install NFS server, PVs and PVCs.
 
 ## <a name='Notebook'></a>**Chest X-ray Pipeline Notebook**
 ### <a name='CreateJupyterNotebookServer'></a>**Create Jupyter notebook server**
