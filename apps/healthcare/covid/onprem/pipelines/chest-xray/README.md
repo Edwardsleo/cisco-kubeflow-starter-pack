@@ -132,7 +132,8 @@ Logs of chest X-ray serving component
 
 ### <a name='KatibDashboard'></a>**Katib dashboard**
 
-Screenshots of Katib dashboard & Hyperparameter(HP) tuning results are shown below.
+To track HP tuning experiments, you need to go Katib dashboard from KF Central dashboard's left panel.
+Screenshots of Katib monitor dashboard & Hyperparameter(HP) tuning results are shown below.
 
 ![TF-Chest Xray Pipeline](pictures/exp-monitor.PNG)
 ![TF-Chest Xray Pipeline](pictures/katib-graph.png)
