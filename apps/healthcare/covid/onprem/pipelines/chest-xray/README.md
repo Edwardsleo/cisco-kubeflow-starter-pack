@@ -117,13 +117,13 @@ If you click Run link, you will be directed to Kubeflow Pipeline Dashboard
 
 ### <a name='PipelineDashboard'></a>**KF Pipeline dashboard**
 
-The dashboard lets you navigate through experiments & runs.
+This dashboard lets you navigate through experiments & runs.
 
-Click on latest experiment which is created
+Click on latest run which is created
 
 ![TF-Chest Xray Pipeline](pictures/4-pipeline-created.PNG)
 
-Pipeline components screenshots & logs can be viewed as below
+Each pipeline components logs can be viewed as below
 
 Logs of chest X-ray Katib hyperparameter component
 ![TF-Chest Xray Pipeline](pictures/katib.PNG)
