@@ -9,6 +9,8 @@
 * [COVID-19 FAQ Bot](#COVIDFaqBot)
      * [Implementation](#FAQImplementation)
 * [Chest X-ray Diagnosis](#chestXrayDiagnosis)
+     * [Dataset](#XrayDataset)
+     * [Model](#XrayModel)
      * [Implementation](#DiagnosisImplementation) 
 
 <!-- vscode-markdown-toc-config
@@ -61,7 +63,7 @@ For FAQ Bot implemented as a Kubeflow pipeline, please refer [COVID-19 FAQ Bot](
   This app develops a chest X-ray model to identify the covid infection from X-ray images.
 
   
- ### <a name='Dataset'></a>*Dataset*
+ ### <a name='XrayDataset'></a>*Dataset*
 The dataset involved here is built from publicly available data sources at
 * [ieee8023-covid-chestxray-dataset](https://github.com/ieee8023/covid-chestxray-dataset)
 * [agchung-figure1-covid-chestxray-dataset](https://github.com/agchung/Figure1-COVID-chestxray-dataset)
@@ -70,7 +72,7 @@ The dataset involved here is built from publicly available data sources at
 * [Radiological Society of North America](https://www.kaggle.com/c/rsna-pneumonia-detection-challenge (which came from: https://nihcc.app.box.com/v/ChestXray-NIHCC))
 
 
-### <a name='Model'></a>*Model*
+### <a name='XrayModel'></a>*Model*
 
  Model Training is implemented using Tensorflow's keras VGG16 (Visual Geometry Group) architecture.
 
