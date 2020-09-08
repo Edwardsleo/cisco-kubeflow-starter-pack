@@ -9,11 +9,11 @@
 	* [Install NFS server (if not installed)](#InstallNFS)
 		* [Retrieve Ingress IP](#RetrieveIngressIP)
 		* [Install NFS server, PVs and PVCs](#InstallNFSserverPV)
-* [Pipeline Notebook](#Notebook)
+* [Chest X-ray Pipeline Notebook](#Notebook)
     * [Create Jupyter notebook server](#CreateJupyterNotebookServer)
     * [Upload Jupyter notebook for chest X-ray pipeline deployment](#UploadPipelinenb)
-    * [Run chest X-ray pipeline](#RunPipeline)
-    * [KF pipeline dashboard](#PipelineDashboard)
+    * [Run pipeline](#RunPipeline)
+    * [KF Pipeline dashboard](#PipelineDashboard)
     * [Katib dashboard](#KatibDashboard)
     * [Model Inference](#Inferencing)
 * [Visualizations from Kubeflow Pipeline](#VisualizationfromKFpipeline)
@@ -95,9 +95,12 @@ Follow the [steps](https://github.com/CiscoAI/cisco-kubeflow-starter-pack/tree/m
 
 Upload chest-xray-pipeline-deployment.ipynb file from [here](./chest-xray-pipeline-deployment.ipynb)
 
-### <a name='RunPipeline'></a>**Run pipeline notebook**
+### <a name='RunPipeline'></a>**Run pipeline**
 
-Open the above uploaded notebook and start executing cells, o/p screenshots of which are captured below.
+Open the above uploaded notebook and start executing cells - *git clone, load components, define pipeline* 
+
+O/p screenshots of which are captured below.
+
 
 ![TF-Chest Xray  Pipeline](pictures/1-git-clone.png)
 
@@ -107,12 +110,12 @@ Open the above uploaded notebook and start executing cells, o/p screenshots of w
 
 ![TF-Chest Xray Pipeline](pictures/2-run-pipeline.png)
 
-Once chest X-ray pipeline is executed, Experiment and Run link will be generated and displayed as output.
+Once the above cells are executed, Experiment and Run link will be generated and displayed as output.
 If you click Run link, you will be directed to Kubeflow Pipeline Dashboard
 
 ![TF-Chest Xray Pipeline](pictures/3-exp-link.PNG)
 
-### <a name='PipelineDashboard'></a>**KF pipeline dashboard**
+### <a name='PipelineDashboard'></a>**KF Pipeline dashboard**
 
 The dashboard lets you navigate through experiments & runs.
 
@@ -134,7 +137,7 @@ Logs of chest X-ray serving component
 
 ### <a name='KatibDashboard'></a>**Katib dashboard**
 
-To track HP tuning experiments, you need to go Katib dashboard from KF Central dashboard's left panel. 
+To track HP tuning created by pipeline, you need to go Katib dashboard from KF Central dashboard's left panel. 
 
 Screenshots of Katib monitor dashboard & Hyperparameter(HP) tuning results are shown below.
 
