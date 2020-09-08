@@ -13,7 +13,7 @@ inputs:
 
 implementation:
   container:
-    image: docker.io/samba07/test:objkatib1.7
+    image: docker.io/samba07/object-detection-train:0.2
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},
@@ -26,4 +26,3 @@ implementation:
       --component, {inputValue: component},
       --timestamp, {inputValue: timestamp},
     ]
-

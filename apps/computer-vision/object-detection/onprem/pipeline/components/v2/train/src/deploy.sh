@@ -62,11 +62,8 @@ mv ../darknet/darknet /usr/local/bin
 cd ${NFS_PATH}
 
 sed -i "s#/home/pjreddie/data/voc/#${NFS_PATH}/datasets/#g" cfg/${CFG_DATA}
-cat cfg/${CFG_DATA}
 sed -i "s#/home/pjreddie/backup/#${NFS_PATH}/backup#g" cfg/${CFG_DATA}
-cat cfg/${CFG_DATA}
 sed -i "s#data/#${NFS_PATH}/data/#g" cfg/${CFG_DATA}
-cat cfg/${CFG_DATA}
 
 # Update config file
 sed -i 's/ batch.*/#batch=1/g' cfg/${CFG_FILE}
@@ -87,6 +84,7 @@ then
 else
     sed -i "s/momentum.*/momentum=${MOMENTUM}/g" cfg/${CFG_FILE}
     sed -i "s/decay.*/decay=${DECAY}/g" cfg/${CFG_FILE}
+    # Training
     darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${GPUS} -dont_show > /var/log/katib/training.log
     cat /var/log/katib/training.log
     avg_loss=$(sed -n '$p' /var/log/katib/training.log | awk '{ print $3 }')

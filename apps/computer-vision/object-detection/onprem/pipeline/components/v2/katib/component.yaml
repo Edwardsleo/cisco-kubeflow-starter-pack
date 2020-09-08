@@ -16,7 +16,7 @@ inputs:
 
 implementation:
   container:
-    image: docker.io/samba07/test:katibcom1.0
+    image: docker.io/samba07/object-detection-katib:0.1
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},
