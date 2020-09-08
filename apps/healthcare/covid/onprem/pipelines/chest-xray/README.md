@@ -9,8 +9,8 @@
 	* [Install NFS server (if not installed)](#InstallNFS)
 		* [Retrieve Ingress IP](#RetrieveIngressIP)
 		* [Install NFS server, PVs and PVCs](#InstallNFSserverPV)
+* [Pipeline Notebook](#Notebook)
     * [Create Jupyter notebook server](#CreateJupyterNotebookServer)
-    * [Upload Jupyter notebook for dataset preparation & minIO upload](#UploadDatasetBuildernb)
     * [Upload Jupyter notebook for chest X-ray pipeline deployment](#UploadPipelinenb)
     * [Run chest X-ray pipeline](#RunPipeline)
     * [KF pipeline dashboard](#PipelineDashboard)
@@ -85,7 +85,7 @@ This IP will be referred to as INGRESS_IP from here on.
 
 Follow the [steps](./../../../../networking/ble-localization/onprem/install) to install NFS server, PVs and PVCs.
 
-
+## <a name='Notebook'></a>**Pipeline Notebook**
 ### <a name='CreateJupyterNotebookServer'></a>**Create Jupyter notebook server**
 
 Follow the [steps](https://github.com/CiscoAI/cisco-kubeflow-starter-pack/tree/master/apps/networking/ble-localization/onprem/notebook#create--connect-to-jupyter-notebook-server) to create & connect to Jupyter Notebook Server in Kubeflow
@@ -95,9 +95,9 @@ Follow the [steps](https://github.com/CiscoAI/cisco-kubeflow-starter-pack/tree/m
 
 Upload chest-xray-pipeline-deployment.ipynb file from [here](./chest-xray-pipeline-deployment.ipynb)
 
-### <a name='RunPipeline'></a>**Run Chest X-ray pipeline**
+### <a name='RunPipeline'></a>**Run pipeline notebook**
 
-Open the above uploaded notebook and start executing cells, screenshots of which are captured below.
+Open the above uploaded notebook and start executing cells, o/p screenshots of which are captured below.
 
 ![TF-Chest Xray  Pipeline](pictures/1-git-clone.png)
 
@@ -107,12 +107,14 @@ Open the above uploaded notebook and start executing cells, screenshots of which
 
 ![TF-Chest Xray Pipeline](pictures/2-run-pipeline.png)
 
-Once chest X-ray pipeline is executed Experiment and Run link will generate and displayed as output.
+Once chest X-ray pipeline is executed, Experiment and Run link will be generated and displayed as output.
 If you click Run link, you will be directed to Kubeflow Pipeline Dashboard
 
 ![TF-Chest Xray Pipeline](pictures/3-exp-link.PNG)
 
 ### <a name='PipelineDashboard'></a>**KF pipeline dashboard**
+
+The dashboard lets you navigate through experiments & runs.
 
 Click on latest experiment which is created
 
@@ -132,7 +134,8 @@ Logs of chest X-ray serving component
 
 ### <a name='KatibDashboard'></a>**Katib dashboard**
 
-To track HP tuning experiments, you need to go Katib dashboard from KF Central dashboard's left panel.
+To track HP tuning experiments, you need to go Katib dashboard from KF Central dashboard's left panel. 
+
 Screenshots of Katib monitor dashboard & Hyperparameter(HP) tuning results are shown below.
 
 ![TF-Chest Xray Pipeline](pictures/exp-monitor.PNG)
@@ -149,11 +152,11 @@ An inference service is created during the serving component execution of the pi
 
 ![TF-Chest Xray Pipeline](pictures/prediction.png)
 
-# <a name='VisualizationfromKFpipeline'></a>**Visualizations from Kubeflow Pipeline**
+## <a name='VisualizationfromKFpipeline'></a>**Visualizations from Kubeflow Pipeline**
 
 Python based visualizations are a new method of generating visualizations within Kubeflow pipelines that allow for rapid development, experimentation, and customization when visualizing results. For information about Python based visualizations and how to use them, please visit the [documentation page](https://www.kubeflow.org/docs/pipelines/sdk/python-based-visualizations).
 
-## <a name='visprerequisites'></a>**Prerequisites**
+### <a name='visprerequisites'></a>**Prerequisites**
 
    - Successful completion of above Kubeflow pipeline  
    
@@ -184,7 +187,7 @@ Python based visualizations are a new method of generating visualizations within
         pip3 install pandas
         pip install xlrd==1.0.0
 
-## <a name='GenerateVis'>**Generate and View Visualizations**
+### <a name='GenerateVis'>**Generate and View Visualizations**
 
 Open the details of a run.
 
