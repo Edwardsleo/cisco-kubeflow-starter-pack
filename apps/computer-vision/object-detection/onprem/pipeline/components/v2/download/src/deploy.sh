@@ -32,20 +32,16 @@ wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optim
 
 cd datasets
 
-tar xf VOCtrainval_11-May-2012.tar
-tar xf VOCtrainval_06-Nov-2007.tar
-tar xf VOCtest_06-Nov-2007.tar
+for f in *.tar; do tar xf "$f"; done
+
+# Delete all tar files
+rm -rf *.tar
 
 wget https://pjreddie.com/media/files/voc_label.py
 python voc_label.py
 
 cat 2007_train.txt 2007_val.txt 2012_*.txt > train.txt
-cd ..
-sed -i 's#/home/pjreddie/data/voc/#/mnt/object_detection/datasets/#g' cfg/voc.data
-sed -i 's#/home/pjreddie/backup/#/mnt/object_detection/backup#g' cfg/voc.data
 
-# Update config file
-sed -i 's/ batch=1/#batch=1/g' cfg/yolov3-voc.cfg
-sed -i 's/ subdivisions=1/#subdivisions=1/g' cfg/yolov3-voc.cfg
-sed -i 's/# batch=64/batch=64/g' cfg/yolov3-voc.cfg
-sed -i 's/##subdivisions=16/subdivisions=16/g' cfg/yolov3-voc.cfg
+# Copy datasets, weights and cfg into nfs-server in anonymous namespace to be used for katib
+podname=$(kubectl -n anonymous get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
+kubectl cp ${NFS_PATH} $podname:/exports -n anonymous

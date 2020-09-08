@@ -1,5 +1,5 @@
-name: Training
-description: train object detection and save model from weights
+name: katib
+description: create katib experiment
 inputs:
   - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
   - {name: weights, type: String, default: "yolov3-voc_50176.weights", description: "pre-trained weights for training"}
@@ -8,12 +8,15 @@ inputs:
   - {name: gpus, type: String, default: "0,1,2,3", description: "No of gpus "}
   - {name: momentum, type: String, default: "0.9", description: "momentum"}
   - {name: decay, type: String, default: "0.005", description: "decay"}
-  - {name: component, type: String, default: "train", description: "Which component you are running"}
+  - {name: component, type: String, default: "katib", description: "Which component you are running"}
+  - {name: image, type: String,  description: "Provide image to run katib experiment"}
   - {name: timestamp, type: String,  description: "Provide current timestamp"}
+  - {name: trials, type: Integer,  default: 4, description: "Number of trials to run katib experiment"}
+  - {name: gpu limits, type: Integer,  default: 2, description: "GPU Limits to each trial"}
 
 implementation:
   container:
-    image: docker.io/samba07/test:objkatib1.7
+    image: docker.io/samba07/test:katibcom1.0
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},
@@ -24,6 +27,8 @@ implementation:
       --momentum, {inputValue: momentum},
       --decay, {inputValue: decay},
       --component, {inputValue: component},
+      --image, {inputValue: image},
       --timestamp, {inputValue: timestamp},
+      --trials, {inputValue: trials},
+      --gpu-limits, {inputValue: gpu limits}
     ]
-

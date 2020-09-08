@@ -5,7 +5,7 @@ inputs:
   - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
 implementation:
   container:
-    image: docker.io/samba07/object-detection-download:0.1
+    image: docker.io/samba07/test:objd0.8
     command: ["/opt/deploy.sh"]
     args: [
       --s3-path, {inputValue: s3 path},
