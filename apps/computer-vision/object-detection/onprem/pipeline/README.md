@@ -52,7 +52,7 @@ Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* d
 
 ![AWS-S3-bucket](pictures/9-s3_datasets.PNG)
 
-![AWS-S3-bucket](pictures/9-s3_data.PNG)
+![AWS-S3-bucket](pictures/9-s3_metadata.PNG)
 
 ![AWS-S3-bucket](pictures/10-s3-pre_trained-weights.PNG)
 
