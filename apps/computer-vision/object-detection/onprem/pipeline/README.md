@@ -182,6 +182,8 @@ Pipeline components screenshots & logs can be viewed as below
 
 ![Object Detection Pipeline](pictures/14-download-logs.PNG)
 
+![Object Detection Pipeline](pictures/14-hptuning-logs.PNG)
+
 ![Object Detection Pipeline](pictures/15-training-logs.PNG)
 
 ![Object Detection Pipeline](pictures/16-conversion-logs.PNG)
