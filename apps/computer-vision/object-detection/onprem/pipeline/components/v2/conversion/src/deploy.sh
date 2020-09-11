@@ -34,6 +34,11 @@ while (($#)); do
        MODEL="$1"
        shift
        ;;
+      "--use-pre-trained")
+       shift
+       USE_PRE_TRAINED="$1"
+       shift
+       ;;
      *)
        echo "Unknown argument: '$1'"
        exit 1
@@ -48,18 +53,30 @@ git clone https://github.com/hunglc007/tensorflow-yolov4-tflite.git tensorflow_y
 cd tensorflow_yolo
 pip install -r requirements-gpu.txt
 
-# Saved model
-python3 save_model.py --weights ${NFS_PATH}/yolov3.weights  --output ${NFS_PATH}/${OUT_PATH} --input_size ${INPUT_SIZE} --model ${MODEL} --framework tflite
+# Save model
+if [[ ${USE_PRE_TRAINED} == "yes" || ${USE_PRE_TRAINED} == "Yes" ]]
+    then
+        python3 save_model.py --weights ${NFS_PATH}/yolov3.weights  --output ${NFS_PATH}/${OUT_PATH} --input_size ${INPUT_SIZE} --model ${MODEL} --framework tflite
+else
+    if [[ ${USE_PRE_TRAINED} == "no" || ${USE_PRE_TRAINED} == "No" ]]
+    then
+        model_file_name=$(basename ${NFS_PATH}/backup/*final.weights)
+        python3 save_model.py --weights $model_file_name --output ${NFS_PATH}/${OUT_PATH} --input_size ${INPUT_SIZE} --model ${MODEL} --framework tflite
+    else
+        echo Please enter a valid input \(yes/no\)
+    fi
+fi
 
 # Convert tensorflow model to tflite
 
 python3 convert_tflite.py --weights ${NFS_PATH}/${OUT_PATH} --output ${NFS_PATH}/${OUT_PATH}/object_detection.tflite
 
-if [[ $PUSH_TO_S3 == "False" || $PUSH_TO_S3 == "false" ]]
+if [[ ${PUSH_TO_S3} == "False" || ${PUSH_TO_S3} == "false" ]]
 then
     echo Proceeding with Inference serving of the saved model in tflite format
+
 else
-    if [[ $PUSH_TO_S3 == "True" || $PUSH_TO_S3 == "true" ]]
+    if [[ ${PUSH_TO_S3} == "True" || ${PUSH_TO_S3} == "true" ]]
     then
         aws s3 cp ${NFS_PATH}/${OUT_PATH} ${S3_PATH}/${OUT_PATH} --recursive
         aws s3 cp ${NFS_PATH}/backup ${S3_PATH}/backup --recursive

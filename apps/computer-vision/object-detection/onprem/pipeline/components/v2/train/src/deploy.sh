@@ -61,18 +61,18 @@ mv ../darknet/darknet /usr/local/bin
 
 cd ${NFS_PATH}
 
-sed -i "s#/home/pjreddie/data/voc/#${NFS_PATH}/datasets/#g" cfg/${CFG_DATA}
-sed -i "s#/home/pjreddie/backup/#${NFS_PATH}/backup#g" cfg/${CFG_DATA}
-sed -i "s#data/#${NFS_PATH}/data/#g" cfg/${CFG_DATA}
-
-# Update config file
-sed -i 's/ batch.*/#batch=1/g' cfg/${CFG_FILE}
-sed -i 's/ subdivisions.*/#subdivisions=1/g' cfg/${CFG_FILE}
-sed -i 's/##batch.*/batch=64/g' cfg/${CFG_FILE}
-sed -i 's/##subdivisions.*/subdivisions=16/g' cfg/${CFG_FILE}
-
 if [[ $COMPONENT == "train" || $COMPONENT == "TRAIN" ]]
 then
+    gpus=""
+    for ((x=0; x < $GPUS ; x++ ))
+    do
+        if [[ $gpus == "" ]]
+        then
+                gpus="$x"
+        else
+                gpus="$gpus,$x"
+        fi
+    done
     momentum=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[0].value}')
     decay=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[1].value}')
     echo "MOMENTUN: $momentum"
@@ -80,7 +80,7 @@ then
     sed -i "s/momentum.*/momentum=${momentum}/g" cfg/${CFG_FILE}
     sed -i "s/decay.*/decay=${decay}/g" cfg/${CFG_FILE}
     # Training
-    darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${GPUS} -dont_show
+    darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${gpus} -dont_show
 else
     sed -i "s/momentum.*/momentum=${MOMENTUM}/g" cfg/${CFG_FILE}
     sed -i "s/decay.*/decay=${DECAY}/g" cfg/${CFG_FILE}

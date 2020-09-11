@@ -24,11 +24,6 @@ while (($#)); do
        CFG_FILE="$1"
        shift
        ;;
-     "--gpus")
-       shift
-       GPUS="$1"
-       shift
-       ;;
      "--momentum")
        shift
        MOMENTUM="$1"
@@ -59,9 +54,9 @@ while (($#)); do
        TRIALS="$1"
        shift
        ;;
-     "--gpu-limits")
+     "--gpus_per_trial")
        shift
-       GPU_LIMITS="$1"
+       GPUS="$1"
        shift
        ;;
      *)
@@ -130,7 +125,7 @@ spec:
                 - "--cfg_file"
                 - "CONFIG-FILE"
                 - "--gpus"
-                - "NUMBER-OF-GPUS"
+                - "GPUS"
                 - "--component"
                 - "COMPONENT-TYPE"
                 {{- with .HyperParameters}}
@@ -144,13 +139,25 @@ spec:
                   name: nfs-volume
                 resources:
                   limits:
-                    nvidia.com/gpu: GPU-LIMITS
+                    nvidia.com/gpu: GPU-PER-TRIAL
               restartPolicy: Never
               volumes:
               - name: nfs-volume
                 persistentVolumeClaim:
                   claimName: nfs1
 EOF
+
+gpus=""
+for ((x=0; x < $GPUS ; x++ ))
+do
+        if [[ $gpus == "" ]]
+        then
+                gpus="$x"
+        else
+                gpus="$gpus,$x"
+        fi
+
+done
 
 EXP_NAME="object-detection-$TIMESTAMP"
 sed -i "s/KATIB_NAME/$EXP_NAME/g" object-detection-katib-$TIMESTAMP.yaml
@@ -161,9 +168,9 @@ sed -i "s#/mnt/#$NFS_PATH/#g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/PRETRINED-WEIGHTS/$WEIGHTS/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/CONFIG-DATA/$CFG_DATA/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/CONFIG-FILE/$CFG_FILE/g" object-detection-katib-$TIMESTAMP.yaml
-sed -i "s/NUMBER-OF-GPUS/$GPUS/g" object-detection-katib-$TIMESTAMP.yaml
+sed -i "s/GPUS/$gpus/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/COMPONENT-TYPE/$COMPONENT/g" object-detection-katib-$TIMESTAMP.yaml
-sed -i "s/GPU-LIMITS/$GPU_LIMITS/g" object-detection-katib-$TIMESTAMP.yaml
+sed -i "s/GPU-PER-TRIAL/$GPUS/g" object-detection-katib-$TIMESTAMP.yaml
 
 
 # Creating katib experiment

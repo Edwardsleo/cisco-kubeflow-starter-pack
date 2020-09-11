@@ -7,10 +7,11 @@ inputs:
   - {name: output, type: String, default: "model/001", description: "path to saved model"}
   - {name: input size, type: String, default: "100", description: "define input size of export model"}
   - {name: model, type: String, default: "yolov3", description: "model yolov3 or yolov4"}
+  - {name: use pre trained, type: String, default: "yes", description: "Flag value to input whether to use already pre-trained model or to use trained model from training component, for serving purpose"}
 
 implementation:
   container:
-    image: docker.io/samba07/object-detection-conversion:0.1
+    image: docker.io/samba07/object-detection-conversion:0.2
     command: ["/opt/deploy.sh"]
     args: [
       --push-to-s3, {inputValue: push to s3}, 
@@ -19,4 +20,5 @@ implementation:
       --out-dir, {inputValue: output},
       --input-size, {inputValue: input size},
       --model, {inputValue: model},
+      --use-pre-trained, {inputValue: use pre trained},
     ]

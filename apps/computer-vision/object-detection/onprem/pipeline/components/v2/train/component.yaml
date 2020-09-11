@@ -5,7 +5,7 @@ inputs:
   - {name: weights, type: String, default: "yolov3-voc_50176.weights", description: "pre-trained weights for training"}
   - {name: cfg_data, type: String, default: "voc.data", description: "data file"}
   - {name: cfg_file, type: String, default: "yolov3-voc.cfg", description: "cfg file"}
-  - {name: gpus, type: String, default: "0,1,2,3", description: "No of gpus "}
+  - {name: gpus, type: Integer, default: 4, description: "No of gpus "}
   - {name: momentum, type: String, default: "0.9", description: "momentum"}
   - {name: decay, type: String, default: "0.005", description: "decay"}
   - {name: component, type: String, default: "train", description: "Which component you are running"}
@@ -13,7 +13,7 @@ inputs:
 
 implementation:
   container:
-    image: docker.io/samba07/object-detection-train:0.2
+    image: docker.io/samba07/object-detection-train:0.3
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},

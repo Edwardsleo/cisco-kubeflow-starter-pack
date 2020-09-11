@@ -2,7 +2,7 @@
 # https://hub.docker.com/_/python
 FROM python:3.7-slim
 RUN apt update
-RUN apt install -y wget git curl zip unzip
+RUN apt install -y wget curl
 RUN pip install awscli
 
 # Install kubectl

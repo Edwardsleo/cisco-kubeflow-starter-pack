@@ -14,6 +14,11 @@ while (($#)); do
        S3_PATH="$1"
        shift
        ;;
+     "--cfg_data")
+       shift
+       CFG_DATA="$1"
+       shift
+       ;;
      *)
        echo "Unknown argument: '$1'"
        exit 1
@@ -27,6 +32,12 @@ aws s3 cp ${S3_PATH} ${NFS_PATH} --recursive
 cd ${NFS_PATH}
 mkdir -p backup
 
+sed -i "s#metadata/#${NFS_PATH}/metadata/#g" cfg/${CFG_DATA}
+sed -i "s#backup/#${NFS_PATH}/backup#g" cfg/${CFG_DATA}
+
+sed -i "s#voc#${NFS_PATH}/datasets/voc#g" metadata/test.txt
+sed -i "s#voc#${NFS_PATH}/datasets/voc#g" metadata/train.txt
+
 # Download Pre-trained weights
 wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov3.weights
 
@@ -36,11 +47,6 @@ for f in *.tar; do tar xf "$f"; done
 
 # Delete all tar files
 rm -rf *.tar
-
-wget https://pjreddie.com/media/files/voc_label.py
-python voc_label.py
-
-cat 2007_train.txt 2007_val.txt 2012_*.txt > train.txt
 
 # Copy datasets, weights and cfg into nfs-server in anonymous namespace to be used for katib
 podname=$(kubectl -n anonymous get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
