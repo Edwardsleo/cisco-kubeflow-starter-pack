@@ -46,15 +46,15 @@
 
 Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* directory, dataset files in the *datasets* directory, ( .names ) files in *data* directory, trained weights files in *pre-trained-weights* directory of the S3 bucket as shown below, for successful training and subsequent inferencing
 
-![AWS-S3-bucket](pictures/7-bucket-folders.png)
+![AWS-S3-bucket](pictures/7-bucket-folders.PNG)
 
-![AWS-S3-bucket](pictures/8-s3-cfg.PNG)
+![AWS-S3-bucket](pictures/8-s3-cfg.png)
 
-![AWS-S3-bucket](pictures/9-s3_datasets.PNG)
+![AWS-S3-bucket](pictures/9-s3_datasets.png)
 
-![AWS-S3-bucket](pictures/9-s3_data.PNG)
+![AWS-S3-bucket](pictures/9-s3_metadata.png)
 
-![AWS-S3-bucket](pictures/10-s3-pre_trained-weights.PNG)
+![AWS-S3-bucket](pictures/10-s3-pre_trained-weights.png)
 
 ## <a name='UCSSetup'></a>**UCS Setup**
 
