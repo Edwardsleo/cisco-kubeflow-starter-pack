@@ -180,15 +180,15 @@ Click on the latest experiment which is created
 
 Pipeline components screenshots & logs can be viewed as below
 
-![Object Detection Pipeline](pictures/14-download-logs.PNG)
+![Object Detection Pipeline](pictures/14-download-logs.png)
 
-![Object Detection Pipeline](pictures/14-hptuning-logs.PNG)
+![Object Detection Pipeline](pictures/14-hptuning-logs.png)
 
-![Object Detection Pipeline](pictures/15-training-logs.PNG)
+![Object Detection Pipeline](pictures/15-training-logs.png)
 
-![Object Detection Pipeline](pictures/16-conversion-logs.PNG)
+![Object Detection Pipeline](pictures/16-conversion-logs.png)
 
-![Object Detection Pipeline](pictures/17-kfserving-logs.PNG)
+![Object Detection Pipeline](pictures/17-kfserving-logs.png)
 
 ### <a name='Inferencing'></a>**Model Inference from Notebook**
 
