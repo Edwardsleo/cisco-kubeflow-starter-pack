@@ -119,7 +119,7 @@ spec:
                 - "--nfs-path"
                 - "/mnt/"
                 - "--weights"
-                - "PRETRINED-WEIGHTS"
+                - "PRETRAINED-WEIGHTS"
                 - "--cfg_data"
                 - "CONFIG-DATA"
                 - "--cfg_file"
@@ -165,7 +165,7 @@ sed -i "s/TIMESTAMP/ts-$TIMESTAMP/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/NUMBER-OF-TRIALS/$TRIALS/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s|docker.io|$IMAGE|g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s#/mnt/#$NFS_PATH/#g" object-detection-katib-$TIMESTAMP.yaml
-sed -i "s/PRETRINED-WEIGHTS/$WEIGHTS/g" object-detection-katib-$TIMESTAMP.yaml
+sed -i "s/PRETRAINED-WEIGHTS/$WEIGHTS/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/CONFIG-DATA/$CFG_DATA/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/CONFIG-FILE/$CFG_FILE/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/GPUS/$gpus/g" object-detection-katib-$TIMESTAMP.yaml
@@ -200,5 +200,5 @@ done
 momentum=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[0].value}')
 decay=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[1].value}')
 
-echo "MOMENTUN: $momentum"
-echo "DECY: $decay"
+echo "MOMENTUM: $momentum"
+echo "DECAY: $decay"

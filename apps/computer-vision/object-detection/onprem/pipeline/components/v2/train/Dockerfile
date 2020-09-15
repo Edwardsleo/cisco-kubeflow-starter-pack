@@ -1,5 +1,6 @@
-FROM housebw/darknet:latest
+FROM daisukekobayashi/darknet:gpu-cv-cc75
 RUN apt update
+RUN apt install curl -y
 
 # Install kubectl
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.19.0/bin/linux/amd64/kubectl

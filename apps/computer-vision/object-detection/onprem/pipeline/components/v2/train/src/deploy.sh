@@ -56,9 +56,6 @@ while (($#)); do
    esac
 done
 
-# Change darknet binary file to bin folder
-mv ../darknet/darknet /usr/local/bin
-
 cd ${NFS_PATH}
 
 if [[ $COMPONENT == "train" || $COMPONENT == "TRAIN" ]]
@@ -75,8 +72,8 @@ then
     done
     momentum=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[0].value}')
     decay=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[1].value}')
-    echo "MOMENTUN: $momentum"
-    echo "DECY: $decay"
+    echo "MOMENTUM: $momentum"
+    echo "DECAY: $decay"
     sed -i "s/momentum.*/momentum=${momentum}/g" cfg/${CFG_FILE}
     sed -i "s/decay.*/decay=${decay}/g" cfg/${CFG_FILE}
     # Training
@@ -87,6 +84,6 @@ else
     # Training
     darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${GPUS} -dont_show > /var/log/katib/training.log
     cat /var/log/katib/training.log
-    avg_loss=$(sed -n '$p' /var/log/katib/training.log | awk '{ print $3 }')
+    avg_loss=$(tail -2 /var/log/katib/training.log | head -1 | awk '{ print $3 }')
     echo "loss=${avg_loss}"
 fi
