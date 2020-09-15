@@ -7,7 +7,7 @@ inputs:
 
 implementation:
   container:
-    image: docker.io/samba07/object-detection-download:0.3
+    image: docker.io/samba07/object-detection-download:0.4
     command: ["/opt/deploy.sh"]
     args: [
       --s3-path, {inputValue: s3 path},

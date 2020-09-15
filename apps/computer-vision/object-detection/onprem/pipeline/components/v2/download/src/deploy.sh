@@ -38,9 +38,6 @@ sed -i "s#backup/#${NFS_PATH}/backup#g" cfg/${CFG_DATA}
 sed -i "s#voc#${NFS_PATH}/datasets/voc#g" metadata/test.txt
 sed -i "s#voc#${NFS_PATH}/datasets/voc#g" metadata/train.txt
 
-# Download Pre-trained weights
-wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov3.weights
-
 cd datasets
 
 for f in *.tar; do tar xf "$f"; done

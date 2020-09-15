@@ -10,7 +10,7 @@ inputs:
 
 implementation:
   container:
-    image: docker.io/samba07/object-detection-kfserving:0.2
+    image: docker.io/samba07/object-detection-kfserving:0.4
     command: ["python", "/opt/kfservingdeployer.py"]
     args: [
       --inference-name, {inputValue: inferenceservice name},
