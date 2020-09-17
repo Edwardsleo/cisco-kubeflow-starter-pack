@@ -223,6 +223,9 @@ Pipeline components screenshots & logs can be viewed as below
 To track HP tuning created by pipeline, you need to go Katib dashboard from KF Central dashboard's left panel. 
 Currently, the hyperparameters chosen are momentum and decay.
 
+#### **Note**:
+To customize the hyperparameters used for tuning, refer [here](./Katib.md).
+
 ### <a name='Inferencing'></a>**Model Inference from Notebook**
 
 Create an inference service & check whether it is ready. 
