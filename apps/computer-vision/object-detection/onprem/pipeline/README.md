@@ -59,15 +59,15 @@ Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* d
 
 ### <a name='DatasetFolder'></a>**Dataset Folder Structure**
 
-- Pipeline supports dataset files present in TAR format. Dataset tar files can be one or more.
+- Dataset files needs to be provided in tarball. tarballs can be one or more.
 
-- Each tar file contains a folder within which sets of images (with .jpg format) & its corresponding annotated files (with .txt format) are provided as shown below.
+- Each tarball should comprise of a folder within which sets of images (.jpg format) & their corresponding annotated files (.txt format) as shown below.
 
 ![Folder hierarchy](pictures/21-datasets-file.PNG)
 
 ### **Note**:
 
-Backup folder is created and the trained darknet model file (in .weights format) is pushed to S3 bucket during pipeline execution (if push_to_s3 flag is set to true). The stored model can be utilized for future inferencing (such as on edge device)
+After the pipeline execution is complete, a backup folder is created with trained darknet weights (in .weights format), tflite model (.tflite) is pushed to S3 bucket. The stored tflite model or darknet weights can be utilized for future inferencing.
 
 ## <a name='UCSSetup'></a>**UCS Setup**
 
