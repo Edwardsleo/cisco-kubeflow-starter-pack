@@ -5,6 +5,7 @@
 * [Infrastructure Used](#InfrastructureUsed)
 * [Prerequisites](#Prerequisites)
 * [S3 Bucket Layout](#AWSSetup)
+    * [Dataset Folder Structure](#DatasetFolder) 
 * [UCS Setup](#UCSSetup)
     * [Install Kubeflow](#InstallKubeflow)
 	* [Install NFS server (if not installed)](#InstallNFS)
@@ -44,7 +45,7 @@
 
 ## <a name='AWSSetup'></a>**S3 Bucket Layout**
 
-Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* directory, dataset files folder (in .tar format) in the *datasets* directory, ( .names ) files and label ( files containing relative file paths of JPG image files) files in *metadata* directory, trained weights files in *pre-trained-weights* directory of the S3 bucket as shown below, for successful training and subsequent inferencing
+Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* directory, dataset files folder (in .tar format) in the *datasets* directory, ( .names ) files and label files ( files containing relative file paths of JPG image files) in *metadata* directory, trained weights files in *pre-trained-weights* directory of the S3 bucket as shown below, for successful training and subsequent inferencing
 
 ![AWS-S3-bucket](pictures/7-bucket-folders.PNG)
 
@@ -55,6 +56,18 @@ Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* d
 ![AWS-S3-bucket](pictures/9-s3_metadata.png)
 
 ![AWS-S3-bucket](pictures/10-s3-pre_trained-weights.png)
+
+### <a name='DatasetFolder'></a>**Dataset Folder Structure**
+
+- Pipeline supports dataset files present in TAR format. Dataset tar files can be one or more.
+
+- Each tar file contains a folder within which sets of images (with .jpg format) & its corresponding annotated files (with .txt format) are provided as shown below.
+
+![Folder hierarchy](pictures/21-dataset-files.PNG)
+
+### **Note**:
+
+Backup folder is created and the trained darknet model file (in .weights format) is pushed to S3 bucket during pipeline execution (if push_to_s3 flag is set to true). The stored model can be utilized for future inferencing (such as on edge device)
 
 ## <a name='UCSSetup'></a>**UCS Setup**
 
@@ -147,6 +160,16 @@ A namespace label 'serving.kubeflow.org/inferenceservice=enabled' is set to Kube
 ```
 kubectl label namespace kubeflow serving.kubeflow.org/inferenceservice=enabled
 ```
+
+### **Note**:
+
+The base docker image used for the training component may vary based on the compute capability of GPUs running on UCS server.
+
+Please replace the base docker image based on GPU model that you are using [here](./components/v2/train/Dockerfile)
+
+- ```NVIDIA V100``` GPU - base image to be used ```daisukekobayashi/darknet:gpu-cv-cc75```
+
+- ```Tesla P100``` GPU - base image to be used ```daisukekobayashi/darknet:gpu-cv-cc60```
 
 ### <a name='UploadNotebookfile'></a>**Upload Object Detection Pipeline Notebook file**
 
