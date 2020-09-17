@@ -17,6 +17,7 @@
 	* [Upload Object Detection Pipeline Notebook file](#UploadNotebookfile)
 	* [Run Object Detection Pipeline](#RunPipeline)
 	* [KF Pipeline Dashboard](#PipelineDashboard)
+	* [Katib Dashboard](#KatibDashboard)
 	* [Model Inference](#Inferencing)
 <!-- vscode-markdown-toc-config
 	numbering=false
@@ -220,8 +221,6 @@ Pipeline components screenshots & logs can be viewed as below
 ### <a name='KatibDashboard'></a>**Katib dashboard**
 
 To track HP tuning created by pipeline, you need to go Katib dashboard from KF Central dashboard's left panel. 
-
-Screenshots of Katib monitor dashboard & Hyperparameter(HP) tuning results are shown below.
 
 
 ### <a name='Inferencing'></a>**Model Inference from Notebook**
