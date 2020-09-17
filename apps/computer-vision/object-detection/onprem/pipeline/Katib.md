@@ -2,12 +2,12 @@
 
 ## <a name='Introduction'></a>**Introduction**
 
-Currently Katib Hyperparameter tuning (HP) for object detection pipeline is done considering two parameters:
+Currently, Katib Hyperparameter tuning (HP) for object detection pipeline is done considering two parameters:
 
 * Momentum
 * Decay
 
-We can change the hyperparameters and the number of hyperparameters to be tuned as per requirement. 
+The hyperparameters and the number of hyperparameters to be tuned can be modified as per requirement. 
 
 ## <a name='Procedure'></a>**Custom HP Tuning Procedure**
 
