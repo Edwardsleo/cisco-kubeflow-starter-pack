@@ -26,8 +26,9 @@
 
 ## <a name='Workflow'></a>**Object Detection Workflow**
 
-* Download datasets, darknet config/weights from object storage.  
-* Train an object detection model using darknet.  
+* Download datasets, darknet config & weights from object storage.  
+* Hyperparameter tune the darknet model on validation dataset. 
+* Train an object detection model using darknet with best hyperparameters.  
 * Convert the darknet model/weights to tflite and upload to object storage.  
 * Serve tflite model using Kubeflow pipeline.  
 * Perform prediction for a client image request through Jupyter-notebook.
