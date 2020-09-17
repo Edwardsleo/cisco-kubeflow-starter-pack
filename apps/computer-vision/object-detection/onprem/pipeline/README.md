@@ -70,7 +70,7 @@ Datasets folder should contain
 
 ### **Note**:
 
-After the pipeline execution is complete, a backup folder with trained darknet weights (in .weights format), tflite model (.tflite) is pushed to S3 bucket. The stored tflite model or darknet weights can be utilized for future inferencing.
+After the pipeline execution is complete, a backup folder with trained darknet weights (in .weights) and model folder (with .tflite) are pushed to S3 bucket. The stored tflite model or darknet weights can be utilized for future inferencing.
 
 ## <a name='UCSSetup'></a>**UCS Setup**
 
@@ -216,6 +216,13 @@ Pipeline components screenshots & logs can be viewed as below
 ![Object Detection Pipeline](pictures/16-conversion-logs.png)
 
 ![Object Detection Pipeline](pictures/17-kfserving-logs.png)
+
+### <a name='KatibDashboard'></a>**Katib dashboard**
+
+To track HP tuning created by pipeline, you need to go Katib dashboard from KF Central dashboard's left panel. 
+
+Screenshots of Katib monitor dashboard & Hyperparameter(HP) tuning results are shown below.
+
 
 ### <a name='Inferencing'></a>**Model Inference from Notebook**
 
