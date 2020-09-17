@@ -2,13 +2,13 @@ name: hp-tuning
 description: create katib experiment
 inputs:
   - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
-  - {name: weights, type: String, default: "yolov3-voc_50176.weights", description: "pre-trained weights for training"}
+  - {name: weights, type: String, default: "yolov3-voc_50000.weights", description: "pre-trained weights for training"}
   - {name: cfg_data, type: String, default: "voc.data", description: "data file"}
   - {name: cfg_file, type: String, default: "yolov3-voc.cfg", description: "cfg file"}
   - {name: momentum, type: String, default: "0.9", description: "momentum"}
   - {name: decay, type: String, default: "0.005", description: "decay"}
   - {name: component, type: String, default: "katib", description: "Which component you are running"}
-  - {name: image, type: String,  description: "Provide image to run katib experiment"}
+  - {name: image, type: String,  default: "docker.io/samba07/object-detection-train:0.4", description: "Provide image to run katib experiment"}
   - {name: timestamp, type: String,  description: "Provide current timestamp"}
   - {name: trials, type: Integer,  default: 4, description: "Number of trials to run katib experiment"}
   - {name: gpus per trial, type: Integer,  default: 2, description: "GPU Limits to each trial"}

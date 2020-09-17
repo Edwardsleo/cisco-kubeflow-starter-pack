@@ -29,11 +29,6 @@ while (($#)); do
        INPUT_SIZE="$1"
        shift
        ;;
-     "--model")
-       shift
-       MODEL="$1"
-       shift
-       ;;
       "--classes-file")
        shift
        CLASSES_FILE="$1"

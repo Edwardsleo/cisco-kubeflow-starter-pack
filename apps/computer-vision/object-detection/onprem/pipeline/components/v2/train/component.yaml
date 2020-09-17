@@ -2,7 +2,7 @@ name: Training
 description: train object detection and save model from weights
 inputs:
   - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
-  - {name: weights, type: String, default: "yolov3-voc_50176.weights", description: "pre-trained weights for training"}
+  - {name: weights, type: String, default: "yolov3-voc_50000.weights", description: "pre-trained weights for training"}
   - {name: cfg_data, type: String, default: "voc.data", description: "data file"}
   - {name: cfg_file, type: String, default: "yolov3-voc.cfg", description: "cfg file"}
   - {name: gpus, type: Integer, default: 4, description: "No of gpus "}
