@@ -5,7 +5,7 @@
 * [Infrastructure Used](#InfrastructureUsed)
 * [Prerequisites](#Prerequisites)
 * [S3 Bucket Layout](#AWSSetup)
-    * [Dataset Folder Structure](#DatasetFolder) 
+    * [Datasets](#DatasetFolder) 
 * [UCS Setup](#UCSSetup)
     * [Install Kubeflow](#InstallKubeflow)
 	* [Install NFS server (if not installed)](#InstallNFS)
@@ -58,9 +58,11 @@ Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* d
 
 ![AWS-S3-bucket](pictures/10-s3-pre_trained-weights.png)
 
-### <a name='DatasetFolder'></a>**Dataset Folder Structure**
+### <a name='DatasetFolder'></a>**Datasets**
 
-- Dataset files needs to be provided in tarball. tarballs can be one or more.
+Datasets folder should contain
+
+- Dataset files in tarball ( can be one or more).
 
 - Each tarball should comprise of a folder within which sets of images (.jpg format) & their corresponding annotated files (.txt format) as shown below.
 
@@ -68,7 +70,7 @@ Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* d
 
 ### **Note**:
 
-After the pipeline execution is complete, a backup folder is created with trained darknet weights (in .weights format), tflite model (.tflite) is pushed to S3 bucket. The stored tflite model or darknet weights can be utilized for future inferencing.
+After the pipeline execution is complete, a backup folder with trained darknet weights (in .weights format), tflite model (.tflite) is pushed to S3 bucket. The stored tflite model or darknet weights can be utilized for future inferencing.
 
 ## <a name='UCSSetup'></a>**UCS Setup**
 
@@ -166,7 +168,8 @@ kubectl label namespace kubeflow serving.kubeflow.org/inferenceservice=enabled
 
 The base docker image used for building training component image may vary based on the compute capability of GPUs running on UCS server.
 
-Please replace the base docker image based on GPU model that you are using [here](./components/v2/train/Dockerfile)
+Please replace the base docker image based on GPU model [here](./components/v2/train/Dockerfile) and build a docker image.
+Replace the image field [in] (./components/v2/train/train/component.yaml) with the built image.
 
 - ```NVIDIA V100``` GPU - base image to be used ```daisukekobayashi/darknet:gpu-cv-cc75```
 
