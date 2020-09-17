@@ -170,7 +170,7 @@ kubectl label namespace kubeflow serving.kubeflow.org/inferenceservice=enabled
 The base docker image used for building training component image may vary based on the compute capability of GPUs running on UCS server.
 
 Please replace the base docker image based on GPU model [here](./components/v2/train/Dockerfile) and build a docker image.
-Replace the image field [in](./components/v2/train/train/component.yaml) with the built image.
+Replace the image field [in](./components/v2/train/component.yaml) with the built image.
 
 - ```NVIDIA V100``` GPU - base image to be used ```daisukekobayashi/darknet:gpu-cv-cc75```
 
