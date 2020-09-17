@@ -163,7 +163,7 @@ kubectl label namespace kubeflow serving.kubeflow.org/inferenceservice=enabled
 
 ### **Note**:
 
-The base docker image used for the training component may vary based on the compute capability of GPUs running on UCS server.
+The base docker image used for building training component image may vary based on the compute capability of GPUs running on UCS server.
 
 Please replace the base docker image based on GPU model that you are using [here](./components/v2/train/Dockerfile)
 
