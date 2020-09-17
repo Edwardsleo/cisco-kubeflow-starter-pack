@@ -63,7 +63,7 @@ Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* d
 
 - Each tar file contains a folder within which sets of images (with .jpg format) & its corresponding annotated files (with .txt format) are provided as shown below.
 
-![Folder hierarchy](pictures/21-dataset-files.PNG)
+![Folder hierarchy](pictures/21-datasets-file.PNG)
 
 ### **Note**:
 
