@@ -45,7 +45,7 @@
 
 ## <a name='AWSSetup'></a>**S3 Bucket Layout**
 
-Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* directory, dataset files folder (in .tar format) in the *datasets* directory, object classes file ( can be in .name or .list format) and label files ( files containing relative file paths of JPG image files) in *metadata* directory, trained weights files in *pre-trained-weights* directory of the S3 bucket as shown below, for successful training and subsequent inferencing
+Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* directory, dataset files folder (in .tar format) in the *datasets* directory, object classes file (in .name format) and label files ( files containing relative file paths of JPG image files) in *metadata* directory, trained weights files in *pre-trained-weights* directory of the S3 bucket as shown below, for successful training and subsequent inferencing
 
 ![AWS-S3-bucket](pictures/7-bucket-folders.PNG)
 
