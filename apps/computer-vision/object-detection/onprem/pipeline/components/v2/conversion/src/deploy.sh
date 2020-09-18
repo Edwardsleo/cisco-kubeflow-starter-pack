@@ -29,9 +29,9 @@ while (($#)); do
        INPUT_SIZE="$1"
        shift
        ;;
-     "--model")
+      "--classes-file")
        shift
-       MODEL="$1"
+       CLASSES_FILE="$1"
        shift
        ;;
      *)
@@ -43,23 +43,28 @@ done
 
 cd ${NFS_PATH}
 
-git clone https://github.com/hunglc007/tensorflow-yolov4-tflite.git tensorflow_yolo
+git clone https://github.com/peace195/tensorflow-lite-YOLOv3.git tensorflow_lite
 
-cd tensorflow_yolo
-pip install -r requirements-gpu.txt
+if [ -d "$OUT_PATH" ]; then
+  # Delete if folder exists
+  rm -rf ${OUT_PATH}
+fi
 
-# Saved model
-python3 save_model.py --weights ${NFS_PATH}/yolov3.weights  --output ${NFS_PATH}/${OUT_PATH} --input_size ${INPUT_SIZE} --model ${MODEL} --framework tflite
+model_file_name=$(basename ${NFS_PATH}/backup/*final.weights)
+python tensorflow_lite/convert_weights_pb.py --class_names ${NFS_PATH}/metadata/${CLASSES_FILE} --data_format NHWC --weights_file ${NFS_PATH}/backup/$model_file_name --output_graph ${NFS_PATH}/${OUT_PATH} --size=${INPUT_SIZE}
+
 
 # Convert tensorflow model to tflite
 
-python3 convert_tflite.py --weights ${NFS_PATH}/${OUT_PATH} --output ${NFS_PATH}/${OUT_PATH}/object_detection.tflite
+tflite_convert --saved_model_dir=${NFS_PATH}/${OUT_PATH} --output_file=${NFS_PATH}/${OUT_PATH}/object_detection.tflite --saved_model_signature_key='predict'
 
-if [[ $PUSH_TO_S3 == "False" || $PUSH_TO_S3 == "false" ]]
+
+if [[ ${PUSH_TO_S3} == "False" || ${PUSH_TO_S3} == "false" ]]
 then
     echo Proceeding with Inference serving of the saved model in tflite format
+
 else
-    if [[ $PUSH_TO_S3 == "True" || $PUSH_TO_S3 == "true" ]]
+    if [[ ${PUSH_TO_S3} == "True" || ${PUSH_TO_S3} == "true" ]]
     then
         aws s3 cp ${NFS_PATH}/${OUT_PATH} ${S3_PATH}/${OUT_PATH} --recursive
         aws s3 cp ${NFS_PATH}/backup ${S3_PATH}/backup --recursive

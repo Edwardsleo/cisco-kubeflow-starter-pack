@@ -12,9 +12,6 @@ RUN mkdir -p $APP_HOME
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r ./requirements.txt
 
-# Download repo
-#RUN git clone https://github.com/hunglc007/tensorflow-yolov4-tflite.git $APP_HOME/$REPO_NAME
-
 # Copy local code to container image
 COPY model.py  $APP_HOME
 #COPY model.py  $APP_HOME/$REPO_NAME/

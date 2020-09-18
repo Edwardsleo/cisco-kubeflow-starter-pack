@@ -5,6 +5,7 @@
 * [Infrastructure Used](#InfrastructureUsed)
 * [Prerequisites](#Prerequisites)
 * [S3 Bucket Layout](#AWSSetup)
+    * [Datasets](#DatasetFolder) 
 * [UCS Setup](#UCSSetup)
     * [Install Kubeflow](#InstallKubeflow)
 	* [Install NFS server (if not installed)](#InstallNFS)
@@ -16,6 +17,7 @@
 	* [Upload Object Detection Pipeline Notebook file](#UploadNotebookfile)
 	* [Run Object Detection Pipeline](#RunPipeline)
 	* [KF Pipeline Dashboard](#PipelineDashboard)
+	* [Katib Dashboard](#KatibDashboard)
 	* [Model Inference](#Inferencing)
 <!-- vscode-markdown-toc-config
 	numbering=false
@@ -25,8 +27,9 @@
 
 ## <a name='Workflow'></a>**Object Detection Workflow**
 
-* Download datasets, darknet config/weights from object storage.  
-* Train an object detection model using darknet.  
+* Download datasets, darknet config & weights from object storage.  
+* Hyperparameter tune the darknet model. 
+* Train an object detection model using darknet with best hyperparameters.  
 * Convert the darknet model/weights to tflite and upload to object storage.  
 * Serve tflite model using Kubeflow pipeline.  
 * Perform prediction for a client image request through Jupyter-notebook.
@@ -44,15 +47,31 @@
 
 ## <a name='AWSSetup'></a>**S3 Bucket Layout**
 
-Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* directory, dataset files in the *datasets* directory, trained weights files in *pre-trained-weights* directory of the S3 bucket as shown below, for successful training and subsequent inferencing
+Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* directory, dataset & annotation files (in .tar format) in the *datasets* directory, object classes file (in .name format) and metadata files ( which contains relative paths of JPG image files) in *metadata* directory, trained weights files in *pre-trained-weights* directory of the S3 bucket as shown below, for successful training and subsequent inferencing
 
-![AWS-S3-bucket](pictures/7-bucket-folders.png)
+![AWS-S3-bucket](pictures/7-bucket-folders.PNG)
 
-![AWS-S3-bucket](pictures/8-s3-cfg.PNG)
+![AWS-S3-bucket](pictures/8-s3-cfg.png)
 
-![AWS-S3-bucket](pictures/9-s3_datasets.PNG)
+![AWS-S3-bucket](pictures/9-s3_datasets.png)
 
-![AWS-S3-bucket](pictures/10-s3-pre_trained-weights.PNG)
+![AWS-S3-bucket](pictures/9-s3_metadata.png)
+
+![AWS-S3-bucket](pictures/10-s3-pre_trained-weights.png)
+
+### <a name='DatasetFolder'></a>**Datasets**
+
+Datasets folder should contain
+
+- Dataset files in tarball ( can be one or more).
+
+- Each tarball should comprise of a folder within which sets of images (.jpg format) & their corresponding annotated files (.txt format) as shown below.
+
+![Folder hierarchy](pictures/21-datasets-file.PNG)
+
+### **Note**:
+
+After the pipeline execution is complete, a backup folder with trained darknet weights (in .weights) and model folder (with .tflite) are pushed to S3 bucket. The stored tflite model or darknet weights can be utilized for future inferencing.
 
 ## <a name='UCSSetup'></a>**UCS Setup**
 
@@ -143,8 +162,19 @@ kubectl get secrets -n kubeflow | grep aws-secret
 A namespace label 'serving.kubeflow.org/inferenceservice=enabled' is set to Kubeflow namespace for inference purpose.
 
 ```
-kubectl label namespace seldon serving.kubeflow.org/inferenceservice=enabled
+kubectl label namespace kubeflow serving.kubeflow.org/inferenceservice=enabled
 ```
+
+### **Note**:
+
+The base docker image used for building training component image may vary based on the compute capability of GPUs running on UCS server.
+
+Please replace the base docker image based on GPU model [here](./components/v2/train/Dockerfile) and build a docker image.
+Replace the image field [in here](./components/v2/train/component.yaml) with the built image.
+
+- ```NVIDIA V100``` GPU - base image to be used ```daisukekobayashi/darknet:gpu-cv-cc75```
+
+- ```Tesla P100``` GPU - base image to be used ```daisukekobayashi/darknet:gpu-cv-cc60```
 
 ### <a name='UploadNotebookfile'></a>**Upload Object Detection Pipeline Notebook file**
 
@@ -178,13 +208,23 @@ Click on the latest experiment which is created
 
 Pipeline components screenshots & logs can be viewed as below
 
-![Object Detection Pipeline](pictures/14-download-logs.PNG)
+![Object Detection Pipeline](pictures/14-download-logs.png)
 
-![Object Detection Pipeline](pictures/15-training-logs.PNG)
+![Object Detection Pipeline](pictures/14-hptuning-logs.png)
 
-![Object Detection Pipeline](pictures/16-conversion-logs.PNG)
+![Object Detection Pipeline](pictures/15-training-logs.png)
 
-![Object Detection Pipeline](pictures/17-kfserving-logs.PNG)
+![Object Detection Pipeline](pictures/16-conversion-logs.png)
+
+![Object Detection Pipeline](pictures/17-kfserving-logs.png)
+
+### <a name='KatibDashboard'></a>**Katib dashboard**
+
+To track HP tuning created by pipeline, you need to go Katib dashboard from KF Central dashboard's left panel. 
+Currently, the hyperparameters chosen are momentum and decay.
+
+#### **Note**:
+To customize the hyperparameters used for tuning, refer [here](./Katib.md).
 
 ### <a name='Inferencing'></a>**Model Inference from Notebook**
 

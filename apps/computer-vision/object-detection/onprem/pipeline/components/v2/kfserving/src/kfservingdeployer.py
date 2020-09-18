@@ -31,6 +31,8 @@ def main():
                                       args=[
                                           "model.py",
                                           "--model-name", "%s"%FLAGS.inference_name,
+                                          "--out_dir", "%s"%FLAGS.model_path,
+                                          "--classes_file", "%s"%FLAGS.classes_file,
                                           ]))))
 
     isvc = V1alpha2InferenceService(api_version=api_version,
@@ -83,8 +85,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--inference-name', default="object-detection", type=str,
                     help='Name of the inferenceservice model.')
-    parser.add_argument('--storage-uri', default="pvc://nfs/object_detection/model", help="storage uri path")
+    parser.add_argument('--storage-uri', default="pvc://nfs/object_detection", help="storage uri path")
     parser.add_argument('--image', type=str, help='Inferenceservice custom image')
+    parser.add_argument('--model_path', type=str, help='path to tflite file')
+    parser.add_argument('--classes_file', type=str, help='Name of the class file ex: voc.names or coco.names')
     parser.add_argument('--namespace', type=str, default="kubeflow",help='In which namespace you want to deploy kfserving')
     FLAGS, _ = parser.parse_known_args()
     main()
