@@ -28,7 +28,7 @@
 ## <a name='Workflow'></a>**Object Detection Workflow**
 
 * Download datasets, darknet config & weights from object storage.  
-* Hyperparameter tune the darknet model on validation dataset. 
+* Hyperparameter tune the darknet model. 
 * Train an object detection model using darknet with best hyperparameters.  
 * Convert the darknet model/weights to tflite and upload to object storage.  
 * Serve tflite model using Kubeflow pipeline.  
@@ -47,7 +47,7 @@
 
 ## <a name='AWSSetup'></a>**S3 Bucket Layout**
 
-Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* directory, dataset files folder (in .tar format) in the *datasets* directory, object classes file (in .name format) and label files ( files containing relative file paths of JPG image files) in *metadata* directory, trained weights files in *pre-trained-weights* directory of the S3 bucket as shown below, for successful training and subsequent inferencing
+Ensure that required darknet configuration files ( .cfg & .data ) are in *cfg* directory, dataset & annotation files (in .tar format) in the *datasets* directory, object classes file (in .name format) and metadata files ( which contains relative paths of JPG image files) in *metadata* directory, trained weights files in *pre-trained-weights* directory of the S3 bucket as shown below, for successful training and subsequent inferencing
 
 ![AWS-S3-bucket](pictures/7-bucket-folders.PNG)
 
