@@ -1,0 +1,20 @@
+name: rasa train
+description: rasa train
+inputs:
+  - {name: data folder, type: String, default: 'data'}
+  - {name: config path, type: String, default: 'config.yml'}
+  - {name: domain path, type: String, default: 'domain.yml'}
+  - {name: out path, type: String, default: '/mnt/models'}
+  - {name: fixed model name, type: String, default: 'rasa_model'}
+
+implementation:
+  container:
+    image: docker.io/samba07/rasa-train:0.1
+    command: ["/bin/deploy.sh"]
+    args: [
+      --data, {inputValue: data folder},
+      --config, {inputValue: config path},
+      --domain, {inputValue: domain path},
+      --out, {inputValue: out path},
+      --fixed-model-name, {inputValue: fixed model name},
+    ]

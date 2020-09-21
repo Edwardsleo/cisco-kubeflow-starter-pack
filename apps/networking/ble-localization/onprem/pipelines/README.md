@@ -4,7 +4,7 @@
 
 To train, serve using kubeflow pipeline and prediction for client request through jupyter-notebook.
 
-![TF-BLERSSI Pipeline](pictures/0-blerssi-graph.png)
+![TF-BLERSSI Pipeline](pictures/0-blerssi-graph.PNG)
 
 ## Infrastructure Used
 
@@ -80,6 +80,9 @@ Pipeline components execution can be viewed as below
 
 ![TF-BLERSSI Pipeline](pictures/6-pipeline-completed.PNG)
 
+Logs of BLERSSI katib component
+
+![TF-BLERSSI Pipeline](pictures/1-katib.PNG)
 
 Logs of BLERSSI Training Component
 

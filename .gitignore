@@ -1,6 +1,8 @@
 .cache
+.DS_Store
 kustomize
 kfx
+site/
 *.zip
 test/build/
 .ipynb*/

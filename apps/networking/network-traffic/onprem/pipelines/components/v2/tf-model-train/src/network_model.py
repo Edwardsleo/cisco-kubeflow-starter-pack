@@ -134,6 +134,29 @@ def normalize_data(selected_X,selected_Y):
     trainX, testX, trainY, testY= train_test_split(selected_X,selected_Y, test_size=0.25)
     return trainX, testX, trainY, testY
 
+def prec_metric(labels, predictions):
+    predicted_classes = predictions["class_ids"]  
+    prec_metric = tf.metrics.precision(labels, predicted_classes, name="prec_metric")
+    return {"prec_metric": prec_metric}
+
+def recall_metric(labels, predictions):
+    predicted_classes = predictions["class_ids"]  
+    recall_metric = tf.metrics.recall(labels, predicted_classes, name="recall_metric")
+    return {"recall_metric": recall_metric}
+
+def f1_metric(labels, predictions):
+    predicted_classes = predictions["class_ids"]  
+    f1_score = tf.contrib.metrics.f1_score(labels, predicted_classes, name="f1_score")
+    return {"f1_score": f1_score}
+
+def predict_input_fn(testX):
+      return tf.estimator.inputs.pandas_input_fn(
+      x=testX,
+      num_epochs=1,
+      shuffle=False
+      )
+
+
 def get_model(trainX,trainY,testX,testY,final_feature,args):
     
     TF_MODEL_DIR = '/mnt/Model_Network/'
@@ -144,13 +167,13 @@ def get_model(trainX,trainY,testX,testY,final_feature,args):
     input_columns = [tf.feature_column.numeric_column(k) for k in final_feature]
     feature_spec = tf.feature_column.make_parse_example_spec(input_columns)
     serving_input_receiver_fn = tf.estimator.export.build_parsing_serving_input_receiver_fn(feature_spec)
-    seed = 10000
+    seed = 1000
     config = tf.estimator.RunConfig(model_dir=TF_MODEL_DIR, save_summary_steps=100, save_checkpoints_steps=1000, tf_random_seed=seed)
-    
+
     train_input_fn = tf.estimator.inputs.pandas_input_fn(
         x = trainX,
         y = trainY,
-        batch_size = 128,
+        batch_size = 64,
         num_epochs = 1000,
         shuffle = False,
         queue_capacity = 100,
@@ -159,70 +182,107 @@ def get_model(trainX,trainY,testX,testY,final_feature,args):
     test_input_fn = tf.estimator.inputs.pandas_input_fn(
         x = testX,
         y = testY,
-        batch_size = 128,
-        num_epochs = 1000,
+        batch_size = 64,
+        num_epochs = 10,
         shuffle = True,
-        queue_capacity = 100,
+        queue_capacity = 10,
         num_threads = 1
     )
     
-    model = tf.estimator.DNNClassifier(hidden_units = [13,65,110],
-                 feature_columns = input_columns,
-                 model_dir = TF_MODEL_DIR,
-                 n_classes=2, config=config
-               )
+    model =tf.estimator.DNNClassifier(feature_columns=input_columns,
+                                        hidden_units=[32, 64, 128],
+                                        n_classes=2,activation_fn=tf.nn.relu,dropout=0.2,batch_norm=False)
+    
+    # Adding your custom metrics:
+    model = tf.contrib.estimator.add_metrics(model, prec_metric)
+    model = tf.contrib.estimator.add_metrics(model, recall_metric)
+    model = tf.contrib.estimator.add_metrics(model, f1_metric)
     
     export_final = tf.estimator.FinalExporter(TF_EXPORT_DIR1, serving_input_receiver_fn=serving_input_receiver_fn)
-    
+
     train_spec = tf.estimator.TrainSpec(input_fn=train_input_fn, 
-                                    max_steps=1)
-    
+                                    max_steps=1200)
+
     eval_spec = tf.estimator.EvalSpec(input_fn=test_input_fn,
-                                  steps=1,
+                                  steps=1200,
                                   exporters=export_final,
-                                  throttle_secs=1,
-                                  start_delay_secs=1)
+                                  throttle_secs=2,
+                                  start_delay_secs=2)
                                       
     result = tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
     print(result)
 
+    predictions = model.predict(input_fn=predict_input_fn(testX))
+    pred_list = list(predictions)
+    predicted_output = [int(predictions['classes']) for predictions in pred_list]
+    
+    from sklearn.metrics import classification_report,confusion_matrix
+    print('Confusion Matrx')
+    cm = confusion_matrix(testY, predicted_output)
+    total = sum(sum(cm))
+    acc = (cm[0, 0] + cm[1, 1]) / total
+    sensitivity = cm[0, 0] / (cm[0, 0] + cm[0, 1])
+    specificity = cm[1, 1] / (cm[1, 0] + cm[1, 1])
+    print(cm)
+    print("acc: {:.4f}".format(acc))
+    print("sensitivity: {:.4f}".format(sensitivity))
+    print("specificity: {:.4f}".format(specificity))
+    
+    print('Classification Report')
+    print(classification_report(testY, predicted_output))
+    
+    import pandas as pd
+    df1 = pd.DataFrame({'actual': testY,'pred': predicted_output})
+    # Create a Pandas Excel writer using XlsxWriter as the engine.
+    writer = pd.ExcelWriter('/mnt/network_source.xlsx', engine='xlsxwriter')
+
+    # Convert the dataframe to an XlsxWriter Excel object.
+    # df2 = df1+df
+    df1.to_excel(writer, sheet_name='Sheet1')
+    # Close the Pandas Excel writer and output the Excel file.
+    writer.save()
+
     with open('/tf_export_dir.txt', 'w') as f:
       f.write(args.tf_export_dir)
 
-def parse_arguments():
-  parser = argparse.ArgumentParser()
 
-  parser.add_argument('--tf-model-dir',
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--tf-model-dir',
                       type=str,
                       help='GCS path or local directory.')
-  parser.add_argument('--tf-export-dir',
+    parser.add_argument('--tf-export-dir',
                       type=str,
                       default='rssi/',
                       help='GCS path or local directory to export model')
-  parser.add_argument('--tf-model-type',
+    parser.add_argument('--tf-model-type',
                       type=str,
                       default='DNN',
                       help='Tensorflow model type for training.')
-  parser.add_argument('--tf-train-steps',
+    parser.add_argument('--tf-train-steps',
                       type=int,
                       default=10000,
                       help='The number of training steps to perform.')
-  parser.add_argument('--tf-batch-size',
+    parser.add_argument('--tf-batch-size',
                       type=int,
                       default=100,
                       help='The number of batch size during training')
-  parser.add_argument('--tf-learning-rate',
+    parser.add_argument('--tf-learning-rate',
                       type=float,
                       default=0.01,
                       help='Learning rate for training.')
 
-  args = parser.parse_args()
-  return args
+    args = parser.parse_args()
+    return args
 
 
 def main(unused_args):
+
     args = parse_arguments()
-#     tf.logging.set_verbosity(tf.logging.INFO)
+
+    tf.logging.set_verbosity(tf.logging.INFO)
+    
     '''functionalities'''
     dataFrme = read_dataFile()
 #     print(dataFrme.shape)

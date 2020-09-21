@@ -1,0 +1,6 @@
+tornado>=6.0.3
+kubernetes==10.0.1
+pandas
+numpy
+kfserving==0.3.0
+tensorflow==1.15.0

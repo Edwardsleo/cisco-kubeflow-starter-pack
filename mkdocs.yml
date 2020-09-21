@@ -11,13 +11,17 @@ dev_addr: '127.0.0.1:8000'
 
 nav:
   - Home: './index.md'
-  - Installation:
-    - Prerequisites Reference: 'install/k8sup.md'
+  - Setup:
+    - Prerequisites: 'install/k8sup.md'
     - Kubeflow: 'install/kfup.md'
-  - Jupyter Notebook Server: 'jupyter/createserver.md'
-  - NFS Installation: 'nfs/nfsup.md'
-  - Apps:
-    - Networking: 'apps/networking/ble-localization/onprem/blerssipipeline.md'
+    - Jupyter Servers: 'jupyter/createserver.md'
+    - NFS Storage Class: 'nfs/nfsup.md'
+  - Run Apps:
+    - Networking: 
+      - BLE Location Prediction: 'apps/networking/ble-localization/blerssipipeline.md'
+      - Malicious Traffic Prediction: 'apps/networking/malicious-traffic-prediction/malicious-traffic-prediction.md'
+    - Healthcare:
+      - COVID Forecasting: 'apps/healthcare/covid-forecasting/covid-forecasting.md'
   - GitHub Source Code: https://github.com/CiscoAI/cisco-kubeflow-starter-pack
 
 plugins:
@@ -25,8 +29,8 @@ plugins:
 
 theme:
   name: material
-  logo: 'images/cisco.svg'
-  favicon: 'images/favicon.ico'
+  logo: 'assets/images/cisco.svg'
+  favicon: 'assets/images/favicon.ico'
   language: 'en'
   palette:
     primary: 'blue'
@@ -42,7 +46,8 @@ markdown_extensions:
   - admonition
   - codehilite:
       linenums: true
-  - pymdownx.superfences
   - pymdownx.tasklist
+  - pymdownx.details
+  - pymdownx.superfences
   - toc:
       permalink: True

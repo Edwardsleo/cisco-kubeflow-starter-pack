@@ -13,7 +13,7 @@ outputs:
 
 implementation:
   container:
-    image: docker.io/edward1723/kf-networktraffic-model-train:0.1
+    image: docker.io/edward1723/network-train:0.1
     command: ["python", "/opt/network_model.py"]
     args: [
       --tf-model-dir, {inputValue: TF model dir},

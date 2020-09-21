@@ -147,3 +147,9 @@ kustomize build . | kubectl apply -f -
 kubectl get deployment serve-$TIMESTAMP-network -n kubeflow
 
 kubectl get svc serve-$TIMESTAMP-network-service -n kubeflow
+
+echo "Writing Prediction result files to Visualisation server"
+
+vis_podname=$(kubectl -n kubeflow get pods --field-selector=status.phase=Running | grep ml-pipeline-visualizationserver | awk '{print $1}')
+
+kubectl cp /mnt/network_source.xlsx $vis_podname:/src -n kubeflow

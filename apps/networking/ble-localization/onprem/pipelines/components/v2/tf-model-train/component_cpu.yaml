@@ -7,13 +7,14 @@ inputs:
   - {name: TF train steps, type: Integer, default: 200, description: 'The number of training steps to perform.'}
   - {name: TF batch size, type: Integer, default: 100, description: 'The number of batch size during training'}
   - {name: TF learning rate, type: Float, default: 0.01, description: 'Learning rate for training.'}
+  - {name: timestamp, type: String}
 
 outputs:
         - {name: TF export dir, type: GCSPath,  description: 'GCS or local directory.'} # type: {GCSPath: {path_type: Directory}}
 
 implementation:
   container:
-    image: docker.io/samba07/kf-blerssi-model-cpu-train:0.1
+    image: docker.io/premkarthi/kf-blerssi-model-cpu-train:v3
     command: ["python", "/opt/blerssi-model.py"]
     args: [
       --tf-model-dir, {inputValue: TF model dir},
@@ -22,6 +23,8 @@ implementation:
       --tf-train-steps, {inputValue: TF train steps},
       --tf-batch-size, {inputValue: TF batch size},
       --tf-learning-rate, {inputValue: TF learning rate},
+      --timestamp, {inputValue: timestamp},
     ]
     fileOutputs:
       TF export dir: /tf_export_dir.txt
+

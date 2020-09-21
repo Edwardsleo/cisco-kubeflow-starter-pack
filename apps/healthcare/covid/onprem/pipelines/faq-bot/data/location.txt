@@ -1,0 +1,216 @@
+world
+usa
+brazil
+russia
+spain
+uk
+italy
+india
+germany
+peru
+turkey
+iran
+france
+chile
+mexico
+saudi arabia
+canada
+pakistan
+qatar
+belgium
+bangladesh
+netherlands
+belarus
+ecuador
+sweden
+south africa
+uae
+singapore
+portugal
+colombia
+switzerland
+kuwait
+indonesia
+egypt
+ukraine
+ireland
+poland
+philippines
+romania
+argentina
+afghanistan
+dominican republic
+israel
+japan
+austria
+panama
+oman
+bahrain
+kazakhstan
+denmark
+bolivia
+southkorea
+serbia
+armenia
+nigeria
+algeria
+czechia
+moldova
+ghana
+norway
+malaysia
+iraq
+morocco
+australia
+finland
+cameroon
+azerbaijan
+guatemala
+honduras
+sudan
+tajikistan
+luxembourg
+senegal
+hungary
+djibouti
+guinea
+uzbekistan
+drc
+ivory coast
+thailand
+greece
+gabon
+el salvador
+haiti
+nepal
+north macedonia
+bosnia and herzegovina
+bulgaria
+kenya
+croatia
+somalia
+cuba
+mayotte
+venezuela
+kyrgyzstan
+estonia
+maldives
+iceland
+sri lanka
+lithuania
+ethiopia
+slovakia
+new zealand
+slovenia
+mali
+guinea-bissau
+equatorial guinea
+lebanon
+albania
+car
+costa rica
+nicaragua
+hong kong
+zambia
+tunisia
+latvia
+paraguay
+south sudan
+niger
+cyprus
+madagascar
+sierra leone
+burkina faso
+andorra
+uruguay
+chad
+georgia
+jordan
+mauritania
+diamond princess
+san marino
+malta
+congo
+jamaica
+channel islands
+french guiana
+uganda
+tanzania
+sao tome and principe
+réunion
+cabo verde
+palestine
+togo
+taiwan
+yemen
+rwanda
+malawi
+isle of man
+mauritius
+vietnam
+montenegro
+liberia
+mozambique
+eswatini
+benin
+myanmar
+zimbabwe
+martinique
+libya
+faeroe islands
+mongolia
+gibraltar
+guadeloupe
+cayman islands
+guyana
+bermuda
+brunei
+comoros
+cambodia
+syria
+trinidad and tobago
+bahamas
+aruba
+monaco
+barbados
+angola
+liechtenstein
+sint maarten
+suriname
+burundi
+french polynesia
+bhutan
+macao
+saint martin
+botswana
+eritrea
+antigua and barbuda
+gambia
+st. vincent grenadines
+namibia
+timor-leste
+grenada
+curaçao
+new caledonia
+laos
+belize
+dominica
+fiji
+saint lucia
+saint kitts and nevis
+falkland islands
+greenland
+turks and caicos
+vatican city
+montserrat
+seychelles
+ms zaandam
+western sahara
+british virgin islands
+papua new guinea
+caribbean netherlands
+st. barth
+lesotho
+anguilla
+saint pierre miquelon
+china

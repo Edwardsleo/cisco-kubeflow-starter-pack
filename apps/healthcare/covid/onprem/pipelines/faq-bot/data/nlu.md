@@ -1,0 +1,176 @@
+## intent:greet
+- Hi
+- Hey
+- Hi bot
+- Hey bot
+- Hello
+- Good morning
+- hi again
+- hi folks
+- hi Mister
+- hi pal!
+- hi there
+- greetings
+- hello everybody
+- hello is anybody there
+- hello robot
+- hallo
+- heeey
+- hi hi
+- hey
+- hey hey
+- hello there
+- hi
+- hello
+- yo
+- hola
+- hi?
+- hey bot!
+- hello friend
+
+## intent:covid
+- what is [corona](coronavirus)?
+- what is [coronavirus](coronavirus)?
+- [coronavirus](coronavirus)
+- [corona](coronavirus)
+- What is the [source](coronavirus) of the virus?
+- what [corona](coronavirus)?
+- what's [corona](coronavirus)?
+- Where do [coronaviruses](coronavirus) come from?
+- what is [COVID-19](covid)?
+- what is [covid](covid)?
+- [covid](covid)
+- [COVID-19](covid)
+- [covid](covid)
+- which [symptoms](symptoms)
+- What are the [symptoms](symptoms) of COVID-19?
+- covid [symptoms](symptoms) 
+- [symptoms](symptoms) of covid-19
+- [symptoms](symptoms) 
+- [Symptoms](symptoms) of Coronavirus
+- Watch for [symptoms](symptoms)
+- What are the common [symptoms](symptoms)?
+- What are the [symptoms](symptoms) of COVID-19 infection?
+- What are the [symptoms](symptoms) and complications that covid-19 can cause?
+- How it [spread](spread)?
+- How COVID-19 [spreads](spread)?
+- What are all the COVID-19 [transmission](spread) Routes?
+- How does COVID-19 [spread](spread)?
+- [spread](spread)
+- How is COVID-19 [passed](spread) on?
+- What is the mode of [transmission](spread)?
+- How does it [spread](spread)?
+- How does the virus [spread](spread)?
+- Is there a [vaccine](vaccine) drug or treatment for COVID-19?
+- [vaccine](vaccine)
+- [drug](vaccine)
+- covid [drug](vaccine)
+- covid [vaccine](vaccine)
+- covid [treatment](vaccine)
+- Is there a [vaccine](vaccine) for a novel coronavirus?
+- Is there a [treatment](vaccine) for a novel coronavirus?
+
+## intent:covid_cases
+- [world](location) total number of confirmed cases
+- [world](location) covid cases
+- [world](location) confirmed cases
+- total number of confirmed cases in [world](location)
+- total number of confirmed deaths in [world](location)
+- total number of confirmed recovered in [world](location)
+- [world](location) covid infected
+- How many peoples are infected in [world](location)
+- confirmed cases in [india](location)
+- confirmed deaths in [india](location)
+- confirmed cases in [usa](location)
+- How much peoples are recovered from covid in [cuba](location)
+- How many peoples are infected in [mexico](location)?
+- How many peoples are death in [mexico](location)?
+- How many peoples are recovered from covid in [mexico](location)?
+- how many peoples are recovered from coronavirus in [india](location)?
+- how many confirmed cases in [switzerland](location)?
+- how many confirmed deaths in [switzerland](location)?
+- how many peoples are recovered from corona in [switzerland](location)? 
+- how much peoples are infected in [india](location)?
+
+## intent:thankyou
+- um thank you good bye
+- okay cool uh good bye thank you
+- okay thank you good bye
+- you rock
+- and thats all thank you and good bye
+- thank you and good bye
+- sorry about my mistakes thank you good bye
+- noise thank you good bye
+- thank you goodbye noise
+- okay thank you goodbye
+- uh thank you good bye
+- thank you goodbye
+- thank you goodbye noise thank you goodbye
+- breath thank you goodbye
+- thank you
+- okay thank you
+- thanks goodbye
+- ah thank you goodbye
+- thank you noise
+- thank you good bye
+- breath thank you very much goodbye
+- thanks
+- noise thank you goodbye
+- unintelligible thank you goodbye
+- uh okay thank you good bye
+- thank you bye
+- um okay thank you good bye
+
+## intent:deny
+- no
+- no new selection
+- no thanks
+- no thank you
+- uh no
+- breath no
+- do you have something else
+- no this does not work for me
+
+## intent:stop
+- ok then you cant help me
+- that was shit, you're not helping
+- you can't help me
+- you can't help me with what i need
+- i guess you can't help me then
+- ok i guess you can't help me
+- that's not what i want
+- ok, but that doesnt help me
+- this is leading to nothing
+- this conversation is not really helpful
+- you cannot help me with what I want
+- I think you cant help me
+- hm i don't think you can do what i want
+- stop
+- stop go back
+- do you get anything?
+- and you call yourself bot company? pff
+- and that's it?
+- nothing else?
+
+## intent:affirm
+- yeah a cheap restaurant serving international food
+- correct
+- ye
+- uh yes
+- let's do it
+- yeah
+- uh yes
+- um yes
+- yes knocking
+- that's correct
+- yes yes
+- right
+- yea
+- yes
+- yes right
+- yes and i dont care
+- right on
+- i love that
+
+## lookup:location.txt
+data/location.txt

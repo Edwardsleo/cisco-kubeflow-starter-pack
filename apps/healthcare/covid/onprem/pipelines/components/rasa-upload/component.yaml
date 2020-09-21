@@ -1,0 +1,23 @@
+name: rasa upload minio
+description: upload model to minio
+inputs:
+  - {name: minio bucket, type: String, default: 'rasa'}
+  - {name: minio username, type: String, default: 'minio'}
+  - {name: minio key, type: String, default: 'minio123'}
+  - {name: minio region, type: String, default: 'us-east-1'}
+  - {name: model name, type: String, default: 'rasa_model'}
+  - {name: model path, type: String, default: '/mnt/models'}
+
+
+implementation:
+  container:
+    image: docker.io/samba07/minio-upload:0.1
+    command: ["/bin/deploy.sh"]
+    args: [
+      --minio_bucket, {inputValue: minio bucket},
+      --minio_username, {inputValue: minio username},
+      --minio_key, {inputValue: minio key},
+      --minio_region, {inputValue: minio region},
+      --model_name, {inputValue: model name},
+      --model_path, {inputValue: model path},
+    ]

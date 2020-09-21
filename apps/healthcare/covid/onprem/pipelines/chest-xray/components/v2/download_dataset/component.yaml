@@ -1,0 +1,13 @@
+name: Download image dataset
+description: Download image dataset
+inputs:
+  - {name: Minio bucket name, type: String, default: "imgzip", description: 'Name of MinIO bucket where datasets are already uploaded'}
+  
+implementation:
+  container:
+    image: premkarthi/covid-image-download-dataset:v3
+    command: ["/usr/local/bin/python3", "/opt/download-dataset.py"]
+    args: [
+      --minio-bucket-name, {inputValue: Minio bucket name},
+          ]
+    

@@ -1,33 +1,36 @@
+# Install NFS Dynamic Volume Provisioner
 
-# Install NFS server
+Please ensure that Kubernetes & Kubeflow are already installed.
 
-Please ensure that K8s & Kubeflow is already installed.
+- [NFS Dynamic Storage Class](#nfs)
+    * [Install NFS dynamic volume provisioner](#nfs-helm-package)
+    * [Create volume claims](#create-nfs-volumeclaims)
 
-- [NFS and it's PV and PVC](#nfs)
-    * [Install NFS apt package](#nfs-apt-package)
-    * [Run nfs-installation.sh](#run-nfs-installationsh)
+## <a id=nfs></a> Install NFS Dynamic Storage Class
 
-## <a id=nfs></a> Install NFS and it's PV and PVC
+### <a id=nfs-helm-package></a> Install NFS dynamic volume provisioner
+With [Helm](https://helm.sh/docs/intro/install/) installed on the UCS machine run:
 
-### <a id=nfs-apt-package></a> Install NFS apt package
-With sudo access on the UCS machine run:
-
-	sudo apt install nfs-kernel-server
-	
-### <a id=run-nfs-installationsh></a> Run nfs-installation.sh 
-     cd ${PROJECT_ROOT_DIR}/apps/networking/ble-localization/install/
-     sh nfs-installation.sh
-
-Sample output:<br>
-```
-Provide INGRESS_IP (ex: 10.10.10.101)
-INGRESS IP:
+```bash
+helm repo update
+helm install stable/nfs-server-provisioner --generate-name --set=persistence.enabled=true,persistence.storageClass=local-path,persistence.size=50Gi
 ```
 
-This script will create:
+!!! note "Check Storage Class Name"
+    Replace parameter `storageClass` with the relevant default Storage Class in your k8s cluster.
 
-- ClusterRoleBinding for NFS
-- create secrets
-- create nfs-server
-- nfs-pv
-- nfs-pvc in anonymous, kubeflow namespaces.
+### <a id=create-nfs-volumeclaims></a> Create secret, volume claims
+
+```bash
+cd ${PROJECT_ROOT_DIR}/apps/networking/ble-localization/install/
+kubectl create secret generic kubeflow-dashboard-ip  --from-literal=KUBEFLOW_DASHBOARD_IP=$INGRESS_IP  -n kubeflow
+kubectl create -f nfs/anonymous-profile.yaml
+kubectl create -f nfs/anonymous/nfs-pvc.yaml
+kubectl create -f nfs/kubeflow/nfs-pvc.yaml
+```
+
+This will create:
+
+- A k8s secret with the `$INGRESS_IP` in the kubeflow namespace
+- An anonymous user profile
+- A Persistent Volume Claim in the anonymous, kubeflow namespaces

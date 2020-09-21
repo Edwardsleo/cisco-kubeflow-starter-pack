@@ -1,0 +1,15 @@
+name: katib hyperparamater value
+description: creates katib hyperparamater value
+inputs:
+  - {name: timestamp, type: String}
+  - {name: image, type: String, default: "docker.io/poornimadevii/blerssi-train:v1", description: "Provide blerssi training image"}
+
+implementation:
+  container:
+    image: docker.io/samba07/blerssi-katib:0.2
+    command: ["python", "/opt/blerssi-katib.py"]
+    args: [
+      --timestamp, {inputValue: timestamp},
+      --image, {inputValue: image},
+    ]
+

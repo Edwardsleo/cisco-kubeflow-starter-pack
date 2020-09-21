@@ -16,6 +16,8 @@ This repository needs to be cloned and the instructions in the following directo
 ## Getting Help
 If you have questions, concerns, bug reports, etc., please create an issue against this repository. Before filing a new issue, do check if the issue has already been reported. You can also send email to the core group at *cisco-kubeflow-support AT cisco.com*.
 
+Documentation: https://ciscoai.github.io/cisco-kubeflow-starter-pack/
+
 ## Getting Involved
 We encourage everyone to provide us with feedback and suggest features that are high on their priority list.
 

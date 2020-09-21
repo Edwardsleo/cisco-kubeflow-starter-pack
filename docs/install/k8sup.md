@@ -2,7 +2,7 @@
 
 - UCS C240
 	* Ubuntu 16+ baremetal
-	* Kubernetes v1.14.x
+	* Kubernetes v1.16.x
 	* Default Kubernetes storage class that can dynamically provision volumes
 
 ## Prerequisites Reference Setup
@@ -59,13 +59,13 @@ sudo apt-get install -y \
 
 ## <a id=kubernetes></a> Kubernetes setup
 
-Recommended version is `v1.14.10` for Kubernetes and `v0.7.5` for Kubernetes-CNI.
+Recommended version is `v1.16.9` for Kubernetes and `v0.7.5` for Kubernetes-CNI.
 Please lookup EOL for Kubernetes versions before installing.
 
 ```bash
 # set environment variables for Kubernetes and CNI
-export KUBERNETES_VERSION=1.14.10
-export KUBERNETES_CNI=0.7.5
+export KUBERNETES_VERSION='1.16.9'
+export KUBERNETES_CNI='0.7.5'
 
 # add kubernetes apt packages
 sudo bash -c 'apt-get update && apt-get install -y apt-transport-https
@@ -95,7 +95,7 @@ A single node Kubernetes cluster does not have ETCD replication or cluster backu
 
 ### <a id=kubeadm></a> Create cluster with kubeadm
 ```bash
-INGRESS_IP=<UCS machine\'s IP>
+INGRESS_IP=<UCS server IP>
 sudo systemctl daemon-reload
 sudo systemctl restart docker
 sudo systemctl restart kubelet
@@ -116,9 +116,11 @@ export KUBECONFIG=$HOME/.kube/config
 #### Check KUBECONFIG
 
 `kubectl get nodes -o wide`
-```
-NAME                   STATUS   ROLES    AGE    VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
-ucs-kubeflow  Not Ready    master   4d2h   v1.14.10   10.x.x.101   <none>        Ubuntu 18.04.2 LTS   4.15.0-20-generic   docker://18.9.3
+
+Expected Output:
+```bash
+NAME            STATUS       ROLES    AGE    VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+ucs-kubeflow    Not Ready    master   4d2h   v1.16.9   10.x.x.101      <none>        Ubuntu 18.04.2 LTS   4.15.0-20-generic   docker://18.9.3
 ```
 
 **Note:** Master node status becomes Ready after Calico is installed in the next steps.
@@ -176,8 +178,8 @@ Cluster checks: <br>
 
 Expected output:<br>
 ```
-NAME                   STATUS   ROLES    AGE    VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
-ucs-kubeflow           Ready    master   4d2h   v1.14.10   10.x.x.101      <none>        Ubuntu 18.04.2 LTS   4.15.0-20-generic   docker://18.9.3
+NAME           STATUS   ROLES    AGE    VERSION    INTERNAL-IP  EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+ucs-kubeflow   Ready    master   4d2h   v1.16.9   10.x.x.101   <none>        Ubuntu 18.04.2 LTS   4.15.0-20-generic   docker://18.9.3
 ```
 
 ### Storage Class is running

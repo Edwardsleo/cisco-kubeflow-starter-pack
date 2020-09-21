@@ -15,6 +15,12 @@ With sudo access on the UCS machine run:
 
 	sudo apt install nfs-kernel-server
 	
+### CLone repository
+Clone this repo to get all the required file to create nfs PV and PVC
+
+     git clone https://github.com/CiscoAI/cisco-kubeflow-starter-pack.git
+     cd cisco-kubeflow-starter-pack/apps/networking/ble-localization/onprem/install/	
+	
 ### <a id=run-nfs-installationsh></a> Run nfs-installation.sh 
      
      sh nfs-installation.sh

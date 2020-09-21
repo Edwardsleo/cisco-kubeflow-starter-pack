@@ -1,0 +1,16 @@
+name: Download
+description: Download datasets
+inputs:
+  - {name: s3 path, type: String, description: "add s3 bucket url"}
+  - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
+  - {name: cfg_data, type: String, default: "voc.data", description: "data file"}
+
+implementation:
+  container:
+    image: docker.io/samba07/object-detection-download:0.4
+    command: ["/opt/deploy.sh"]
+    args: [
+      --s3-path, {inputValue: s3 path},
+      --nfs-path, {inputValue: nfs path},
+      --cfg_data, {inputValue: cfg_data},
+    ]

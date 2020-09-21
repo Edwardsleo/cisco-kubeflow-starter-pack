@@ -2,10 +2,10 @@
 
 ## What we're going to do
 
-Train & save a BLERSSI location model from kubeflow jupyter notebook.
+Train & save a BLERSSI location model from Kubeflow Jupyter notebook.
 Then, serve and predict using the saved model.
 
-### Infrastructure Used
+### Infrastructure used
 
 * Cisco UCS - C240M5 and C480ML
 
@@ -31,7 +31,7 @@ Use either of 'EXTERNAL-IP' or 'INTERNAL-IP' of any of the nodes based on which 
 
 This IP will be referred to as INGRESS_IP from here on.
 
-### Create & Connect to Jupyter Notebook Server
+### Create & connect to Jupyter Notebook server
 
 You can access Kubeflow Dashboard using the Ingress IP and _31380_ port. For example, http://<INGRESS_IP:31380>
 
@@ -51,13 +51,13 @@ Provide Notebook Server name and select notebook image appropriately as below
 
 ![TF-BLERSSI Pipeline](pictures/create-notebook-1.PNG)
 
-Create new Workspace Volume
+Create new Workspace volume
 
 ![TF-BLERSSI Pipeline](pictures/create-notebook-2.PNG)
 
 If you are creating GPU attached notebook then choose number of GPUs and GPU Vendor as *NVIDIA*. 
 
-Click Launch Button
+Click Launch button
 
 ![TF-BLERSSI Pipeline](pictures/create-notebook-3.PNG)
 
@@ -65,27 +65,29 @@ Once Notebook Server is created, click on Connect button.
 
 ![TF-BLERSSI Pipeline](pictures/6-connect-notebook1.PNG)
 
-### Upload BLERSSI-Classification.ipynb file
+### Upload BLERSSI-classification.ipynb file
 
-Upload the [BLERSSI-Classification.ipynb](./BLERSSI-Classification.ipynb) to the Notebook Server.
+Upload the [BLERSSI-classification.ipynb](./BLERSSI-classification.ipynb) to the Notebook Server.
 
-![TF-BLERSSI Pipeline](pictures/7-upload-pipeline-notebook1.PNG)
+![TF-BLERSSI Pipeline](pictures/7-upload-pipeline-notebook1.png)
 
-### Train BLERSSI Model
+### Train BLERSSI model
 
-Open the notebook file and run first command to train BLERSSI model
+Open the notebook file and run commands to train & save BLERSSI model.
 
-![TF-BLERSSI Pipeline](pictures/1-start-training.PNG)
+![TF-BLERSSI Pipeline](pictures/1-start-training.png)
 
-Once training completes, the model will be stored in local notebook server
+Once training completes, the model will be stored in the notebook server locally.
 
-![TF-BLERSSI Pipeline](pictures/2-complete-training.PNG)
+![TF-BLERSSI Pipeline](pictures/2-complete-training.png)
 
-### Serve BLERSSI Model from K8s PVC through Kfserving
+### Serve BLERSSI model from chosen model store (MinIO/Workspace Volume) through Kfserving
 
-![TF-BLERSSI Pipeline](pictures/4-create-kfserving-blerssi.PNG)
+![TF-BLERSSI Pipeline](pictures/4-create-kfserving-blerssi1.png)
 
-### Predict location for test data using served BLERSSI Model 
+![TF-BLERSSI Pipeline](pictures/4-create-kfserving-blerssi2.png)
+
+### Predict location for test data using served BLERSSI model 
 
 Change Ingress IP in the curl command to your provided value before executing location prediction.
 

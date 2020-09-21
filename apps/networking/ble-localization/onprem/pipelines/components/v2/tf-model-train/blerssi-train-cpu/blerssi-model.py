@@ -42,6 +42,9 @@ def parse_arguments():
                       type=float,
                       default=0.01,
                       help='Learning rate for training.')
+  parser.add_argument('--timestamp',
+                      type=str,
+                      help='Timestamp value')
 
   args = parser.parse_args()
   return args
@@ -69,6 +72,20 @@ def make_feature_cols():
 def main(unused_args):
   tf.logging.set_verbosity(tf.logging.INFO)
   args = parse_arguments()
+
+
+  timestamp = str(args.timestamp)
+
+  filename = "/mnt/Model_Blerssi/hpv-"+timestamp+".txt"
+  f = open(filename, "r")
+  batchsize = int(f.readline())
+  learningrate = float(f.readline())
+  print("****************")
+  print("Optimized Hyper paramater value")
+  print("Batch-size = " + str(batchsize))
+  print("Learning rate = "+ str(learningrate))
+  print("****************")
+
   df_full = pd.read_csv('/opt/iBeacon_RSSI_Labeled.csv') #Labeled dataset
 
   # Input Data Preprocessing
@@ -87,7 +104,7 @@ def main(unused_args):
   train_input_fn = tf.estimator.inputs.pandas_input_fn(
     x = df_train[FEATURES],
     y = df_train['location'],
-    batch_size = args.tf_batch_size,
+    batch_size = batchsize,
     num_epochs = 1,
     shuffle = False,
     queue_capacity = 1000,
@@ -98,7 +115,7 @@ def main(unused_args):
   test_input_fn = tf.estimator.inputs.pandas_input_fn(
     x = df_train[FEATURES],
     y = df_train['location'],
-    batch_size = args.tf_batch_size,
+    batch_size = batchsize,
     num_epochs = 1,
     shuffle = True,
     queue_capacity = 1000,
@@ -119,7 +136,8 @@ def main(unused_args):
   model = tf.estimator.DNNClassifier(hidden_units = [13,65,110],
                      feature_columns = feature_columns,
                      model_dir = args.tf_model_dir,
-                     n_classes=105, config=config
+                     n_classes=105, config=config,
+                     optimizer=tf.train.AdamOptimizer(learning_rate=learningrate)
                    )
 
   export_final = tf.estimator.FinalExporter(args.tf_export_dir, serving_input_receiver_fn=serving_input_receiver_fn)
@@ -136,7 +154,7 @@ def main(unused_args):
   # Train and Evaluate the model
 
   tf.estimator.train_and_evaluate(model, train_spec, eval_spec)
-  
+
   with open('/tf_export_dir.txt', 'w') as f:
     f.write(args.tf_export_dir)
 

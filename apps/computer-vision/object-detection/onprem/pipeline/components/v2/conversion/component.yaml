@@ -1,0 +1,22 @@
+name: Convert model
+description: Convert & push model to S3 bucket
+inputs:
+  - {name: push to s3, type: String, default: "False", description: "Boolean value to input whether model files need to be uploaded to S3 bucket"}
+  - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
+  - {name: s3 path, type: String, description: "add s3 bucket url"}
+  - {name: output, type: String, default: "model", description: "path to saved model"}
+  - {name: input size, type: Integer, default: 416, description: "define input size of export model"}
+  - {name: classes file, type: String, default: "voc.names", description: "object classes file"}
+
+implementation:
+  container:
+    image: docker.io/samba07/object-detection-conversion:0.4
+    command: ["/opt/deploy.sh"]
+    args: [
+      --push-to-s3, {inputValue: push to s3},
+      --nfs-path, {inputValue: nfs path},
+      --s3-path, {inputValue: s3 path},
+      --out-dir, {inputValue: output},
+      --input-size, {inputValue: input size},
+      --classes-file, {inputValue: classes file},
+    ]

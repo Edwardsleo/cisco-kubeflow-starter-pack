@@ -1,0 +1,16 @@
+name: Train Covid Xray TF Model
+description: Trains the Network model that uses Tensorflow
+inputs:
+  - {name: timestamp, type: String}
+  - {name: TF batch size, type: Integer, default: 32, description: 'The number of batch size during training'}
+  - {name: TF learning rate, type: Float, default: 0.01, description: 'Learning rate for training.'}
+
+implementation:
+  container:
+    image: docker.io/edward1723/chest-xray-train:0.2
+    command: ["python", "/opt/covid-xray-model.py"]
+    args: [
+      --timestamp, {inputValue: timestamp},
+      --tf-batch-size, {inputValue: TF batch size},
+      --tf-learning-rate, {inputValue: TF learning rate},
+    ]

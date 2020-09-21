@@ -1,0 +1,16 @@
+name: katib hyperparamater value
+description: creates katib hyperparamater value
+inputs:
+  - {name: timestamp, type: String}
+  - {name: image, type: String}
+outputs:
+
+
+implementation:
+  container:
+    image: docker.io/edward1723/deploy-katib:0.1
+    command: ["python", "/opt/chest-xray-katib.py"]
+    args: [
+      --timestamp, {inputValue: timestamp},
+      --image, {inputValue: image},
+    ]
