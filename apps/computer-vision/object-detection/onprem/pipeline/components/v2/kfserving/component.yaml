@@ -3,7 +3,7 @@ description: kfserving deployment
 inputs:
   - {name: inferenceservice name, type: String, default: 'object_detection', description: 'Name of the inferenceservice'}
   - {name: storage uri, type: String, default: 'pvc://nfs/object_detection', description: 'storage uri path'}
-  - {name: image, type: String, default: 'docker.io/samba07/object-detection-model-server:0.3', description: 'Inferenceservice custom image'}
+  - {name: image, type: String, default: 'docker.io/samba07/object-detection-model-server:0.4', description: 'Inferenceservice custom image'}
   - {name: tflite model path, type: String, default: 'model', description: 'path to tflite file'}
   - {name: classes file, type: String, default: 'voc.names', description: 'Name of the class file ex: voc.names or coco.names'}
   - {name: namespace, type: String, default: "kubeflow", description: 'In which namespace you want to deploy kfserving'}
