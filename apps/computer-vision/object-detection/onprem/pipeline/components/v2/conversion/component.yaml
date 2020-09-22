@@ -7,10 +7,11 @@ inputs:
   - {name: output, type: String, default: "model", description: "path to saved model"}
   - {name: input size, type: Integer, default: 416, description: "define input size of export model"}
   - {name: classes file, type: String, default: "voc.names", description: "object classes file"}
+  - {name: tiny, type: String, default: "False", description: "tiny or yolov3"}
 
 implementation:
   container:
-    image: docker.io/samba07/object-detection-conversion:0.4
+    image: docker.io/samba07/object-detection-conversion:0.5
     command: ["/opt/deploy.sh"]
     args: [
       --push-to-s3, {inputValue: push to s3},
@@ -19,4 +20,5 @@ implementation:
       --out-dir, {inputValue: output},
       --input-size, {inputValue: input size},
       --classes-file, {inputValue: classes file},
+      --tiny, {inputValue: tiny}
     ]

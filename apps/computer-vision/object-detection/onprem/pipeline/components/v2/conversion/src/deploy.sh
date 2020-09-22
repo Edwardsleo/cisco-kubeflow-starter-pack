@@ -34,6 +34,11 @@ while (($#)); do
        CLASSES_FILE="$1"
        shift
        ;;
+     "--tiny")
+       shift
+       TINY="$1"
+       shift
+       ;;
      *)
        echo "Unknown argument: '$1'"
        exit 1
@@ -51,7 +56,7 @@ if [ -d "$OUT_PATH" ]; then
 fi
 
 model_file_name=$(basename ${NFS_PATH}/backup/*final.weights)
-python tensorflow_lite/convert_weights_pb.py --class_names ${NFS_PATH}/metadata/${CLASSES_FILE} --data_format NHWC --weights_file ${NFS_PATH}/backup/$model_file_name --output_graph ${NFS_PATH}/${OUT_PATH} --size=${INPUT_SIZE}
+python tensorflow_lite/convert_weights_pb.py --class_names ${NFS_PATH}/metadata/${CLASSES_FILE} --data_format NHWC --weights_file ${NFS_PATH}/backup/$model_file_name --output_graph ${NFS_PATH}/${OUT_PATH} --size=${INPUT_SIZE} --tiny=${TINY}
 
 
 # Convert tensorflow model to tflite

@@ -202,3 +202,7 @@ decay=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous -o=jsonpa
 
 echo "MOMENTUM: $momentum"
 echo "DECAY: $decay"
+
+# Update momentun and decay in cfg file
+sed -i "s/momentum.*/momentum=${momentum}/g" cfg/${CFG_FILE}
+sed -i "s/decay.*/decay=${decay}/g" cfg/${CFG_FILE}

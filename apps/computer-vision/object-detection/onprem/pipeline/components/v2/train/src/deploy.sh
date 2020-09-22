@@ -70,12 +70,6 @@ then
                 gpus="$gpus,$x"
         fi
     done
-    momentum=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[0].value}')
-    decay=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[1].value}')
-    echo "MOMENTUM: $momentum"
-    echo "DECAY: $decay"
-    sed -i "s/momentum.*/momentum=${momentum}/g" cfg/${CFG_FILE}
-    sed -i "s/decay.*/decay=${decay}/g" cfg/${CFG_FILE}
     # Training
     darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${gpus} -dont_show
 else
