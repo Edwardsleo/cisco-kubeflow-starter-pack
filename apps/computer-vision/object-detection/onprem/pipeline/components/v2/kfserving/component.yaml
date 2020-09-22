@@ -7,7 +7,7 @@ inputs:
   - {name: tflite model path, type: String, default: 'model', description: 'path to tflite file'}
   - {name: classes file, type: String, default: 'voc.names', description: 'Name of the class file ex: voc.names or coco.names'}
   - {name: namespace, type: String, default: "kubeflow", description: 'In which namespace you want to deploy kfserving'}
-  - {name: gpus to inferenceservice, type: String, default: 1, description: 'Number of gpus to allocate to inferenceservice'}
+  - {name: gpus to inferenceservice, type: Integer, default: 1, description: 'Number of gpus to allocate to inferenceservice'}
 
 implementation:
   container:

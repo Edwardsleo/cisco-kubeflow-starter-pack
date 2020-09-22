@@ -56,8 +56,18 @@ if [ -d "$OUT_PATH" ]; then
 fi
 
 model_file_name=$(basename ${NFS_PATH}/backup/*final.weights)
-python tensorflow_lite/convert_weights_pb.py --class_names ${NFS_PATH}/metadata/${CLASSES_FILE} --data_format NHWC --weights_file ${NFS_PATH}/backup/$model_file_name --output_graph ${NFS_PATH}/${OUT_PATH} --size=${INPUT_SIZE} --tiny=${TINY}
 
+if [[ ${TINY} == "False" || ${TINY} == "false" ]]
+then
+    python tensorflow_lite/convert_weights_pb.py --class_names ${NFS_PATH}/metadata/${CLASSES_FILE} --data_format NHWC --weights_file ${NFS_PATH}/backup/$model_file_name --output_graph ${NFS_PATH}/${OUT_PATH} --size=${INPUT_SIZE}
+else
+    if [[ ${TINY} == "True" || ${TINY} == "true" ]]
+    then
+        python tensorflow_lite/convert_weights_pb.py --class_names ${NFS_PATH}/metadata/${CLASSES_FILE} --data_format NHWC --weights_file ${NFS_PATH}/backup/$model_file_name --output_graph ${NFS_PATH}/${OUT_PATH} --size=${INPUT_SIZE} --tiny=${TINY}
+    else
+        echo Please enter a valid input \(True/False\)
+    fi
+fi
 
 # Convert tensorflow model to tflite
 
