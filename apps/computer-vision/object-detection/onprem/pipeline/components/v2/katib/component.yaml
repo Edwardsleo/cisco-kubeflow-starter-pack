@@ -5,8 +5,6 @@ inputs:
   - {name: weights, type: String, default: "yolov3-voc_50000.weights", description: "pre-trained weights for training"}
   - {name: cfg_data, type: String, default: "voc.data", description: "data file"}
   - {name: cfg_file, type: String, default: "yolov3-voc.cfg", description: "cfg file"}
-  - {name: momentum, type: String, default: "0.9", description: "momentum"}
-  - {name: decay, type: String, default: "0.005", description: "decay"}
   - {name: component, type: String, default: "katib", description: "Which component you are running"}
   - {name: image, type: String,  default: "docker.io/samba07/object-detection-train:0.5", description: "Provide image to run katib experiment"}
   - {name: timestamp, type: String,  description: "Provide current timestamp"}
@@ -15,15 +13,13 @@ inputs:
 
 implementation:
   container:
-    image: docker.io/samba07/object-detection-katib:0.4
+    image: docker.io/samba07/object-detection-katib:0.5
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},
       --weights, {inputValue: weights},
       --cfg_data, {inputValue: cfg_data},
       --cfg_file, {inputValue: cfg_file},
-      --momentum, {inputValue: momentum},
-      --decay, {inputValue: decay},
       --component, {inputValue: component},
       --image, {inputValue: image},
       --timestamp, {inputValue: timestamp},

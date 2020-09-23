@@ -24,16 +24,6 @@ while (($#)); do
        CFG_FILE="$1"
        shift
        ;;
-     "--momentum")
-       shift
-       MOMENTUM="$1"
-       shift
-       ;;
-     "--decay")
-       shift
-       DECAY="$1"
-       shift
-       ;;
      "--component")
        shift
        COMPONENT="$1"
