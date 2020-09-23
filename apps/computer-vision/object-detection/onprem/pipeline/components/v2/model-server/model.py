@@ -1,17 +1,14 @@
 import os
 import re
+import time
 import numpy as np
 import argparse
 import kfserving
 import tensorflow as tf
 from kfserving import storage
-
-physical_devices = tf.config.experimental.list_physical_devices('GPU')
-if len(physical_devices) > 0:
-    tf.config.experimental.set_memory_growth(physical_devices[0], True)
 from tensorflow.python.saved_model import tag_constants
 
-
+import logging
 class KFServing(kfserving.KFModel):
 
     def __init__(self, name: str):
@@ -19,27 +16,36 @@ class KFServing(kfserving.KFModel):
         self.name = name
         self.ready = False
 
+        # Load model
+        self.base_path="/mnt/models/"
+        for tflite in os.listdir(os.path.join(self.base_path, FLAGS.out_dir)):
+            if tflite.endswith(".tflite"):
+                self.exported_path=os.path.join(self.base_path, FLAGS.out_dir,tflite)
+                break
+        else:
+            raise Exception("Model path not found")
+
+        self.interpreter = tf.lite.Interpreter(model_path=self.exported_path, num_threads=2)
+        self.interpreter.allocate_tensors()
+        self.input_details = self.interpreter.get_input_details()
+        self.output_details = self.interpreter.get_output_details()
+
     def load(self):
         self.ready = True
 
     def predict(self, request):
 
-        self.base_path="/mnt/models/"
-        for tflite in os.listdir(os.path.join(self.base_path, FLAGS.out_dir)):
-            if tflite.endswith(".tflite"):
-                exported_path=os.path.join(self.base_path, FLAGS.out_dir,tflite)
-                break
-        else:
-            raise Exception("Model path not found")
+        def inferencing():
+            self.interpreter.set_tensor(self.input_details[0]['index'], np.expand_dims(np.asarray(request["instances"]).astype(np.float32), 0))
+            self.interpreter.invoke()
+            pred = [(self.interpreter.get_tensor(self.output_details[i]['index'])).tolist() for i in range(len(self.output_details))]
+            return pred
 
-        interpreter = tf.lite.Interpreter(model_path=exported_path)
-        interpreter.allocate_tensors()
-        input_details = interpreter.get_input_details()
-        output_details = interpreter.get_output_details()
-        interpreter.set_tensor(input_details[0]['index'], np.expand_dims(np.asarray(request["instances"]).astype(np.float32), 0))
-        interpreter.invoke()
-        predictions = [(interpreter.get_tensor(output_details[i]['index'])).tolist() for i in range(len(output_details))]
-
+        strategy = tf.distribute.MirroredStrategy(devices=['/gpu:0'])
+        start_time = time.time()
+        predictions=strategy.experimental_run_v2(inferencing)
+        stop_time = time.time()
+        logging.info('predict time: {:.3f}s'.format((stop_time - start_time)))
         return {"predictions": predictions}
 
     def postprocess(self, request):
@@ -120,11 +126,14 @@ class KFServing(kfserving.KFModel):
                     names[id] = name
             return names
 
+        start_time = time.time()
         boxes, classes, scores = handle_predictions(request["predictions"][0],confidence=0.3,iou_threshold=0.5)
         class_names = load_classes_names(os.path.join(self.base_path,"metadata", FLAGS.classes_file))
         classs=[]
         for key in classes:
             classs.append(class_names[key].strip())
+        stop_time = time.time()
+        logging.info('post process time: {:.3f}s'.format((stop_time - start_time)))
         return {"predictions": [boxes.tolist(), classs, scores.tolist()]}
 
 
