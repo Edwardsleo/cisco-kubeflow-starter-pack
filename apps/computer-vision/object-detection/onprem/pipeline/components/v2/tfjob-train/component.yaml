@@ -1,0 +1,46 @@
+name: tfjob training
+description: Training using tfjob
+inputs:
+  - {name: dataset, type: String, default: './data/voc2012_train.tfrecord', description: 'Path to dataset'}
+  - {name: val_dataset, type: String, default: './data/voc2012_val.tfrecord', description: 'Path to val dataset'}
+  - {name: tiny, type: Boolean, default: False, description: 'yolov3 or yolov3-tiny'}
+  - {name: weights, type: String, default: './checkpoints/yolov3_new.tf', description: 'path to weights file'}
+  - {name: classes, type: String, default: './data/voc.names', description: 'path to classes file'}
+  - {name: transfer, type: String, default: 'fine_tune', description: 'Can be one of ['none', 'darknet', 'no_output', 'frozen', 'fine_tune'],
+                                  'none: Training from scratch, '
+                                  'darknet: Transfer darknet, '
+                                  'no_output: Transfer all but output, '
+                                  'frozen: Transfer and freeze all, '
+                                  'fine_tune: Transfer all and freeze darknet only'}
+  - {name: size, type: Integer, default: 416, description: 'Image size'}
+  - {name: epochs, type: Integer, default: 3, description: 'number of epochs'}
+  - {name: batch_size, type: Integer, default: 32, description: 'batch size'}
+  - {name: learning_rate, type: Float, default: 1e -5, description: 'learning rate'}
+  - {name: num_classes, type: Integer, default: 20, description: 'number of classes in the model'}
+  - {name: weights_num_classes, type: Integer, default: None, description: 'specify num class for `weights` file if different, 
+                                         useful in transfer learning with different number of classes'}
+  - {name: saved_model_dir, type: String, default: 'trained_model', description: 'path to saved model'}
+  - {name: samples, type: Integer, default: 17125, description: 'no of samples'}
+
+implementation:
+  container:
+    image: docker.io/poornimadevii/darknet_tfjob:v36
+    command: ["python", "/opt/main.sh"]
+    args: [
+    
+      --dataset, {inputValue: dataset},
+      --val_dataset, {inputValue: val_dataset},
+      --tiny, {inputValue: tiny},
+      --weights, {inputValue: weights},
+      --classes, {inputValue: classes},
+      --transfer, {inputValue: transfer},
+      --size, {inputValue: size},
+      --epochs, {inputValue: epochs},
+      --batch_size, {inputValue: batch_size},
+      --learning_rate, {inputValue: learning_rate},
+      --num_classes, {inputValue: num_classes},
+      --weights_num_classes, {inputValue: weights_num_classes},
+      --saved_model_dir, {inputValue: saved_model_dir},
+      --samples, {inputValue: samples},
+
+    ]

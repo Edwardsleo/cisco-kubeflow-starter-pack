@@ -1,0 +1,28 @@
+name: Object detection/ Inferencing
+description: Object detection
+inputs:
+  - {name: tiny, type: Boolean, default: False, description: 'yolov3 or yolov3-tiny'}
+  - {name: weights, type: String, default: './checkpoints/yolov3_new.tf', description: 'path to weights file'}
+  - {name: classes, type: String, default: './data/voc.names', description: 'path to classes file'}
+  - {name: size, type: Integer, default: 416, description: 'Image size'}
+  - {name: image, type: String, default: './data/dog.jpg', description: 'path of input image for inferencing'}
+  - {name: tfrecord, type: String, default: None, description: 'tfrecord instead of image'}
+  - {name: output, type: String, default: './output.jpg', description: 'path to output image'}
+  - {name: num_classes, type: Integer, default: 20, description: 'number of classes in the model'}
+
+implementation:
+  container:
+    image: docker.io/poornimadevii/darknet_tfjob:v36
+    command: ["python", "/opt/main.sh"]
+    args: [
+    
+      --tiny, {inputValue: tiny},
+      --weights, {inputValue: weights},
+      --classes, {inputValue: classes},
+      --size, {inputValue: size},
+      --image, {inputValue: image},
+      --tfrecord, {inputValue: tfrecord},
+      --output, {inputValue: output},
+      --num_classes, {inputValue: num_classes},
+      
+    ]
