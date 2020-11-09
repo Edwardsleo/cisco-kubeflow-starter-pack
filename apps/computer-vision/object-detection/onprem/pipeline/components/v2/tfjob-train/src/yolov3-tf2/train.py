@@ -21,7 +21,7 @@ import yolov3_tf2.dataset as dataset
 flags.DEFINE_string('dataset', './data/voc2012_train.tfrecord', 'path to dataset')
 flags.DEFINE_string('val_dataset', './data/voc2012_val.tfrecord', 'path to validation dataset')
 flags.DEFINE_boolean('tiny', False, 'yolov3 or yolov3-tiny')
-flags.DEFINE_string('output_weights', './checkpoints/yolov3_new.tf','path to weights file')
+flags.DEFINE_string('converted_weights', './checkpoints/yolov3_new.tf','path to weights file')
 flags.DEFINE_string('classes_file', './data/voc.names', 'path to classes file')
 flags.DEFINE_enum('mode', 'fit', ['fit', 'eager_fit', 'eager_tf'],
                                   'fit: model.fit, '
@@ -99,7 +99,7 @@ def build_and_compile_model():
             else:
                 model_pretrained = YoloV3(
                     FLAGS.input_size, training=True, classes=FLAGS.weights_num_classes or FLAGS.num_classes)
-            model_pretrained.load_weights(FLAGS.output_weights)
+            model_pretrained.load_weights(FLAGS.converted_weights)
 
             if FLAGS.transfer == 'darknet':
                 model.get_layer('yolo_darknet').set_weights(
@@ -115,7 +115,7 @@ def build_and_compile_model():
 
         else:
             # All other transfer require matching classes
-            model.load_weights(FLAGS.output_weights)
+            model.load_weights(FLAGS.converted_weights)
             if FLAGS.transfer == 'fine_tune':
                 # freeze darknet and fine tune other layers
                 darknet = model.get_layer('yolo_darknet')
@@ -150,8 +150,6 @@ def main(_argv):
         GLOBAL_BATCH_SIZE = FLAGS.batch_size * strategy.num_replicas_in_sync
         
         steps_per_epoch = FLAGS.samples // GLOBAL_BATCH_SIZE
-        print(">>>>>>>>>>>>>>>>samples", FLAGS.samples)
-        print(">>>>>>>>>>>>>>>>>steps_per_epoch", steps_per_epoch) 
         with strategy.scope():
 
                ds_train = make_datasets_batched().repeat()
@@ -167,7 +165,7 @@ def main(_argv):
                multi_worker_model = build_and_compile_model()
 
         callbacks = [
-                        ModelCheckpoint('checkpoints_keras/yolov3_train_{epoch}.tf',
+                        ModelCheckpoint((FLAGS.saved_model_dir + '/yolov3_train_{epoch}.tf'),
                                                         verbose=1, save_weights_only=True),
                     ]
 
@@ -177,17 +175,6 @@ def main(_argv):
                             callbacks=callbacks,
                             verbose=1)
 
-        def is_chief():
-              return TASK_INDEX == 0
-
-        if is_chief():
-               model_path = FLAGS.saved_model_dir
-
-        else:
-              # Save to a path that is unique across workers.
-              model_path = FLAGS.saved_model_dir + '/worker_tmp_' + str(TASK_INDEX)
-
-        multi_worker_model.save(model_path)
 
 if __name__ == "__main__":
 

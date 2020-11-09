@@ -10,11 +10,11 @@ inputs:
 #  - {name: val_dataset, type: String, default: './data/voc2012_val.tfrecord', description: 'Path to val dataset'}
    - {name: tiny, type: Bool, default: 'False', description: 'yolov3 or yolov3-tiny'}
    - {name: darknet_weights, type: String, default: 'yolov3-voc_final.weights', description: 'path to darknet weights file'}
-   - {name: output_weights, type: String, default: './checkpoints/yolov3_new.tf', description: 'path to weights file'}
+   - {name: converted_weights, type: String, default: './checkpoints/yolov3_new.tf', description: 'path to weights file'}
    - {name: classes file, type: String, default: 'voc.names', description: 'path to classes file'}
    - {name: transfer, type: String, default: 'fine_tune', description: 'Can be one of none , darknet, no_output, frozen, fine_tune, none: Training from scratch, darknet: Transfer darknet, no_output: Transfer all but output, frozen: Transfer and freeze all,fine_tune: Transfer all and freeze darknet only'}
    - {name: input size, type: Integer, default: 416, description: 'Image size'}
-   - {name: epochs, type: Integer, default: 3, description: 'number of epochs'}
+   - {name: epochs, type: Integer, default: 1, description: 'number of epochs'}
    - {name: batch_size, type: Integer, default: 32, description: 'batch size'}
    - {name: learning_rate, type: Float, default: 1e-5, description: 'learning rate'}
    - {name: num_classes, type: Integer, default: 20, description: 'number of classes in the model'}
@@ -36,7 +36,7 @@ implementation:
       --dataset, {inputValue: dataset},
       --tiny, {inputValue: tiny},
       --darknet_weights, {inputValue: darknet_weights},
-      --output_weights, {inputValue: output_weights},
+      --converted_weights, {inputValue: converted_weights},
       --classes_file, {inputValue: classes file},
       --transfer, {inputValue: transfer},
       --input_size, {inputValue: input size},
