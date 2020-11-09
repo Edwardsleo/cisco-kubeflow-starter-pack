@@ -2,21 +2,102 @@
 
 set -x
 
+while (($#)); do
+   case $1 in
+     "--nfs_path")
+       shift
+       NFS_PATH="$1"
+       shift
+       ;; 
+     "--data_dir")
+       shift
+       DATA_DIR="$1"
+       shift
+       ;;
+     "--image_list_file")
+       shift
+       IMAGE_LIST_FILE="$1"
+       shift
+       ;;  
+     "--darknet_weights")
+       shift
+       WEIGHTS="$1"
+       shift
+       ;;
+	 "--output_weights")
+       shift
+       OUTPUT_WEIGHTS="$1"
+       shift
+       ;;
+	 "--tiny")
+       shift
+       TINY="$1"
+       shift
+       ;;
+	 "--num_classes")
+       shift
+       NUM_CLASSES="$1"
+       shift
+       ;;
+	 "--dataset")
+       shift
+       DATASET="$1"
+       shift
+       ;;
+     "--classes_file")
+       shift
+       CLASSES_FILE="$1"
+       shift
+       ;;
+     "--transfer")
+       shift
+       TRANSFER="$1"
+       shift
+       ;;
+     "--input-size")
+       shift
+       INPUT_SIZE="$1"
+       shift
+       ;;
+     "--epochs")
+       shift
+       EPOCHS="$1"
+       shift
+       ;;
+      "--batch_size")
+       shift
+       BATCH_SIZE="$1"
+       shift
+       ;;
+     "--learning_rate")
+       shift
+       LEARNING_RATE="$1"
+       shift
+       ;;
+	 "--saved_model_dir")
+       shift
+       MODEL_DIR="$1"
+       shift
+       ;;
+	 "--samples")
+       shift
+       SAMPLES="$1"
+       shift
+       ;;
+     *)
+       echo "Unknown argument: '$1'"
+       exit 1
+       ;;
+   esac
+done
+
 cd /opt/yolov3-tf2/
 
-python3 tools/voc2012.py \
-  --data_dir '/mnt/tfjob/VOCdevkit/VOC2012/' \
-  --split train \
-  --output_file ./data/voc2012_train.tfrecord
 
-python3  tools/voc2012.py \
-  --data_dir '/mnt/tfjob/VOCdevkit/VOC2012/' \
-  --split val \
-  --output_file ./data/voc2012_val.tfrecord
+python3 tools/voc2012.py --data_dir $NFS_PATH"/datasets/"$DATA_DIR --dataset $DATASET --image_list_file $NFS_PATH"/metadata/"$IMAGE_LIST_FILE --classes_file $NFS_PATH"/metadata/"$CLASSES_FILE
+python3 convert.py --darknet_weights $NFS_PATH"/pre-trained-weights/"$WEIGHTS --output_weights $OUTPUT_WEIGHTS --tiny $TINY --num_classes $NUM_CLASSES
+python3 train.py --dataset $DATASET --tiny $TINY --output_weights $OUTPUT_WEIGHTS --classes_file $NFS_PATH"/metadata/"$CLASSES_FILE --transfer $TRANSFER --input_size $INPUT_SIZE --epochs $EPOCHS --batch_size $BATCH_SIZE --learning_rate $LEARNING_RATE --saved_model_dir $NFS_PATH$MODEL_DIR --samples $SAMPLES 
 
-python3 convert.py
-python3 train.py
-
-cp -r trained_model/ /mnt/tfjob
-cp -r checkpoints_keras/ /mnt/tfjob
-
+#cp -r MODEL_DIR /mnt/$MODEL_DIR
+#cp -r checkpoints_keras/ /mnt/tfjob
+cp -r ./data/*  /mnt/object_detection/test_purpose/

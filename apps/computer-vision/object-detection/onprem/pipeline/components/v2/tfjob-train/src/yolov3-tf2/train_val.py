@@ -21,8 +21,8 @@ import yolov3_tf2.dataset as dataset
 flags.DEFINE_string('dataset', './data/voc2012_train.tfrecord', 'path to dataset')
 flags.DEFINE_string('val_dataset', './data/voc2012_val.tfrecord', 'path to validation dataset')
 flags.DEFINE_boolean('tiny', False, 'yolov3 or yolov3-tiny')
-flags.DEFINE_string('output_weights', './checkpoints/yolov3_new.tf','path to weights file')
-flags.DEFINE_string('classes_file', './data/voc.names', 'path to classes file')
+flags.DEFINE_string('weights', './checkpoints/yolov3_new.tf','path to weights file')
+flags.DEFINE_string('classes', './data/voc.names', 'path to classes file')
 flags.DEFINE_enum('mode', 'fit', ['fit', 'eager_fit', 'eager_tf'],
                                   'fit: model.fit, '
                                   'eager_fit: model.fit(run_eagerly=True), '
@@ -34,9 +34,9 @@ flags.DEFINE_enum('transfer', 'fine_tune',
                                   'no_output: Transfer all but output, '
                                   'frozen: Transfer and freeze all, '
                                   'fine_tune: Transfer all and freeze darknet only')
-flags.DEFINE_integer('input_size', 416, 'image size')
+flags.DEFINE_integer('size', 416, 'image size')
 flags.DEFINE_integer('epochs', 3, 'number of epochs')
-flags.DEFINE_integer('batch_size', 16, 'batch size')
+flags.DEFINE_integer('batch_size', 32, 'batch size')
 flags.DEFINE_float('learning_rate', 1e-5, 'learning rate')
 flags.DEFINE_integer('num_classes', 20, 'number of classes in the model')
 flags.DEFINE_integer('weights_num_classes', None, 'specify num class for `weights` file if different, '
@@ -60,7 +60,7 @@ def make_datasets_batched():
 
         if FLAGS.dataset:
                    train_dataset = dataset.load_tfrecord_dataset(
-                                FLAGS.dataset, FLAGS.classes_file, FLAGS.input_size)
+                                FLAGS.dataset, FLAGS.classes, FLAGS.size)
                    
         else:
                 train_dataset = dataset.load_fake_dataset()
@@ -69,21 +69,33 @@ def make_datasets_batched():
         #train_dataset = train_dataset.cache()
         train_dataset = train_dataset.batch(GLOBAL_BATCH_SIZE)
 
-        train_dataset = train_dataset.map(lambda x, y: (dataset.transform_images(x, FLAGS.input_size),
-            dataset.transform_targets(y, anchors, anchor_masks, FLAGS.input_size)))
+        train_dataset = train_dataset.map(lambda x, y: (dataset.transform_images(x, FLAGS.size),
+            dataset.transform_targets(y, anchors, anchor_masks, FLAGS.size)))
+            
+        if FLAGS.val_dataset:
+                   val_dataset = dataset.load_tfrecord_dataset(
+                             FLAGS.val_dataset, FLAGS.classes, FLAGS.size)
+        else:
+            val_dataset = dataset.load_fake_dataset()
+        val_dataset = val_dataset.shard(NUM_WORKERS, TASK_INDEX)
+        val_dataset = val_dataset.batch(FLAGS.batch_size)
+        val_dataset = val_dataset.map(lambda x, y: (
+        dataset.transform_images(x, FLAGS.size),
+        dataset.transform_targets(y, anchors, anchor_masks, FLAGS.size)))
 
-        return train_dataset
+
+        return train_dataset, val_dataset
 
 #Define function to build & compile model
 def build_and_compile_model():
 
         
-        #f FLAGS.tiny:
-        #          model = YoloV3Tiny(FLAGS.input_size, training=True,
-        #                          classes=FLAGS.num_classes)
+        if FLAGS.tiny:
+                   model = YoloV3Tiny(FLAGS.size, training=True,
+                                   classes=FLAGS.num_classes)
                          
-        #lse:
-        model = YoloV3(FLAGS.input_size, training=True, classes=FLAGS.num_classes)
+        else:
+                   model = YoloV3(FLAGS.size, training=True, classes=FLAGS.num_classes)
                    
         # Configure the model for transfer learning
         if FLAGS.transfer == 'none':
@@ -95,11 +107,11 @@ def build_and_compile_model():
             # reset top layers
             if FLAGS.tiny:
                 model_pretrained = YoloV3Tiny(
-                    FLAGS.input_size, training=True, classes=FLAGS.weights_num_classes or FLAGS.num_classes)
+                    FLAGS.size, training=True, classes=FLAGS.weights_num_classes or FLAGS.num_classes)
             else:
                 model_pretrained = YoloV3(
-                    FLAGS.input_size, training=True, classes=FLAGS.weights_num_classes or FLAGS.num_classes)
-            model_pretrained.load_weights(FLAGS.output_weights)
+                    FLAGS.size, training=True, classes=FLAGS.weights_num_classes or FLAGS.num_classes)
+            model_pretrained.load_weights(FLAGS.weights)
 
             if FLAGS.transfer == 'darknet':
                 model.get_layer('yolo_darknet').set_weights(
@@ -115,7 +127,7 @@ def build_and_compile_model():
 
         else:
             # All other transfer require matching classes
-            model.load_weights(FLAGS.output_weights)
+            model.load_weights(FLAGS.weights)
             if FLAGS.transfer == 'fine_tune':
                 # freeze darknet and fine tune other layers
                 darknet = model.get_layer('yolo_darknet')
@@ -150,19 +162,29 @@ def main(_argv):
         GLOBAL_BATCH_SIZE = FLAGS.batch_size * strategy.num_replicas_in_sync
         
         steps_per_epoch = FLAGS.samples // GLOBAL_BATCH_SIZE
-        print(">>>>>>>>>>>>>>>>samples", FLAGS.samples)
-        print(">>>>>>>>>>>>>>>>>steps_per_epoch", steps_per_epoch) 
+
         with strategy.scope():
 
-               ds_train = make_datasets_batched().repeat()
+               ds_train = make_datasets_batched()[0].repeat()
                ds_train = ds_train.prefetch(
                           buffer_size=tf.data.experimental.AUTOTUNE)
                           
-               options = tf.data.Options()
-               options.experimental_distribute.auto_shard_policy = \
+               options_train = tf.data.Options()
+               options_train.experimental_distribute.auto_shard_policy = \
                                 tf.data.experimental.AutoShardPolicy.DATA
                                 
-               ds_train = ds_train.with_options(options)
+               ds_train = ds_train.with_options(options_train)
+               
+               ds_val = make_datasets_batched()[1].repeat()
+               ds_val = ds_train.prefetch(
+                          buffer_size=tf.data.experimental.AUTOTUNE)
+                          
+               options_val = tf.data.Options()
+               options_val.experimental_distribute.auto_shard_policy = \
+                                tf.data.experimental.AutoShardPolicy.DATA
+                                
+               ds_val = ds_val.with_options(options_val)
+
                
                multi_worker_model = build_and_compile_model()
 
@@ -175,7 +197,8 @@ def main(_argv):
                             epochs=FLAGS.epochs,
                             steps_per_epoch=steps_per_epoch,
                             callbacks=callbacks,
-                            verbose=1)
+                            verbose=1,
+                            validation_data=ds_val)
 
         def is_chief():
               return TASK_INDEX == 0
