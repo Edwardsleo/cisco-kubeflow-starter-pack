@@ -1,3 +1,6 @@
+##Python script to convert dataset into tfrecords
+
+#Import libraries
 import time
 import os
 import hashlib
@@ -10,20 +13,16 @@ import re
 import shutil
 import subprocess
 import sys
-
-#sys.path.insert(0,'tools/yolov2pascal')
 import pascal_voc_io, yolo_io
 
-
+#Define input/commandline arguments
 flags.DEFINE_string('data_dir', './data/voc2012_raw/VOCdevkit/VOC2012/',
                     'path to raw PASCAL VOC dataset')
-#flags.DEFINE_enum('split', 'train', [
-#                  'train', 'val'], 'specify train or val split')
 flags.DEFINE_string('image_list_file', 'train.txt', 'list of images names')
 flags.DEFINE_string('dataset', './data/voc2012_train.tfrecord', 'output dataset')
 flags.DEFINE_string('classes_file', './data/voc2012.names', 'classes file')
 
-
+#Convert annotation to tensorflow examples
 def build_example(annotation, class_map):
     img_path = os.path.join(
         FLAGS.data_dir, annotation['filename'])
@@ -78,7 +77,8 @@ def build_example(annotation, class_map):
     }))
     return example
 
-
+#Parse annotations in .xml format
+#Convert annotations into .xml format & parse, if annotations are available in .txt format
 def parse_xml(xml):
     if not len(xml):
         return {xml.tag: xml.text}
@@ -93,7 +93,7 @@ def parse_xml(xml):
             result[child.tag].append(child_result[child.tag])
     return {xml.tag: result}
 
-
+#Define Main function
 def main(_argv):
     class_map = {name: idx for idx, name in enumerate(
         open(FLAGS.classes_file).read().splitlines())}
@@ -102,21 +102,23 @@ def main(_argv):
     writer = tf.io.TFRecordWriter(FLAGS.dataset)
     image_list = open(FLAGS.image_list_file).read().splitlines()
     logging.info("Image list loaded: %d", len(image_list))
+    raw_names = []
     for name in tqdm.tqdm(image_list):
         name = re.findall(r'\d+[_-]?\d+',name)
-        print(">>>>>>>>>>>>>name", name)
         xml_file = os.path.join(FLAGS.data_dir,(name[0] + '.xml'))
-        print(">>>>>>>>>>>>file1", xml_file)
+        raw_names.append(name[0])
         if not os.path.exists(xml_file):
-            process = subprocess.Popen(['python3', 'tools/yolo2voc.py',FLAGS.data_dir],
+            process = subprocess.Popen(['python3', 'tools/yolo2voc.py', FLAGS.data_dir],
                      stdout=subprocess.PIPE, 
                      stderr=subprocess.PIPE)
             stdout, stderr = process.communicate()
-            print(">>>>>>>>>stdout", stdout)
+            print("Ran successfully")
 
             shutil.copy(FLAGS.classes_file, (FLAGS.data_dir + '/classes.txt'))
+
+    for raw_name in raw_names:
         annotation_xml = os.path.join(
-            FLAGS.data_dir, (name[0] + '.xml'))
+            FLAGS.data_dir, (raw_name + '.xml'))
         annotation_xml = lxml.etree.fromstring(open(annotation_xml).read())
         annotation = parse_xml(annotation_xml)['annotation']
         tf_example = build_example(annotation, class_map)

@@ -1,28 +1,30 @@
-name: Object detection/ Inferencing
+name: Inferencing
 description: Object detection
 inputs:
-  - {name: tiny, type: Boolean, default: False, description: 'yolov3 or yolov3-tiny'}
-  - {name: weights, type: String, default: './checkpoints/yolov3_new.tf', description: 'path to weights file'}
-  - {name: classes, type: String, default: './data/voc.names', description: 'path to classes file'}
-  - {name: size, type: Integer, default: 416, description: 'Image size'}
-  - {name: image, type: String, default: './data/dog.jpg', description: 'path of input image for inferencing'}
-  - {name: tfrecord, type: String, default: None, description: 'tfrecord instead of image'}
-  - {name: output, type: String, default: './output.jpg', description: 'path to output image'}
+  - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
+  - {name: saved_model_dir, type: String, default: 'trained_model', description: 'path to saved model'}
+  - {name: trained_weights, type: String, default: 'yolov3_train_1.tf', description: 'path to weights file'}
+  - {name: classes file, type: String, default: 'voc.names', description: 'path to classes file'}
+  - {name: input size, type: Integer, default: 416, description: 'Image size'}
+  - {name: input_image, type: String, default: './data/dog.jpg', description: 'path of input image for inferencing'}
+  - {name: tfrecord, type: String, default: 'None', description: 'tfrecord instead of image'}
+  - {name: output_image, type: String, default: './dog_output.jpg', description: 'path to output image'}
   - {name: num_classes, type: Integer, default: 20, description: 'number of classes in the model'}
 
 implementation:
   container:
-    image: docker.io/poornimadevii/darknet_tfjob:v36
-    command: ["python", "/opt/main.sh"]
+    image: docker.io/poornimadevii/tfjob-inference:v2
+    command: ["/bin/bash","/opt/main.sh"]
     args: [
-    
-      --tiny, {inputValue: tiny},
-      --weights, {inputValue: weights},
-      --classes, {inputValue: classes},
-      --size, {inputValue: size},
-      --image, {inputValue: image},
+      
+      --nfs_path, {inputValue: nfs path},
+      --saved_model_dir, {inputValue: saved_model_dir},
+      --trained_weights, {inputValue: trained_weights},
+      --classes_file, {inputValue: classes file},
+      --input_size, {inputValue: input size},
+      --input_image, {inputValue: input_image},
       --tfrecord, {inputValue: tfrecord},
-      --output, {inputValue: output},
+      --output_image, {inputValue: output_image},
       --num_classes, {inputValue: num_classes},
       
     ]

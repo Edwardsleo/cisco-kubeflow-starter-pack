@@ -1,4 +1,4 @@
-## Convert darknet weights to checkpoints ( in .tf format)
+##Python script to convert darknet weights to .tf checkpoints
 
 #Import libraries
 from absl import app, flags, logging
@@ -11,10 +11,9 @@ import tensorflow as tf
 #Define inputs
 flags.DEFINE_string('darknet_weights', '', 'path to weights file')
 flags.DEFINE_string('converted_weights', './checkpoints/yolov3_new.tf', 'path to output')
-flags.DEFINE_boolean('tiny', False,'yolov3 or yolov3-tiny')
 flags.DEFINE_integer('num_classes', 20, 'number of classes in the model')
 
-
+#Main function to convert darknet weights to weights in .tf format
 def main(_argv):
     
     yolo = YoloV3(classes=FLAGS.num_classes)

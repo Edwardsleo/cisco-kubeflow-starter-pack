@@ -1,4 +1,4 @@
-## Train the object detection model ( .tf format)
+## Python script to train object detection model
 
 #Import libraries
 from absl import app, flags, logging
@@ -20,7 +20,6 @@ import yolov3_tf2.dataset as dataset
 #Define Inputs
 flags.DEFINE_string('dataset', './data/voc2012_train.tfrecord', 'path to dataset')
 flags.DEFINE_string('val_dataset', './data/voc2012_val.tfrecord', 'path to validation dataset')
-flags.DEFINE_boolean('tiny', False, 'yolov3 or yolov3-tiny')
 flags.DEFINE_string('converted_weights', './checkpoints/yolov3_new.tf','path to weights file')
 flags.DEFINE_string('classes_file', './data/voc.names', 'path to classes file')
 flags.DEFINE_enum('mode', 'fit', ['fit', 'eager_fit', 'eager_tf'],
@@ -28,19 +27,14 @@ flags.DEFINE_enum('mode', 'fit', ['fit', 'eager_fit', 'eager_tf'],
                                   'eager_fit: model.fit(run_eagerly=True), '
                                   'eager_tf: custom GradientTape')
 flags.DEFINE_enum('transfer', 'fine_tune',
-                                  ['none', 'darknet', 'no_output', 'frozen', 'fine_tune'],
+                                 ['none', 'darknet', 'no_output', 'frozen', 'fine_tune'],
                                   'none: Training from scratch, '
-                                  'darknet: Transfer darknet, '
-                                  'no_output: Transfer all but output, '
-                                  'frozen: Transfer and freeze all, '
                                   'fine_tune: Transfer all and freeze darknet only')
 flags.DEFINE_integer('input_size', 416, 'image size')
 flags.DEFINE_integer('epochs', 3, 'number of epochs')
 flags.DEFINE_integer('batch_size', 16, 'batch size')
 flags.DEFINE_float('learning_rate', 1e-5, 'learning rate')
 flags.DEFINE_integer('num_classes', 20, 'number of classes in the model')
-flags.DEFINE_integer('weights_num_classes', None, 'specify num class for `weights` file if different, '
-                                         'useful in transfer learning with different number of classes')
 flags.DEFINE_string('saved_model_dir', 'trained_model', 'path to saved model')
 flags.DEFINE_integer('samples', 17125, 'No of samples')
 
@@ -53,20 +47,13 @@ anchor_masks = yolo_anchor_masks
 def make_datasets_batched():
 
         
-        #anchors = np.array([(10, 13), (16, 30), (33, 23), (30, 61), (62, 45),
-        #                (59, 119), (116, 90), (156, 198), (373, 326)],
-        #                np.float32) / 416
-        #anchor_masks = np.array([[6, 7, 8], [3, 4, 5], [0, 1, 2]])
-
         if FLAGS.dataset:
                    train_dataset = dataset.load_tfrecord_dataset(
                                 FLAGS.dataset, FLAGS.classes_file, FLAGS.input_size)
                    
         else:
                 train_dataset = dataset.load_fake_dataset()
-        #train_dataset = train_dataset.shuffle(buffer_size=512)
         train_dataset = train_dataset.shard(NUM_WORKERS, TASK_INDEX)
-        #train_dataset = train_dataset.cache()
         train_dataset = train_dataset.batch(GLOBAL_BATCH_SIZE)
 
         train_dataset = train_dataset.map(lambda x, y: (dataset.transform_images(x, FLAGS.input_size),
@@ -78,51 +65,19 @@ def make_datasets_batched():
 def build_and_compile_model():
 
         
-        #f FLAGS.tiny:
-        #          model = YoloV3Tiny(FLAGS.input_size, training=True,
-        #                          classes=FLAGS.num_classes)
-                         
-        #lse:
         model = YoloV3(FLAGS.input_size, training=True, classes=FLAGS.num_classes)
                    
         # Configure the model for transfer learning
         if FLAGS.transfer == 'none':
             pass  # Nothing to do
-        elif FLAGS.transfer in ['darknet', 'no_output']:
-            # Darknet transfer is a special case that works
-            # with incompatible number of classes
-
-            # reset top layers
-            if FLAGS.tiny:
-                model_pretrained = YoloV3Tiny(
-                    FLAGS.input_size, training=True, classes=FLAGS.weights_num_classes or FLAGS.num_classes)
-            else:
-                model_pretrained = YoloV3(
-                    FLAGS.input_size, training=True, classes=FLAGS.weights_num_classes or FLAGS.num_classes)
-            model_pretrained.load_weights(FLAGS.converted_weights)
-
-            if FLAGS.transfer == 'darknet':
-                model.get_layer('yolo_darknet').set_weights(
-                    model_pretrained.get_layer('yolo_darknet').get_weights())
-                freeze_all(model.get_layer('yolo_darknet'))
-
-            elif FLAGS.transfer == 'no_output':
-                for l in model.layers:
-                    if not l.name.startswith('yolo_output'):
-                        l.set_weights(model_pretrained.get_layer(
-                            l.name).get_weights())
-                        freeze_all(l)
 
         else:
-            # All other transfer require matching classes
+
             model.load_weights(FLAGS.converted_weights)
             if FLAGS.transfer == 'fine_tune':
                 # freeze darknet and fine tune other layers
                 darknet = model.get_layer('yolo_darknet')
                 freeze_all(darknet)
-            elif FLAGS.transfer == 'frozen':
-                # freeze everything
-                freeze_all(model)
 
 
         optimizer = tf.keras.optimizers.Adam(lr=FLAGS.learning_rate)
@@ -174,6 +129,7 @@ def main(_argv):
                             steps_per_epoch=steps_per_epoch,
                             callbacks=callbacks,
                             verbose=1)
+
 
 
 if __name__ == "__main__":

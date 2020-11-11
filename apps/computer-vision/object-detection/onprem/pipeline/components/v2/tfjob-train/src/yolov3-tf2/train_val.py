@@ -53,10 +53,6 @@ anchor_masks = yolo_anchor_masks
 def make_datasets_batched():
 
         
-        #anchors = np.array([(10, 13), (16, 30), (33, 23), (30, 61), (62, 45),
-        #                (59, 119), (116, 90), (156, 198), (373, 326)],
-        #                np.float32) / 416
-        #anchor_masks = np.array([[6, 7, 8], [3, 4, 5], [0, 1, 2]])
 
         if FLAGS.dataset:
                    train_dataset = dataset.load_tfrecord_dataset(
@@ -100,30 +96,6 @@ def build_and_compile_model():
         # Configure the model for transfer learning
         if FLAGS.transfer == 'none':
             pass  # Nothing to do
-        elif FLAGS.transfer in ['darknet', 'no_output']:
-            # Darknet transfer is a special case that works
-            # with incompatible number of classes
-
-            # reset top layers
-            if FLAGS.tiny:
-                model_pretrained = YoloV3Tiny(
-                    FLAGS.size, training=True, classes=FLAGS.weights_num_classes or FLAGS.num_classes)
-            else:
-                model_pretrained = YoloV3(
-                    FLAGS.size, training=True, classes=FLAGS.weights_num_classes or FLAGS.num_classes)
-            model_pretrained.load_weights(FLAGS.weights)
-
-            if FLAGS.transfer == 'darknet':
-                model.get_layer('yolo_darknet').set_weights(
-                    model_pretrained.get_layer('yolo_darknet').get_weights())
-                freeze_all(model.get_layer('yolo_darknet'))
-
-            elif FLAGS.transfer == 'no_output':
-                for l in model.layers:
-                    if not l.name.startswith('yolo_output'):
-                        l.set_weights(model_pretrained.get_layer(
-                            l.name).get_weights())
-                        freeze_all(l)
 
         else:
             # All other transfer require matching classes

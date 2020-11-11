@@ -1,3 +1,6 @@
+##Python script to create tfjob for training object detection model
+
+#Import libraries
 from kubernetes.client import V1PodTemplateSpec
 from kubernetes.client import V1ObjectMeta
 from kubernetes.client import V1PodSpec
@@ -6,7 +9,6 @@ from kubernetes.client import V1VolumeMount
 from kubernetes.client import V1Volume
 from kubernetes.client import V1PersistentVolumeClaimVolumeSource
 from kubernetes.client import V1ResourceRequirements
-
 from kubeflow.tfjob import constants
 from kubeflow.tfjob import utils
 from kubeflow.tfjob import V1ReplicaSpec
@@ -30,17 +32,13 @@ def parse_arguments():
 
         parser.add_argument("--nfs_path", help='Common NFS path')
 
-
         parser.add_argument("--data_dir", help="Path of dataset folder")
 
         parser.add_argument("--image_list_file", help="Name of image list file")
 
-
         parser.add_argument("--darknet_weights", help="Name of darknet weights file")
 
         parser.add_argument("--converted_weights", help="Name of converted weights in .tf format")
-
-        parser.add_argument("--tiny", help="Boolean value to choose whether yolo-v3 or tiny")
 
         parser.add_argument("--num_classes", help="Number of object classes")
 
@@ -58,7 +56,7 @@ def parse_arguments():
 
         parser.add_argument("--learning_rate", help="learning rate")
 
-        parser.add_argument("--saved_model_dir", help="Output dir to save trained model files")
+        parser.add_argument("--saved_model_dir", help="Output directory to save trained model files")
 
         parser.add_argument("--samples", help="Number of input samples/images")
 
@@ -72,6 +70,7 @@ k8s_config.load_incluster_config()
 custom_api=k8s_client.CustomObjectsApi()
 namespace = utils.get_default_target_namespace()
 
+#Define tfjob configuration in .JSON format
 tfjob = {
    "apiVersion": "kubeflow.org/v1",
    "kind": "TFJob",
@@ -103,8 +102,6 @@ tfjob = {
                                  args.darknet_weights,
                                  "--converted_weights",
                                  args.converted_weights,
-                                 "--tiny",
-                                 args.tiny,
                                  "--num_classes",
                                  args.num_classes,
                                  "--dataset",
@@ -154,7 +151,10 @@ tfjob = {
    }
 }
 
+
 tfjob_name=tfjob["metadata"]["name"]
+
+#Create TFJob for training
 custom_api.create_namespaced_custom_object(group="kubeflow.org", version="v1", namespace=namespace, plural="tfjobs", body=tfjob)
 print("TFjob %s created successfully"%tfjob_name)
 time.sleep(20)
