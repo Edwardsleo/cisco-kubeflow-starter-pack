@@ -89,7 +89,7 @@ done
 cd /opt/yolov3-tf2/
 
 
-python3 tools/voc2012.py --data_dir $NFS_PATH"/datasets/"$DATA_DIR --dataset $DATASET --image_list_file $NFS_PATH"/metadata/"$IMAGE_LIST_FILE --classes_file $NFS_PATH"/metadata/"$CLASSES_FILE
+python3 tools/voc-dataset-conversion.py --data_dir $NFS_PATH"/datasets/"$DATA_DIR --dataset $DATASET --image_list_file $NFS_PATH"/metadata/"$IMAGE_LIST_FILE --classes_file $NFS_PATH"/metadata/"$CLASSES_FILE
 python3 convert.py --darknet_weights $NFS_PATH"/pre-trained-weights/"$WEIGHTS --converted_weights $CONVERTED_WEIGHTS --num_classes $NUM_CLASSES
 python3 train.py --dataset $DATASET --converted_weights $CONVERTED_WEIGHTS --classes_file $NFS_PATH"/metadata/"$CLASSES_FILE --transfer $TRANSFER --input_size $INPUT_SIZE --epochs $EPOCHS --batch_size $BATCH_SIZE --learning_rate $LEARNING_RATE --saved_model_dir $MODEL_DIR --samples $SAMPLES 
 
