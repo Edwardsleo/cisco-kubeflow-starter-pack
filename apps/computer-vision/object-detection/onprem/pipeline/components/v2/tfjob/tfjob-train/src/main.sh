@@ -29,12 +29,12 @@ while (($#)); do
        CONVERTED_WEIGHTS="$1"
        shift
        ;;
-	 "--num_classes")
+     "--num_classes")
        shift
        NUM_CLASSES="$1"
        shift
        ;;
-	 "--dataset")
+     "--dataset")
        shift
        DATASET="$1"
        shift
@@ -69,12 +69,12 @@ while (($#)); do
        LEARNING_RATE="$1"
        shift
        ;;
-	 "--saved_model_dir")
+     "--saved_model_dir")
        shift
        MODEL_DIR="$1"
        shift
        ;;
-	 "--samples")
+     "--samples")
        shift
        SAMPLES="$1"
        shift

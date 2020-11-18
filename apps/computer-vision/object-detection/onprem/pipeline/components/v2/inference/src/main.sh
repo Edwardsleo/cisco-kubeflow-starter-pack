@@ -24,17 +24,17 @@ while (($#)); do
        CLASSES_FILE="$1"
        shift
        ;;
-	 "--input_size")
+     "--input_size")
        shift
        INPUT_SIZE="$1"
        shift
        ;;
-	 "--input_image")
+     "--input_image")
        shift
        INPUT_IMAGE="$1"
        shift
        ;;
-	 "--tfrecord")
+     "--tfrecord")
        shift
        TFRECORD="$1"
        shift
