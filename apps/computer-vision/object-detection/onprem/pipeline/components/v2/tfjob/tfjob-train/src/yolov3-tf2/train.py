@@ -22,12 +22,8 @@ flags.DEFINE_string('dataset', './data/voc2012_train.tfrecord', 'path to dataset
 #flags.DEFINE_string('val_dataset', './data/voc2012_val.tfrecord', 'path to validation dataset')
 flags.DEFINE_string('converted_weights', './checkpoints/yolov3_new.tf','path to weights file')
 flags.DEFINE_string('classes_file', './data/voc.names', 'path to classes file')
-flags.DEFINE_enum('mode', 'fit', ['fit', 'eager_fit', 'eager_tf'],
-                                  'fit: model.fit, '
-                                  'eager_fit: model.fit(run_eagerly=True), '
-                                  'eager_tf: custom GradientTape')
 flags.DEFINE_enum('transfer', 'fine_tune',
-                                 ['none', 'darknet', 'no_output', 'frozen', 'fine_tune'],
+                                 ['none', 'fine_tune'],
                                   'none: Training from scratch, '
                                   'fine_tune: Transfer all and freeze darknet only')
 flags.DEFINE_integer('input_size', 416, 'image size')
