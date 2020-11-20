@@ -19,7 +19,7 @@ import yolov3_tf2.dataset as dataset
 
 #Define Inputs
 flags.DEFINE_string('dataset', './data/voc2012_train.tfrecord', 'path to dataset')
-flags.DEFINE_string('val_dataset', './data/voc2012_val.tfrecord', 'path to validation dataset')
+#flags.DEFINE_string('val_dataset', './data/voc2012_val.tfrecord', 'path to validation dataset')
 flags.DEFINE_string('converted_weights', './checkpoints/yolov3_new.tf','path to weights file')
 flags.DEFINE_string('classes_file', './data/voc.names', 'path to classes file')
 flags.DEFINE_enum('mode', 'fit', ['fit', 'eager_fit', 'eager_tf'],
