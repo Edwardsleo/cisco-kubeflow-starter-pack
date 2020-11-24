@@ -1,4 +1,4 @@
-name: Training
+name: Train
 description: train object detection and save model from weights
 inputs:
   - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}

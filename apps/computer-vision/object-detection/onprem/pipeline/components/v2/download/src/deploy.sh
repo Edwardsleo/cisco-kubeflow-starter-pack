@@ -19,6 +19,11 @@ while (($#)); do
        CFG_DATA="$1"
        shift
        ;;
+     "--timestamp")
+       shift
+       TIMESTAMP="$1"
+       shift
+       ;;
      *)
        echo "Unknown argument: '$1'"
        exit 1
@@ -30,12 +35,12 @@ done
 aws s3 cp ${S3_PATH} ${NFS_PATH} --recursive
 
 cd ${NFS_PATH}
-mkdir -p backup
+mkdir -p backup/${TIMESTAMP}
 
 sed -i "s#metadata/#${NFS_PATH}/metadata/#g" cfg/${CFG_DATA}
-sed -i "s#backup/#${NFS_PATH}/backup#g" cfg/${CFG_DATA}
+sed -i "s#backup/#${NFS_PATH}/backup/${TIMESTAMP}#g" cfg/${CFG_DATA}
 
-sed -i "s#voc#${NFS_PATH}/datasets/voc#g" metadata/test.txt
+sed -i "s#voc-test#${NFS_PATH}/datasets/voc-test#g" metadata/validate.txt
 sed -i "s#voc#${NFS_PATH}/datasets/voc#g" metadata/train.txt
 
 cd datasets
