@@ -174,7 +174,7 @@ kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous
 
 kubectl rollout status deploy/$(kubectl get deploy -l timestamp=ts-$TIMESTAMP -n anonymous | awk 'FNR==2{print $1}') -n anonymous
 
-# Wait for katib experiment to succeeded
+# Wait for katib experiment to succeed
 while true
 do
     status=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous | awk 'FNR==2{print $2}')
