@@ -70,13 +70,58 @@ then
                 gpus="$gpus,$x"
         fi
     done
+    
+    kubectl patch pod $HOSTNAME -n kubeflow -p '{"metadata": {"labels": {"app" : "object-detection-train"}}}'
+	
+    cat >> object-detection-service.yaml << EOF
+apiVersion: v1
+kind: Service
+metadata:
+  name: object-detection-service
+  namespace: kubeflow
+spec:
+  selector:
+    app: object-detection-train
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8090
+      targetPort: 8090
+      nodePort: 30002
+EOF
+
+    #Create an external service to access the dynamic loss chart
+    kubectl apply -f object-detection-service.yaml -n kubeflow    
+
+    echo "Please access dynamically plotted loss chart on http://<INGRESS/EXTERNAL IP>:30002"
+   
+    echo Training has started...
+   
     # Training
-    darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${gpus} -dont_show
+    darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${gpus} -dont_show -mjpeg_port 8090 -map
+
+    sleep 10
+
+    # Delete the external service once training is completed
+    kubectl delete -f object-detection-service.yaml -n kubeflow
+
+    rm -rf object-detection-service.yaml
+
+    #Collect name of visualisation pod to copy the saved loss chart
+    vis_podname=$(kubectl -n kubeflow get pods --field-selector=status.phase=Running | grep ml-pipeline-visualizationserver | awk '{print $1}')
+
+    kubectl cp chart.png $vis_podname:/src -n kubeflow
+
+    mv chart*.png ./backup/$TIMESTAMP	
+   
+   
 else
     sed -i "s/momentum.*/momentum=${MOMENTUM}/g" cfg/${CFG_FILE}
     sed -i "s/decay.*/decay=${DECAY}/g" cfg/${CFG_FILE}
+
     # Training
     darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${GPUS} -dont_show > /var/log/katib/training.log
+
     cat /var/log/katib/training.log
     avg_loss=$(tail -2 /var/log/katib/training.log | head -1 | awk '{ print $3 }')
     echo "loss=${avg_loss}"

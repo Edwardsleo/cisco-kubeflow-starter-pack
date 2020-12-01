@@ -90,3 +90,6 @@ else
         echo Please enter a valid input \(True/False\)
     fi
 fi
+
+#Cleanup
+rm -rf backup cfg datasets metadata/*.txt  pre-trained-weights results tensorflow_lite validation-results
