@@ -33,7 +33,7 @@ def main():
                                       args=[
                                           "model.py",
                                           "--model-name", "%s"%FLAGS.inference_name,
-                                          "--out_dir", "%s"%(FLAGS.model_path + '/' + FLAGS.timestamp),
+                                          "--out_dir", "%s"%FLAGS.model_path,
                                           "--classes_file", "%s"%FLAGS.classes_file,
                                           ]))))
 
@@ -93,6 +93,5 @@ if __name__ == "__main__":
     parser.add_argument('--classes_file', type=str, help='Name of the class file ex: voc.names or coco.names')
     parser.add_argument('--namespace', type=str, default="kubeflow",help='In which namespace you want to deploy kfserving')
     parser.add_argument('--gpus_to_inference', type=str, default=1,help='Number of gpus to attach inferencing service')
-    parser.add_argument('--timestamp',type=str, help='Current timestamp')
     FLAGS, _ = parser.parse_known_args()
     main()

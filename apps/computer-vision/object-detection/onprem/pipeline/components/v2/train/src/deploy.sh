@@ -44,11 +44,6 @@ while (($#)); do
        COMPONENT="$1"
        shift
        ;;
-     "--timestamp")
-       shift
-       TIMESTAMP="$1"
-       shift
-       ;;
      *)
        echo "Unknown argument: '$1'"
        exit 1
@@ -112,7 +107,7 @@ EOF
 
     kubectl cp chart.png $vis_podname:/src -n kubeflow
 
-    mv chart*.png ./backup/$TIMESTAMP	
+    mv chart*.png ./backup
    
    
 else
@@ -121,8 +116,15 @@ else
 
     # Training
     darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${GPUS} -dont_show > /var/log/katib/training.log
-
+       
     cat /var/log/katib/training.log
     avg_loss=$(tail -2 /var/log/katib/training.log | head -1 | awk '{ print $3 }')
     echo "loss=${avg_loss}"
+    
+
+    if [[ -z "$avg_loss" ]]
+    then
+        echo "Darknet training has failed! Please check Katib trial pod error logs for detailed info at /var/log/katib/error.log"
+        exit 2
+    fi
 fi

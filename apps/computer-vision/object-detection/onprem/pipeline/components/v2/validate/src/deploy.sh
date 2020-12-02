@@ -29,11 +29,6 @@ while (($#)); do
        CFG_FILE="$1"
        shift
        ;;
-     "--timestamp")
-       shift
-       TIMESTAMP="$1"
-       shift
-       ;;
      *)
        echo "Unknown argument: '$1'"
        exit 1
@@ -49,11 +44,11 @@ mkdir results
 darknet detector valid cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -dont_show
 
 #Create directory with timestamp
-mkdir -p validation-results/${TIMESTAMP}
+mkdir -p validation-results
 
 #Copy results into timestamp directory
-cp results/* validation-results/${TIMESTAMP}
+cp results/* validation-results
 
 #Push validation results to S3 bucket
-aws s3 cp validation-results/${TIMESTAMP}  ${S3_PATH}/validation-results/${TIMESTAMP} --recursive
+aws s3 cp validation-results  ${S3_PATH}/validation-results --recursive
 

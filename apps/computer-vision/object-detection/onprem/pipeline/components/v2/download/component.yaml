@@ -2,17 +2,15 @@ name: Download
 description: Download datasets
 inputs:
   - {name: s3 path, type: String, description: "add s3 bucket url"}
-  - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
+  - {name: nfs path, type: String, default: "/mnt/object_detection/001", description: "NFS Mount path"}
   - {name: cfg_data, type: String, default: "voc.data", description: "data file"}
-  - {name: timestamp, type: String,  description: "current timestamp"}
 
 implementation:
   container:
-    image: docker.io/poornimadevii/object-detection-download:0.1
+    image: docker.io/poornimadevii/object-detection-download:0.4
     command: ["/opt/deploy.sh"]
     args: [
       --s3-path, {inputValue: s3 path},
       --nfs-path, {inputValue: nfs path},
-      --cfg_data, {inputValue: cfg_data},
-      --timestamp, {inputValue: timestamp}
+      --cfg_data, {inputValue: cfg_data}
     ]

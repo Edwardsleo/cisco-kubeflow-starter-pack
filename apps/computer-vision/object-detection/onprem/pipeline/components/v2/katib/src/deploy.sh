@@ -180,27 +180,23 @@ do
     status=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous | awk 'FNR==2{print $2}')
     if [ $status == "Succeeded" ]
     then
-	    echo "Experiment: $status"
-	    break
+	  momentum=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[0].value}')
+          decay=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[1].value}')
+	  if [[ -z "$momentum" || -z "$decay" ]]
+	  then
+              echo "Katib has failed! Please check Katib trial pod logs for detailed info"
+              exit 2
+          else			
+	      echo "Experiment: $status"
+	      break
+	  fi
     else
-	    echo "Experiment: $status"
-	    sleep 30
+	echo "Experiment: $status"
+	sleep 30
 
-	    #Check for Katib trial status
-
-            trial_status=$(kubectl get trial -l timestamp=ts-$TIMESTAMP -n anonymous | awk 'FNR==2{print $3}')
-	    trial_state=$(kubectl get trial -l timestamp=ts-$TIMESTAMP -n anonymous | awk 'FNR==2{print $2}')
-
-            if [[ $trial_status == "False" || $trial_state == "Failed" ]]
-            then
-                   echo "Katib has failed!! Please check Katib\'s trial pod logs for detailed info."
-                   exit 2
-            fi
     fi
 done
 
-momentum=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[0].value}')
-decay=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[1].value}')
 
 echo "MOMENTUM: $momentum"
 echo "DECAY: $decay"
