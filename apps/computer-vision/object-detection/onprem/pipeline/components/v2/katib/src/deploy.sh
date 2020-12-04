@@ -56,6 +56,8 @@ while (($#)); do
    esac
 done
 
+NFS_PATH=${NFS_PATH}/${TIMESTAMP}
+
 cd ${NFS_PATH}
 
 touch object-detection-katib-$TIMESTAMP.yaml

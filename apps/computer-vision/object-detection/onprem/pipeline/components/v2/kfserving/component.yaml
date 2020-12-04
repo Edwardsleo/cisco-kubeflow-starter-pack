@@ -2,16 +2,17 @@ name: kfserving deploy
 description: kfserving deployment
 inputs:
   - {name: inferenceservice name, type: String, default: 'object_detection', description: 'Name of the inferenceservice'}
-  - {name: storage uri, type: String, default: 'pvc://nfs/object_detection/001', description: 'storage uri path'}
+  - {name: storage uri, type: String, default: 'pvc://nfs/object_detection', description: 'storage uri path'}
   - {name: image, type: String, default: 'docker.io/samba07/object-detection-model-server:0.4', description: 'Inferenceservice custom image'}
   - {name: tflite model path, type: String, default: 'model', description: 'path to tflite file'}
   - {name: classes file, type: String, default: 'voc.names', description: 'Name of the class file ex: voc.names or coco.names'}
   - {name: namespace, type: String, default: "kubeflow", description: 'In which namespace you want to deploy kfserving'}
   - {name: gpus to inferenceservice, type: Integer, default: 1, description: 'Number of gpus to allocate to inferenceservice'}
+  - {name: timestamp, type: String,  description: "Provide current timestamp"}
 
 implementation:
   container:
-    image: docker.io/poornimadevii/object-detection-kfserving:0.5
+    image: docker.io/poornimadevii/object-detection-kfserving:0.6
     command: ["python", "/opt/kfservingdeployer.py"]
     args: [
       --inference-name, {inputValue: inferenceservice name},
@@ -20,5 +21,6 @@ implementation:
       --model_path, {inputValue: tflite model path},
       --classes_file, {inputValue: classes file},
       --namespace, {inputValue: namespace},
-      --gpus_to_inference, {inputValue: gpus to inferenceservice}
+      --gpus_to_inference, {inputValue: gpus to inferenceservice},
+      --timestamp, {inputValue: timestamp}
     ]

@@ -1,7 +1,7 @@
 name: Train
 description: train object detection and save model from weights
 inputs:
-  - {name: nfs path, type: String, default: "/mnt/object_detection/001", description: "NFS Mount path"}
+  - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
   - {name: weights, type: String, default: "yolov3-voc_50000.weights", description: "pre-trained weights for training"}
   - {name: cfg_data, type: String, default: "voc.data", description: "data file"}
   - {name: cfg_file, type: String, default: "yolov3-voc.cfg", description: "cfg file"}
@@ -9,10 +9,11 @@ inputs:
   - {name: momentum, type: String, default: "0.9", description: "momentum"}
   - {name: decay, type: String, default: "0.005", description: "decay"}
   - {name: component, type: String, default: "train", description: "Which component you are running"}
+  - {name: timestamp, type: String,  description: "Provide current timestamp"}
 
 implementation:
   container:
-    image: docker.io/poornimadevii/object-detection-train:0.5
+    image: docker.io/poornimadevii/object-detection-train:0.6
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},
@@ -22,5 +23,6 @@ implementation:
       --gpus, {inputValue: gpus},
       --momentum, {inputValue: momentum},
       --decay, {inputValue: decay},
-      --component, {inputValue: component}
+      --component, {inputValue: component},
+      --timestamp, {inputValue: timestamp}
     ]

@@ -29,12 +29,19 @@ while (($#)); do
        CFG_FILE="$1"
        shift
        ;;
+     "--timestamp")
+       shift
+       TIMESTAMP="$1"
+       shift
+       ;;
      *)
        echo "Unknown argument: '$1'"
        exit 1
        ;;
    esac
 done
+
+NFS_PATH=${NFS_PATH}/${TIMESTAMP}
 
 cd ${NFS_PATH}
 

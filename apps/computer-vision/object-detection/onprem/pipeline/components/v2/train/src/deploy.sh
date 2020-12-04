@@ -44,12 +44,19 @@ while (($#)); do
        COMPONENT="$1"
        shift
        ;;
+     "--timestamp")
+       shift
+       TIMESTAMP="$1"
+       shift
+       ;;
      *)
        echo "Unknown argument: '$1'"
        exit 1
        ;;
    esac
 done
+
+NFS_PATH=${NFS_PATH}/${TIMESTAMP}
 
 cd ${NFS_PATH}
 
@@ -77,7 +84,7 @@ metadata:
 spec:
   selector:
     app: object-detection-train
-  type: LoadBalancer
+  type: NodePort
   ports:
     - protocol: TCP
       port: 8090
