@@ -19,6 +19,11 @@ while (($#)); do
        CFG_DATA="$1"
        shift
        ;;
+     "--timestamp")
+       shift
+       TIMESTAMP="$1"
+       shift
+       ;;
      *)
        echo "Unknown argument: '$1'"
        exit 1
@@ -26,17 +31,26 @@ while (($#)); do
    esac
 done
 
+NFS_PATH=${NFS_PATH}/${TIMESTAMP}
+
 # Download VOC datasets
-aws s3 cp ${S3_PATH} ${NFS_PATH} --recursive
+aws s3 cp ${S3_PATH}/datasets ${NFS_PATH}/datasets --recursive
+aws s3 cp ${S3_PATH}/cfg ${NFS_PATH}/cfg --recursive
+aws s3 cp ${S3_PATH}/metadata ${NFS_PATH}/metadata --recursive
+aws s3 cp ${S3_PATH}/pre-trained-weights ${NFS_PATH}/pre-trained-weights --recursive
 
 cd ${NFS_PATH}
 mkdir -p backup
 
 sed -i "s#metadata/#${NFS_PATH}/metadata/#g" cfg/${CFG_DATA}
-sed -i "s#backup/#${NFS_PATH}/backup#g" cfg/${CFG_DATA}
+sed -i "s#backup/#${NFS_PATH}/backup/#g" cfg/${CFG_DATA}
 
-sed -i "s#voc#${NFS_PATH}/datasets/voc#g" metadata/test.txt
-sed -i "s#voc#${NFS_PATH}/datasets/voc#g" metadata/train.txt
+data_folder_file=$(ls ${NFS_PATH}/datasets | grep .tar)
+data_folder_name=${data_folder_file%.*}
+
+
+sed -i "s#${data_folder_name}#${NFS_PATH}/datasets/${data_folder_name}#g" metadata/validate.txt
+sed -i "s#${data_folder_name}#${NFS_PATH}/datasets/${data_folder_name}#g" metadata/train.txt
 
 cd datasets
 
@@ -45,6 +59,12 @@ for f in *.tar; do tar xf "$f"; done
 # Delete all tar files
 rm -rf *.tar
 
+copy_from_dir_name=${NFS_PATH#*/*/}
+copy_to_dir_name=$(echo ${NFS_PATH} | awk -F "/" '{print $3}')
+make_dir_name=exports/$copy_from_dir_name
+
 # Copy datasets, weights and cfg into nfs-server in anonymous namespace to be used for katib
 podname=$(kubectl -n anonymous get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
-kubectl cp ${NFS_PATH} $podname:/exports -n anonymous
+kubectl exec -n anonymous $podname  -- mkdir -p $make_dir_name
+kubectl cp ${NFS_PATH} $podname:exports/$copy_to_dir_name -n anonymous
+

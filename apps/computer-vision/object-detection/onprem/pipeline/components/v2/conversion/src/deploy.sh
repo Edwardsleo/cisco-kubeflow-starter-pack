@@ -39,6 +39,11 @@ while (($#)); do
        TINY="$1"
        shift
        ;;
+     "--timestamp")
+       shift
+       TIMESTAMP="$1"
+       shift
+       ;;
      *)
        echo "Unknown argument: '$1'"
        exit 1
@@ -46,14 +51,14 @@ while (($#)); do
    esac
 done
 
+NFS_PATH=${NFS_PATH}/${TIMESTAMP}
+
 cd ${NFS_PATH}
 
 git clone https://github.com/peace195/tensorflow-lite-YOLOv3.git tensorflow_lite
 
-if [ -d "$OUT_PATH" ]; then
-  # Delete if folder exists
-  rm -rf ${OUT_PATH}
-fi
+
+mkdir -p ${OUT_PATH}
 
 model_file_name=$(basename ${NFS_PATH}/backup/*final.weights)
 
@@ -87,3 +92,14 @@ else
         echo Please enter a valid input \(True/False\)
     fi
 fi
+
+#NFS Cleanup
+
+#NFS Cleanup in kubeflow namespace
+rm -rf backup cfg datasets metadata/*.txt  pre-trained-weights results tensorflow_lite validation-results
+
+#NFS Cleanup in anonymous namespace
+del_dir_name=exports/${NFS_PATH#*/*/}
+nfspodname=$(kubectl -n anonymous get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
+kubectl exec -n anonymous $nfspodname  -- rm -rf $del_dir_name
+

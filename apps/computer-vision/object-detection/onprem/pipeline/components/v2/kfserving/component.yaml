@@ -8,10 +8,11 @@ inputs:
   - {name: classes file, type: String, default: 'voc.names', description: 'Name of the class file ex: voc.names or coco.names'}
   - {name: namespace, type: String, default: "kubeflow", description: 'In which namespace you want to deploy kfserving'}
   - {name: gpus to inferenceservice, type: Integer, default: 1, description: 'Number of gpus to allocate to inferenceservice'}
+  - {name: timestamp, type: String,  description: "Provide current timestamp"}
 
 implementation:
   container:
-    image: docker.io/samba07/object-detection-kfserving:0.5
+    image: docker.io/poornimadevii/object-detection-kfserving:0.6
     command: ["python", "/opt/kfservingdeployer.py"]
     args: [
       --inference-name, {inputValue: inferenceservice name},
@@ -21,4 +22,5 @@ implementation:
       --classes_file, {inputValue: classes file},
       --namespace, {inputValue: namespace},
       --gpus_to_inference, {inputValue: gpus to inferenceservice},
+      --timestamp, {inputValue: timestamp}
     ]

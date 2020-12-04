@@ -1,0 +1,30 @@
+name: Inferencing
+description: Object detection
+inputs:
+  - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
+  - {name: saved_model_dir, type: String, default: 'trained_weights', description: 'name of saved model directory'}
+  - {name: trained_weights, type: String, default: 'yolov3_train_1.tf', description: 'name of trained weights file'}
+  - {name: classes file, type: String, default: 'voc.names', description: 'path to classes file'}
+  - {name: input size, type: Integer, default: 416, description: 'Image size'}
+  - {name: input_image, type: String, default: './data/dog.jpg', description: 'path of input image for inferencing'}
+  - {name: tfrecord, type: String, default: 'None', description: 'input tfrecord dataset instead of image'}
+  - {name: output_image, type: String, default: './dog_output.jpg', description: 'path to output image'}
+  - {name: num_classes, type: Integer, default: 20, description: 'number of object classes'}
+
+implementation:
+  container:
+    image: docker.io/poornimadevii/inference:v0.1
+    command: ["/bin/bash","/opt/main.sh"]
+    args: [
+      
+      --nfs_path, {inputValue: nfs path},
+      --saved_model_dir, {inputValue: saved_model_dir},
+      --trained_weights, {inputValue: trained_weights},
+      --classes_file, {inputValue: classes file},
+      --input_size, {inputValue: input size},
+      --input_image, {inputValue: input_image},
+      --tfrecord, {inputValue: tfrecord},
+      --output_image, {inputValue: output_image},
+      --num_classes, {inputValue: num_classes},
+      
+    ]

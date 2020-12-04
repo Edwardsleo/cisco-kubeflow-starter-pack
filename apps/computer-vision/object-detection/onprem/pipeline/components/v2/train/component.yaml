@@ -1,4 +1,4 @@
-name: Training
+name: Train
 description: train object detection and save model from weights
 inputs:
   - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
@@ -13,7 +13,7 @@ inputs:
 
 implementation:
   container:
-    image: docker.io/samba07/object-detection-train:0.5
+    image: docker.io/poornimadevii/object-detection-train:0.6
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},
@@ -24,5 +24,5 @@ implementation:
       --momentum, {inputValue: momentum},
       --decay, {inputValue: decay},
       --component, {inputValue: component},
-      --timestamp, {inputValue: timestamp},
+      --timestamp, {inputValue: timestamp}
     ]

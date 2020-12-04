@@ -1,0 +1,32 @@
+name: Tflite conversion
+description: Tflite conversion & inferencing
+inputs:
+  - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
+  - {name: s3 path, type: String, description: "s3 bucket url"}
+  - {name: push to s3, type: String, default: "True",description: "Boolean value to input whether model files need to be uploaded to S3 bucket"}
+  - {name: saved_model_dir, type: String, default: 'trained_weights', description: 'name of saved model directory'}
+  - {name: trained_weights, type: String, default: 'yolov3_train_1.tf', description: 'name of weights file'}
+  - {name: tflite model, type: String, default: 'yolov3.tflite', description: 'name of saved tflite model file'}
+  - {name: classes file, type: String, default: 'voc.names', description: 'name of classes file'}
+  - {name: input size, type: Integer, default: 416, description: 'Image size'}
+  - {name: input_image, type: String, default: './data/dog.jpg', description: 'path of input image for inferencing'}
+  - {name: num_classes, type: Integer, default: 20, description: 'number of classes in the model'}
+
+implementation:
+  container:
+    image: docker.io/poornimadevii/tflite-conversion:v0.1
+    command: ["/opt/main.sh"]
+    args: [
+      
+      --nfs_path, {inputValue: nfs path},
+      --s3_path, {inputValue: s3 path},
+      --push_to_s3, {inputValue: push to s3},
+      --saved_model_dir, {inputValue: saved_model_dir},
+      --trained_weights, {inputValue: trained_weights},
+      --tflite_model, {inputValue: tflite model},
+      --classes_file, {inputValue: classes file},
+      --input_size, {inputValue: input size},
+      --input_image, {inputValue: input_image},
+      --num_classes, {inputValue: num_classes},
+      
+    ]

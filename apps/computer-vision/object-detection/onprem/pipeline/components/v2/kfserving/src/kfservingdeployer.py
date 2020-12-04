@@ -27,7 +27,7 @@ def main():
                                   container=V1Container(
                                       name="kfserving-container",
                                       image=FLAGS.image,
-                                      env=[{"name":"STORAGE_URI", "value":"%s"%FLAGS.storage_uri}],
+                                      env=[{"name":"STORAGE_URI", "value":"%s"%(FLAGS.storage_uri + '/' + FLAGS.timestamp)}],
                                       resources=V1ResourceRequirements(limits={"nvidia.com/gpu": FLAGS.gpus_to_inference}),
                                       command=["python"],
                                       args=[
@@ -87,11 +87,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--inference-name', default="object-detection", type=str,
                     help='Name of the inferenceservice model.')
-    parser.add_argument('--storage-uri', default="pvc://nfs/object_detection", help="storage uri path")
+    parser.add_argument('--storage-uri',help="storage uri path")
     parser.add_argument('--image', type=str, help='Inferenceservice custom image')
     parser.add_argument('--model_path', type=str, help='path to tflite file')
     parser.add_argument('--classes_file', type=str, help='Name of the class file ex: voc.names or coco.names')
     parser.add_argument('--namespace', type=str, default="kubeflow",help='In which namespace you want to deploy kfserving')
     parser.add_argument('--gpus_to_inference', type=str, default=1,help='Number of gpus to attach inferencing service')
+    parser.add_argument('--timestamp', help='current timestamp')
     FLAGS, _ = parser.parse_known_args()
     main()

@@ -1,0 +1,48 @@
+name: tfjob creation
+description: Creating tfjob for training
+inputs:
+   - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
+   - {name: timestamp, type: String,  description: "Current timestamp"}
+   - {name: Training image, type: String, default: "docker.io/poornimadevii/tfjob-training:v0.1", description: 'TFJob training image name'}
+   - {name: data dir, type: String, default: "voc", description: 'Dataset directory'}
+   - {name: image list file, type: String, default: "train.txt", description: 'train or test'}
+   - {name: dataset, type: String, default: './data/voc_train.tfrecord', description: 'Path to dataset in .tfrecord format'}
+   - {name: darknet_weights, type: String, default: 'yolov3-voc_final.weights', description: 'Path to darknet weights file'}
+   - {name: converted_weights, type: String, default: './checkpoints/yolov3.tf', description: 'Path to weights file converted from darknet weights'}
+   - {name: classes file, type: String, default: 'voc.names', description: 'name of classes file'}
+   - {name: transfer, type: String, default: 'fine_tune', description: 'Can be one of none or fine_tune, none: Training from scratch, fine_tune: Transfer all and freeze darknet only'}
+   - {name: input size, type: Integer, default: 416, description: 'Image size'}
+   - {name: epochs, type: Integer, default: 1, description: 'number of epochs'}
+   - {name: batch_size, type: Integer, default: 32, description: 'batch size'}
+   - {name: learning_rate, type: Float, default: 1e-5, description: 'learning rate'}
+   - {name: num_classes, type: Integer, default: 20, description: 'number of classes in the model'}
+   - {name: saved_model_dir, type: String, default: 'trained_weights', description: 'path to saved model'}
+   - {name: samples, type: Integer, default: 16551, description: 'no of samples'}
+
+
+implementation:
+  container:
+    image: docker.io/poornimadevii/tfjob-creation:v0.1
+    command: ["python3", "/opt/tfjob-creation.py"]
+    args: [
+    
+      --nfs_path, {inputValue: nfs path},
+      --timestamp, {inputValue: timestamp},
+      --training_image, {inputValue: Training image},
+      --data_dir, {inputValue: data dir},
+      --image_list_file, {inputValue: image list file},
+      --dataset, {inputValue: dataset},
+      --darknet_weights, {inputValue: darknet_weights},
+      --converted_weights, {inputValue: converted_weights},
+      --classes_file, {inputValue: classes file},
+      --transfer, {inputValue: transfer},
+      --input_size, {inputValue: input size},
+      --epochs, {inputValue: epochs},
+      --batch_size, {inputValue: batch_size},
+      --learning_rate, {inputValue: learning_rate},
+      --num_classes, {inputValue: num_classes},
+      --saved_model_dir, {inputValue: saved_model_dir},
+      --samples, {inputValue: samples},
+
+      
+    ]

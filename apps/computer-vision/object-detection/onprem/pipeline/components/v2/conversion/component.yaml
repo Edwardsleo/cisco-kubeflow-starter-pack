@@ -3,15 +3,16 @@ description: Convert & push model to S3 bucket
 inputs:
   - {name: push to s3, type: String, default: "False", description: "Boolean value to input whether model files need to be uploaded to S3 bucket"}
   - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
-  - {name: s3 path, type: String, description: "add s3 bucket url"}
-  - {name: output, type: String, default: "model", description: "path to saved model"}
-  - {name: input size, type: Integer, default: 416, description: "define input size of export model"}
-  - {name: classes file, type: String, default: "voc.names", description: "object classes file"}
+  - {name: s3 path, type: String, description: "Add s3 bucket url"}
+  - {name: output, type: String, default: "model", description: "Path to saved model"}
+  - {name: input size, type: Integer, default: 416, description: "Define input size of export model"}
+  - {name: classes file, type: String, default: "voc.names", description: "Object classes file"}
   - {name: tiny, type: String, default: "False", description: "tiny or yolov3"}
+  - {name: timestamp, type: String,  description: "Provide current timestamp"}
 
 implementation:
   container:
-    image: docker.io/samba07/object-detection-conversion:0.6
+    image: docker.io/poornimadevii/object-detection-conversion:0.7
     command: ["/opt/deploy.sh"]
     args: [
       --push-to-s3, {inputValue: push to s3},
@@ -20,5 +21,6 @@ implementation:
       --out-dir, {inputValue: output},
       --input-size, {inputValue: input size},
       --classes-file, {inputValue: classes file},
-      --tiny, {inputValue: tiny}
+      --tiny, {inputValue: tiny},
+      --timestamp, {inputValue: timestamp}
     ]
