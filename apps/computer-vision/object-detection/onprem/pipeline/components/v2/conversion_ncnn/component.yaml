@@ -1,0 +1,29 @@
+name: Convert2NCNN
+description: Convert Darknet model to NCNN
+inputs:
+  - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
+  - {name: cfg file, type: String, default: "yolov3-voc.cfg", description: "model cfg file"}
+  - {name: weight file, type: String, default: "yolov3-voc_final.weights", description: "model weight file"}
+  - {name: output, type: String, default: "backup", description: "output"}
+  - {name: patch params, type: String, default: "YoloDetectionOutput 2=0.01f 3=0.2f", description: "patch file parameters"}
+  - {name: optimize, type: String, default: "True", description: "audio model flag"}
+  - {name: push to s3, type: String, default: "False", description: "Boolean value to input whether model files need to be uploaded to S3 bucket"}
+  - {name: s3 path, type: String, description: "add s3 bucket url"}
+  - {name: timestamp, type: String,  description: "Provide current timestamp"}
+
+implementation:
+  container:
+    image: docker.io/edward1723/dknet_ncnn:v6
+    command: ["/opt/deploy.sh"]
+    args: [
+      --nfs-path, {inputValue: nfs path},
+      --cfg-file, {inputValue: cfg file},
+      --weight-file, {inputValue: weight file},
+      --output, {inputValue: output},
+      --patch-params, {inputValue: patch params},
+      --is-optimize, {inputValue: optimize},
+       --push-to-s3, {inputValue: push to s3},
+       --s3-path, {inputValue: s3 path},
+       --timestamp, {inputValue: timestamp}
+    ]
+
