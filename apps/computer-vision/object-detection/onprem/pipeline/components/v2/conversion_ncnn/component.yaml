@@ -6,7 +6,7 @@ inputs:
   - {name: weight file, type: String, default: "yolov3-voc_final.weights", description: "model weight file"}
   - {name: output, type: String, default: "backup", description: "output"}
   - {name: patch params, type: String, default: "YoloDetectionOutput 2=0.01f 3=0.2f", description: "patch file parameters"}
-  - {name: optimize, type: String, default: "True", description: "audio model flag"}
+  - {name: optimize, type: String, default: "False", description: "audio model optimization flag"}
   - {name: push to s3, type: String, default: "False", description: "Boolean value to input whether model files need to be uploaded to S3 bucket"}
   - {name: s3 path, type: String, description: "add s3 bucket url"}
   - {name: timestamp, type: String,  description: "Provide current timestamp"}
