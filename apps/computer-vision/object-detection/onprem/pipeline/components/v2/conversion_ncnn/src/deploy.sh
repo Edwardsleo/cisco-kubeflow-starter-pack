@@ -12,7 +12,7 @@ while (($#)); do
        ;;
       "--cfg-file")
 	shift
-	CGF_FILE="$1"
+	CFG_FILE="$1"
 	shift
 	;;
       "--weight-file")
@@ -84,8 +84,8 @@ echo "*******************Ncnn build success***********"
 
 make -j8
 
-dos2unix ${NFS_PATH}/cfg/${CGF_FILE}
-./darknet2ncnn ${NFS_PATH}/cfg/${CGF_FILE} ${NFS_PATH}/backup/${WEIGHT_FILE} ${NFS_PATH}/${OUTPUT}/model.param ${NFS_PATH}/${OUTPUT}/model.bin
+dos2unix ${NFS_PATH}/cfg/${CFG_FILE}
+./darknet2ncnn ${NFS_PATH}/cfg/${CFG_FILE} ${NFS_PATH}/backup/${WEIGHT_FILE} ${NFS_PATH}/${OUTPUT}/model.param ${NFS_PATH}/${OUTPUT}/model.bin
 
 
 if [[ ${IS_OPTIMIZE} == "True" || ${IS_OPTIMIZE} == "true" ]]
