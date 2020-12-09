@@ -84,8 +84,12 @@ echo "*******************Ncnn build success***********"
 
 make -j8
 
+filename=$(basename -- "$CFG_FILE")
+filename="${filename%.*}"
+
 dos2unix ${NFS_PATH}/cfg/${CFG_FILE}
-./darknet2ncnn ${NFS_PATH}/cfg/${CFG_FILE} ${NFS_PATH}/backup/${WEIGHT_FILE} ${NFS_PATH}/${OUTPUT}/model.param ${NFS_PATH}/${OUTPUT}/model.bin
+
+./darknet2ncnn ${NFS_PATH}/cfg/${CFG_FILE} ${NFS_PATH}/backup/${WEIGHT_FILE} ${NFS_PATH}/${OUTPUT}/${filename}.param ${NFS_PATH}/${OUTPUT}/${filename}.bin
 
 
 if [[ ${IS_OPTIMIZE} == "True" || ${IS_OPTIMIZE} == "true" ]]
@@ -99,7 +103,7 @@ echo "********************************Conversion success*************"
 
 cd ../
 cd ../../
-python opt/scripts/patchParam.py ${NFS_PATH}/${OUTPUT}/model.param ${PATCH_PARAM}
+python opt/scripts/patchParam.py ${NFS_PATH}/${OUTPUT}/${filename}.param ${PATCH_PARAM}
 
 
 if [[ ${PUSH_TO_S3} == "False" || ${PUSH_TO_S3} == "false" ]]
