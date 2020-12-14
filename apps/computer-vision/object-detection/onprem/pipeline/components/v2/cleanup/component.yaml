@@ -6,7 +6,7 @@ inputs:
 
 implementation:
   container:
-    image: docker.io/ramdoot/cleanup:0.1
+    image: docker.io/poornimadevii/cleanup:0.2
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},

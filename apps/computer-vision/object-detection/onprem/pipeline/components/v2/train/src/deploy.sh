@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -x
+set -e
 
 while (($#)); do
    case $1 in
@@ -49,6 +50,11 @@ while (($#)); do
        TIMESTAMP="$1"
        shift
        ;;
+     "--s3-path")
+       shift
+       S3_PATH="$1"
+       shift
+       ;;
      *)
        echo "Unknown argument: '$1'"
        exit 1
@@ -73,41 +79,60 @@ then
         fi
     done
     
-    kubectl patch pod $HOSTNAME -n kubeflow -p '{"metadata": {"labels": {"app" : "object-detection-train"}}}'
+    kubectl patch pod $HOSTNAME -n kubeflow -p '{"metadata": {"labels": {"app" : "object-detection-train-'${TIMESTAMP}'"}}}'
 	
-    cat >> object-detection-service.yaml << EOF
+    cat >> object-detection-service-${TIMESTAMP}.yaml << EOF
 apiVersion: v1
 kind: Service
 metadata:
-  name: object-detection-service
+  name: object-detection-service-${TIMESTAMP}
   namespace: kubeflow
 spec:
   selector:
-    app: object-detection-train
+    app: object-detection-train-${TIMESTAMP}
   type: NodePort
   ports:
     - protocol: TCP
       port: 8090
       targetPort: 8090
-      nodePort: 30002
 EOF
 
     #Create an external service to access the dynamic loss chart
-    kubectl apply -f object-detection-service.yaml -n kubeflow    
+    kubectl apply -f object-detection-service-${TIMESTAMP}.yaml -n kubeflow
 
-    echo "Please access dynamically plotted loss chart on http://<INGRESS/EXTERNAL IP>:30002"
+    svc_port=$(kubectl get services -n kubeflow | grep object-detection-service-${TIMESTAMP} | awk '{print $5}')
+    node_port=${svc_port#*:}
+    node_port=${node_port%/*}
+
+    echo "***********Loss mAP chart access details***********" > access_loss_chart.txt
+
+    echo "" >> access_loss_chart.txt
+
+    echo "Assigned node port for accessing loss chart is $node_port" >> access_loss_chart.txt
+
+    echo "Please access dynamically plotted loss chart on http://<INGRESS/EXTERNAL IP>:$node_port" >> access_loss_chart.txt
+
+    aws s3 cp access_loss_chart.txt ${S3_PATH}/access_loss_chart.txt
+
+    sleep 10
    
     echo Training has started...
    
     # Training
     darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${gpus} -dont_show -mjpeg_port 8090 -map
 
+    model_file_name=$(basename ${NFS_PATH}/backup/*final.weights)
+
+    darknet detector map cfg/${CFG_DATA} cfg/${CFG_FILE} backup/$model_file_name > map_result.txt
+
+    mv map_result.txt ./backup
+
     sleep 10
 
     # Delete the external service once training is completed
-    kubectl delete -f object-detection-service.yaml -n kubeflow
+    kubectl delete -f object-detection-service-${TIMESTAMP}.yaml -n kubeflow
 
-    rm -rf object-detection-service.yaml
+    rm -rf object-detection-service-${TIMESTAMP}.yaml
 
     #Collect name of visualisation pod to copy the saved loss chart
     vis_podname=$(kubectl -n kubeflow get pods --field-selector=status.phase=Running | grep ml-pipeline-visualizationserver | awk '{print $1}')

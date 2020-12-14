@@ -2,6 +2,7 @@ name: Train
 description: train object detection and save model from weights
 inputs:
   - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
+  - {name: s3 path, type: String, description: "add s3 bucket url"}
   - {name: weights, type: String, default: "yolov3-voc_50000.weights", description: "pre-trained weights for training"}
   - {name: cfg_data, type: String, default: "voc.data", description: "data file"}
   - {name: cfg_file, type: String, default: "yolov3-voc.cfg", description: "cfg file"}
@@ -13,10 +14,11 @@ inputs:
 
 implementation:
   container:
-    image: docker.io/poornimadevii/object-detection-train:0.6
+    image: docker.io/poornimadevii/object-detection-train:0.7
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},
+      --s3-path, {inputValue: s3 path},
       --weights, {inputValue: weights},
       --cfg_data, {inputValue: cfg_data},
       --cfg_file, {inputValue: cfg_file},
