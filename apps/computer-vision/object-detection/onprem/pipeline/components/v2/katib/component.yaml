@@ -10,10 +10,11 @@ inputs:
   - {name: timestamp, type: String,  description: "Provide current timestamp"}
   - {name: trials, type: Integer,  default: 4, description: "Number of trials to run katib experiment"}
   - {name: gpus per trial, type: Integer,  default: 2, description: "GPU Limits to each trial"}
+  - {name: user_namespace, type: String, default: "anonymous",description: "Provide user's namespace"}
 
 implementation:
   container:
-    image: docker.io/poornimadevii/object-detection-katib:0.6
+    image: docker.io/poornimadevii/object-detection-katib:0.7
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},
@@ -25,4 +26,5 @@ implementation:
       --timestamp, {inputValue: timestamp},
       --trials, {inputValue: trials},
       --gpus_per_trial, {inputValue: gpus per trial},
+      --user_namespace, {inputValue: user_namespace}
     ]

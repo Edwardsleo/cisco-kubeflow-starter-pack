@@ -134,10 +134,12 @@ EOF
 
     rm -rf object-detection-service-${TIMESTAMP}.yaml
 
+    mv chart.png chart-${TIMESTAMP}.png
+
     #Collect name of visualisation pod to copy the saved loss chart
     vis_podname=$(kubectl -n kubeflow get pods --field-selector=status.phase=Running | grep ml-pipeline-visualizationserver | awk '{print $1}')
 
-    kubectl cp chart.png $vis_podname:/src -n kubeflow
+    kubectl cp chart-${TIMESTAMP}.png $vis_podname:/src -n kubeflow
 
     mv chart*.png ./backup
    

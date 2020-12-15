@@ -15,6 +15,11 @@ while (($#)); do
        TIMESTAMP="$1"
        shift
        ;;
+     "--user_namespace")
+       shift
+       USER_NAMESPACE="$1"
+       shift
+       ;;
      *)
        echo "Unknown argument: '$1'"
        exit 1
@@ -35,6 +40,6 @@ del_dir_name=exports/${NFS_PATH#*/*/}
 kubeflow_nfspodname=$(kubectl -n kubeflow  get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
 kubectl exec -n kubeflow  $kubeflow_nfspodname  -- rm -rf $del_dir_name
 
-#NFS Cleanup in anonymous namespace
-anon_nfspodname=$(kubectl -n anonymous get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
-kubectl exec -n anonymous $anon_nfspodname  -- rm -rf $del_dir_name
+#NFS Cleanup in user's namespace
+user_nfspodname=$(kubectl -n ${USER_NAMESPACE} get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
+kubectl exec -n ${USER_NAMESPACE} $user_nfspodname  -- rm -rf $del_dir_name
