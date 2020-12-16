@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -x
+set -e
 
 while (($#)); do
    case $1 in
@@ -49,6 +50,11 @@ while (($#)); do
        GPUS="$1"
        shift
        ;;
+     "--user_namespace")
+       shift
+       USER_NAMESPACE="$1"
+       shift
+       ;;
      *)
        echo "Unknown argument: '$1'"
        exit 1
@@ -66,7 +72,7 @@ cat >> object-detection-katib-$TIMESTAMP.yaml << EOF
 apiVersion: kubeflow.org/v1alpha3
 kind: Experiment
 metadata:
-  namespace: anonymous
+  namespace: ${USER_NAMESPACE}
   labels:
     controller-tools.k8s.io: '1.0'
     timestamp: TIMESTAMP
@@ -172,18 +178,18 @@ kubectl apply -f object-detection-katib-$TIMESTAMP.yaml
 sleep 1
 
 # Check katib experiment
-kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous
+kubectl get experiment -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE}
 
-kubectl rollout status deploy/$(kubectl get deploy -l timestamp=ts-$TIMESTAMP -n anonymous | awk 'FNR==2{print $1}') -n anonymous
+kubectl rollout status deploy/$(kubectl get deploy -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE} | awk 'FNR==2{print $1}') -n ${USER_NAMESPACE}
 
 # Wait for katib experiment to succeed
 while true
 do
-    status=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous | awk 'FNR==2{print $2}')
+    status=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE} | awk 'FNR==2{print $2}')
     if [ $status == "Succeeded" ]
     then
-	  momentum=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[0].value}')
-          decay=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n anonymous -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[1].value}')
+	  momentum=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE} -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[0].value}')
+          decay=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE} -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[1].value}')
 	  if [[ -z "$momentum" || -z "$decay" ]]
 	  then
               echo "Katib has failed! Please check Katib trial pod logs for detailed info"

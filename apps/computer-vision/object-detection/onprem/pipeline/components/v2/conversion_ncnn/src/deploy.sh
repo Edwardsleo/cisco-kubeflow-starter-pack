@@ -60,6 +60,8 @@ done
 
 NFS_PATH=${NFS_PATH}/${TIMESTAMP}
 
+mkdir ${NFS_PATH}/ncnn-results
+
 git clone https://github.com/xiangweizeng/darknet2ncnn.git
 
 cd darknet2ncnn
@@ -89,12 +91,12 @@ filename="${filename%.*}"
 
 dos2unix ${NFS_PATH}/cfg/${CFG_FILE}
 
-./darknet2ncnn ${NFS_PATH}/cfg/${CFG_FILE} ${NFS_PATH}/backup/${WEIGHT_FILE} ${NFS_PATH}/${OUTPUT}/${filename}.param ${NFS_PATH}/${OUTPUT}/${filename}.bin
+./darknet2ncnn ${NFS_PATH}/cfg/${CFG_FILE} ${NFS_PATH}/backup/${WEIGHT_FILE} ${NFS_PATH}/ncnn-results/${filename}.param ${NFS_PATH}/ncnn-results/${filename}.bin
 
 
 if [[ ${IS_OPTIMIZE} == "True" || ${IS_OPTIMIZE} == "true" ]]
 then
-	#echo "ncnn/build/tools/ncnnoptimize ${NFS_PATH}/${OUTPUT}/model.param ${NFS_PATH}/${OUTPUT}/model.bin audio_opt.param audio_opt.bin"
+	ncnn/build/tools/ncnnoptimize ${NFS_PATH}/ncnn-results/${filename}.param ${NFS_PATH}/ncnn-results/${filename}.bin ${NFS_PATH}/ncnn-results/${filename}_opt.param ${NFS_PATH}/ncnn-results/${filename}_opt.bin 65536
 	echo "audio is working"
 fi
 
@@ -103,17 +105,18 @@ echo "********************************Conversion success*************"
 
 cd ../
 cd ../../
-python opt/scripts/patchParam.py ${NFS_PATH}/${OUTPUT}/${filename}.param ${PATCH_PARAM}
+python opt/scripts/patchParam.py ${NFS_PATH}/ncnn-results/${filename}.param ${PATCH_PARAM}
 
 
 if [[ ${PUSH_TO_S3} == "False" || ${PUSH_TO_S3} == "false" ]]
 then
-    echo Proceeding with Inference serving of the saved model in tflite format
+    echo Proceeding with cleanup of NFS
 
 else
     if [[ ${PUSH_TO_S3} == "True" || ${PUSH_TO_S3} == "true" ]]
     then
-        aws s3 cp ${NFS_PATH}/backup ${S3_PATH}/backup --recursive
+	aws s3 cp ${NFS_PATH}/backup ${S3_PATH}/backup --recursive    
+        aws s3 cp ${NFS_PATH}/ncnn-results ${S3_PATH}/ncnn-results --recursive
     else
         echo Please enter a valid input \(True/False\)
     fi

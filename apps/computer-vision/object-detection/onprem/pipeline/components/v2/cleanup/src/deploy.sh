@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -x
+set -e
 
 while (($#)); do
    case $1 in
@@ -12,6 +13,11 @@ while (($#)); do
      "--timestamp")
        shift
        TIMESTAMP="$1"
+       shift
+       ;;
+     "--user_namespace")
+       shift
+       USER_NAMESPACE="$1"
        shift
        ;;
      *)
@@ -27,13 +33,13 @@ cd ${NFS_PATH}
 
 
 #NFS Cleanup
+del_dir_name=exports/${NFS_PATH#*/*/}
+
 
 #NFS Cleanup in kubeflow namespace
-rm -rf backup cfg datasets metadata/*.txt  pre-trained-weights results validation-results
+kubeflow_nfspodname=$(kubectl -n kubeflow  get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
+kubectl exec -n kubeflow  $kubeflow_nfspodname  -- rm -rf $del_dir_name
 
-#NFS Cleanup in anonymous namespace
-del_dir_name=exports/${NFS_PATH#*/*/}
-nfspodname=$(kubectl -n anonymous get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
-kubectl exec -n anonymous $nfspodname  -- rm -rf $del_dir_name
-
-
+#NFS Cleanup in user's namespace
+user_nfspodname=$(kubectl -n ${USER_NAMESPACE} get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
+kubectl exec -n ${USER_NAMESPACE} $user_nfspodname  -- rm -rf $del_dir_name

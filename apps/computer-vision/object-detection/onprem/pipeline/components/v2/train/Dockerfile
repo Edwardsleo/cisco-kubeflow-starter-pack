@@ -1,6 +1,9 @@
 FROM daisukekobayashi/darknet:gpu-cv-cc75
 RUN apt update
-RUN apt install curl -y
+RUN apt install curl python3 python3-pip -y
+
+# Install awscli
+RUN pip3 install awscli
 
 # Install kubectl
 RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.19.0/bin/linux/amd64/kubectl

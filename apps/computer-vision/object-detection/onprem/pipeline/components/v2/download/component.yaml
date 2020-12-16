@@ -5,14 +5,16 @@ inputs:
   - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
   - {name: cfg_data, type: String, default: "voc.data", description: "data file"}
   - {name: timestamp, type: String,  description: "Provide current timestamp"}
+  - {name: user_namespace, type: String, default: "anonymous",description: "Provide user's namespace"}
 
 implementation:
   container:
-    image: docker.io/poornimadevii/object-detection-download:0.5
+    image: docker.io/poornimadevii/object-detection-download:0.6
     command: ["/opt/deploy.sh"]
     args: [
       --s3-path, {inputValue: s3 path},
       --nfs-path, {inputValue: nfs path},
       --cfg_data, {inputValue: cfg_data},
-      --timestamp, {inputValue: timestamp}
+      --timestamp, {inputValue: timestamp},
+      --user_namespace, {inputValue: user_namespace}
     ]

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -x
+set -e
 
 while (($#)); do
    case $1 in
@@ -22,6 +23,11 @@ while (($#)); do
      "--timestamp")
        shift
        TIMESTAMP="$1"
+       shift
+       ;;
+     "--user_namespace")
+       shift
+       USER_NAMESPACE="$1"
        shift
        ;;
      *)
@@ -64,7 +70,7 @@ copy_to_dir_name=$(echo ${NFS_PATH} | awk -F "/" '{print $3}')
 make_dir_name=exports/$copy_from_dir_name
 
 # Copy datasets, weights and cfg into nfs-server in anonymous namespace to be used for katib
-podname=$(kubectl -n anonymous get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
-kubectl exec -n anonymous $podname  -- mkdir -p $make_dir_name
-kubectl cp ${NFS_PATH} $podname:exports/$copy_to_dir_name -n anonymous
+podname=$(kubectl -n ${USER_NAMESPACE} get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
+kubectl exec -n ${USER_NAMESPACE} $podname  -- mkdir -p $make_dir_name
+kubectl cp ${NFS_PATH} $podname:exports/$copy_to_dir_name -n ${USER_NAMESPACE}
 
