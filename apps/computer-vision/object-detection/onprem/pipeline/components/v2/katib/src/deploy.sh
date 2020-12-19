@@ -1,7 +1,11 @@
 #!/bin/bash
 
+#Basic debugging mode
 set -x
-set -e
+
+#Basic error handling
+set -eo pipefail
+shopt -s inherit_errexit
 
 while (($#)); do
    case $1 in
@@ -199,8 +203,14 @@ do
 	      break
 	  fi
     else
-	echo "Experiment: $status"
-	sleep 30
+	if [ -z "$status" ]
+        then
+             echo "Status of Katib experiment not to be found!!"
+	     exit 3
+	else
+	    echo "Experiment: $status"
+	    sleep 30
+	fi
 
     fi
 done

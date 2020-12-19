@@ -1,7 +1,11 @@
 #!/bin/bash
 
+#Basic debugging mode
 set -x
-set -e
+
+#Basic error handling
+set -eo pipefail
+shopt -s inherit_errexit
 
 while (($#)); do
    case $1 in
