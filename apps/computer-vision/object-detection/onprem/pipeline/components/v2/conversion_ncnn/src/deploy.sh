@@ -84,7 +84,6 @@ cd darknet2ncnn
 
 git config --global http.proxy ''
 git submodule init
-#sleep 10
 git submodule update
 
 
