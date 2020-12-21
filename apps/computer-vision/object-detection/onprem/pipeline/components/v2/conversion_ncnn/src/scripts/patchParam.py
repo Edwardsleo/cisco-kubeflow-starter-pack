@@ -7,6 +7,7 @@ def usage():
 if __name__ == '__main__':
     if len(sys.argv) < 4:
         usage()
+        raise Exception("Error occurred!! More error details below %s\n" %sys.exc_info())
 
     file_name = sys.argv[1]
     layer_name = sys.argv[2]
@@ -17,17 +18,15 @@ if __name__ == '__main__':
     for i in range(3,len(sys.argv)):
         p = sys.argv[i].strip().split('=')
         if len(p) != 2:
-            print("bad parameter: ", sys.argv[i])
             usage()
-            sys.exit()
+            raise ValueError("bad parameter: ", sys.argv[i])
         params[p[0]]=p[1]
 
     print(params)
 
 
     if not os.path.isfile(file_name):
-        print("File path {} does not exist. Exiting...".format(file_name))
-        sys.exit()
+        raise FileNotFoundError("File path {} does not exist. Exiting...".format(file_name))
 
     with open(file_name) as fp:
         for line in fp:

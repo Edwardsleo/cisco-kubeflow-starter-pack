@@ -1,7 +1,10 @@
 #!/bin/bash
 
+#Basic debugging mode
 set -x
-set -e
+
+#Basic error handling
+set -eo pipefail
 
 while (($#)); do
    case $1 in
@@ -60,11 +63,26 @@ done
 
 NFS_PATH=${NFS_PATH}/${TIMESTAMP}
 
+filename=$(basename -- "$CFG_FILE")
+filename="${filename%.*}"
+
+if [ ! -f ${NFS_PATH}/cfg/${CFG_FILE} ]; then
+	echo "${filename}.cfg file is not present!"
+	exit 1
+fi
+
+if [ ! -f ${NFS_PATH}/backup/${WEIGHT_FILE} ]; then
+        echo "${filename}.weight file is not present!"
+        exit 1
+fi
+
 mkdir ${NFS_PATH}/ncnn-results
 
 git clone https://github.com/xiangweizeng/darknet2ncnn.git
 
 cd darknet2ncnn
+
+git config --global http.proxy ''
 git submodule init
 git submodule update
 
@@ -86,9 +104,6 @@ echo "*******************Ncnn build success***********"
 
 make -j8
 
-filename=$(basename -- "$CFG_FILE")
-filename="${filename%.*}"
-
 dos2unix ${NFS_PATH}/cfg/${CFG_FILE}
 
 ./darknet2ncnn ${NFS_PATH}/cfg/${CFG_FILE} ${NFS_PATH}/backup/${WEIGHT_FILE} ${NFS_PATH}/ncnn-results/${filename}.param ${NFS_PATH}/ncnn-results/${filename}.bin
@@ -105,8 +120,8 @@ echo "********************************Conversion success*************"
 
 cd ../
 cd ../../
-python opt/scripts/patchParam.py ${NFS_PATH}/ncnn-results/${filename}.param ${PATCH_PARAM}
 
+python opt/scripts/patchParam.py ${NFS_PATH}/ncnn-results/${filename}.param ${PATCH_PARAM}
 
 if [[ ${PUSH_TO_S3} == "False" || ${PUSH_TO_S3} == "false" ]]
 then
@@ -121,3 +136,4 @@ else
         echo Please enter a valid input \(True/False\)
     fi
 fi
+

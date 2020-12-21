@@ -1,7 +1,11 @@
 #!/bin/bash
 
+#Basic debugging mode
 set -x
-set -e
+
+#Basic error handling
+set -eo pipefail
+shopt -s inherit_errexit
 
 while (($#)); do
    case $1 in
@@ -15,9 +19,9 @@ while (($#)); do
        S3_PATH="$1"
        shift
        ;;
-     "--weights")
+     "--trained_weights")
        shift
-       WEIGHTS="$1"
+       TRAINED_WEIGHTS="$1"
        shift
        ;;
      "--cfg_data")
@@ -49,7 +53,7 @@ cd ${NFS_PATH}
 mkdir results
 
 #Validation
-darknet detector valid cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -dont_show
+darknet detector valid cfg/${CFG_DATA} cfg/${CFG_FILE} backup/${TRAINED_WEIGHTS} -dont_show
 
 #Create directory with timestamp
 mkdir -p validation-results
