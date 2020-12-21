@@ -47,10 +47,10 @@ Provide the **source** file path or path pattern of data.
    
 Provide the custom visualization code and click on **Generate Visualization**.
 
-In the below code please replace **timestamp** with the timestamp value of the present pipeline run.
+Please replace **timestamp** placeholder in the below code with the timestamp value of your present pipeline run.
                 
                 from IPython.display import Image
-                Image(filename='chart-<<timestamp>>.png' ,width = 600, height = 300) 
+                Image(filename='chart-<<timestamp>>.png', width = 600, height = 300) 
                                 
 View generated visualization by scrolling down.
 
