@@ -9,7 +9,7 @@ inputs:
 
 implementation:
   container:
-    image: docker.io/poornimadevii/object-detection-download:0.6
+    image: docker.io/poornimadevii/object-detection-download:0.7
     command: ["/opt/deploy.sh"]
     args: [
       --s3-path, {inputValue: s3 path},

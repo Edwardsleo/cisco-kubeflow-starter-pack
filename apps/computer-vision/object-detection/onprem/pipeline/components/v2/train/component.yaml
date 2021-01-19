@@ -14,7 +14,7 @@ inputs:
 
 implementation:
   container:
-    image: docker.io/poornimadevii/object-detection-train:0.7
+    image: docker.io/poornimadevii/object-detection-train:0.9
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},

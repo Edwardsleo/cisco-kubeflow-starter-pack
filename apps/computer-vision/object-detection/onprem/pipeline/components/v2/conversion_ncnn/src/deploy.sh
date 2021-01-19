@@ -18,6 +18,11 @@ while (($#)); do
 	CFG_FILE="$1"
 	shift
 	;;
+      "--cfg_data")
+       shift
+       CFG_DATA="$1"
+       shift
+        ;;	
       "--weight-file")
         shift
         WEIGHT_FILE="$1"
@@ -66,14 +71,26 @@ NFS_PATH=${NFS_PATH}/${TIMESTAMP}
 filename=$(basename -- "$CFG_FILE")
 filename="${filename%.*}"
 
+backup_folder=$(awk '/backup/{print}' ${NFS_PATH}/cfg/${CFG_DATA} | awk '{print$3}')
+
 if [ ! -f ${NFS_PATH}/cfg/${CFG_FILE} ]; then
 	echo "${filename}.cfg file is not present!"
 	exit 1
 fi
 
-if [ ! -f ${NFS_PATH}/backup/${WEIGHT_FILE} ]; then
+if [[ $backup_folder = '.' || $backup_folder = ' ' ]]
+then 
+
+if [ ! -f ${NFS_PATH}/${WEIGHT_FILE} ]; then
         echo "${filename}.weight file is not present!"
         exit 1
+fi
+
+else
+if [ ! -f ${NFS_PATH}/${backup_folder}/${WEIGHT_FILE} ]; then
+        echo "${filename}.weight file is not present!"
+        exit 1
+fi
 fi
 
 mkdir ${NFS_PATH}/ncnn-results
@@ -106,8 +123,14 @@ make -j8
 
 dos2unix ${NFS_PATH}/cfg/${CFG_FILE}
 
-./darknet2ncnn ${NFS_PATH}/cfg/${CFG_FILE} ${NFS_PATH}/backup/${WEIGHT_FILE} ${NFS_PATH}/ncnn-results/${filename}.param ${NFS_PATH}/ncnn-results/${filename}.bin
 
+if [[ $backup_folder = '.' || $backup_folder = ' ' ]]
+then
+
+    ./darknet2ncnn ${NFS_PATH}/cfg/${CFG_FILE} ${NFS_PATH}/${WEIGHT_FILE} ${NFS_PATH}/ncnn-results/${filename}.param ${NFS_PATH}/ncnn-results/${filename}.bin
+else
+    ./darknet2ncnn ${NFS_PATH}/cfg/${CFG_FILE} ${NFS_PATH}/${backup_folder}/${WEIGHT_FILE} ${NFS_PATH}/ncnn-results/${filename}.param ${NFS_PATH}/ncnn-results/${filename}.bin
+fi
 
 if [[ ${IS_OPTIMIZE} == "True" || ${IS_OPTIMIZE} == "true" ]]
 then
@@ -130,7 +153,20 @@ then
 else
     if [[ ${PUSH_TO_S3} == "True" || ${PUSH_TO_S3} == "true" ]]
     then
-	aws s3 cp ${NFS_PATH}/backup ${S3_PATH}/backup --recursive    
+	if [[ $backup_folder = '.' || $backup_folder = ' ' ]]
+	then
+	    weights_file=$(ls ${NFS_PATH}/*.weights)
+	    weights_file_list=${weights_file[@]}
+
+            for file in $weights_file_list
+	    do	    
+		aws s3 cp $file ${S3_PATH}/$(basename $file)
+	    done
+
+	    aws s3 cp ${NFS_PATH}/map_result.txt ${S3_PATH}
+        else
+	    aws s3 cp ${NFS_PATH}/${backup_folder} ${S3_PATH}/${backup_folder} --recursive
+        fi	    
         aws s3 cp ${NFS_PATH}/ncnn-results ${S3_PATH}/ncnn-results --recursive
     else
         echo Please enter a valid input \(True/False\)

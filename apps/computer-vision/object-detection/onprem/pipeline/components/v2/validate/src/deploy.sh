@@ -52,8 +52,17 @@ cd ${NFS_PATH}
 
 mkdir results
 
-#Validation
-darknet detector valid cfg/${CFG_DATA} cfg/${CFG_FILE} backup/${TRAINED_WEIGHTS} -dont_show
+backup_folder=$(awk '/backup/{print}' cfg/${CFG_DATA} | awk '{print$3}')
+
+if [[ $backup_folder = '.' || $backup_folder = ' ' ]]
+then
+
+    #Validation
+    darknet detector valid cfg/${CFG_DATA} cfg/${CFG_FILE} ./${TRAINED_WEIGHTS} -dont_show
+else
+   #Validation
+    darknet detector valid cfg/${CFG_DATA} cfg/${CFG_FILE} ${backup_folder}/${TRAINED_WEIGHTS} -dont_show
+fi
 
 #Create directory with timestamp
 mkdir -p validation-results

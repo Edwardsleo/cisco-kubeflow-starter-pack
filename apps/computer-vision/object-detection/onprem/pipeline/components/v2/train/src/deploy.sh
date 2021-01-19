@@ -121,40 +121,75 @@ EOF
     sleep 10
    
     echo Training has started...
+
+    if [[ ${WEIGHTS} = 'None' || ${WEIGHTS} = 'none' ]]
+    then	    
    
-    # Training
-    darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${gpus} -dont_show -mjpeg_port 8090 -map
+        # Training from scratch
+        darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} -gpus ${gpus} -dont_show -mjpeg_port 8090 -map
+    else
+        # Training with pre-trained weights
+        darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${gpus} -dont_show -mjpeg_port 8090 -map  
+    fi
 
-    model_file_name=$(basename ${NFS_PATH}/backup/*final.weights)
+    backup_folder=$(awk '/backup/{print}' cfg/${CFG_DATA} | awk '{print$3}')
 
-    darknet detector map cfg/${CFG_DATA} cfg/${CFG_FILE} backup/$model_file_name > map_result.txt
+    if [[ $backup_folder = '.' || $backup_folder = ' ' ]]
+    then
 
-    mv map_result.txt ./backup
+        model_file_name=$(basename ${NFS_PATH}/*final.weights)
 
-    sleep 10
+        darknet detector map cfg/${CFG_DATA} cfg/${CFG_FILE} $model_file_name > map_result.txt
+
+        sleep 10
+
+	mv chart.png chart-${TIMESTAMP}.png
+
+	#Collect name of visualisation pod to copy the saved loss chart
+        vis_podname=$(kubectl -n kubeflow get pods --field-selector=status.phase=Running | grep ml-pipeline-visualizationserver | awk '{print $1}')
+
+        kubectl cp chart-${TIMESTAMP}.png $vis_podname:/src -n kubeflow
+
+    else
+
+	model_file_name=$(basename ${NFS_PATH}/${backup_folder}/*final.weights)
+
+        darknet detector map cfg/${CFG_DATA} cfg/${CFG_FILE} ${backup_folder}/$model_file_name > map_result.txt
+
+        mv map_result.txt ./$backup_folder
+
+        sleep 10
+
+        mv chart.png chart-${TIMESTAMP}.png
+
+        #Collect name of visualisation pod to copy the saved loss chart
+        vis_podname=$(kubectl -n kubeflow get pods --field-selector=status.phase=Running | grep ml-pipeline-visualizationserver | awk '{print $1}')
+
+        kubectl cp chart-${TIMESTAMP}.png $vis_podname:/src -n kubeflow
+
+        mv chart*.png ./$backup_folder
+    fi
 
     # Delete the external service once training is completed
     kubectl delete -f object-detection-service-${TIMESTAMP}.yaml -n kubeflow
 
     rm -rf object-detection-service-${TIMESTAMP}.yaml
-
-    mv chart.png chart-${TIMESTAMP}.png
-
-    #Collect name of visualisation pod to copy the saved loss chart
-    vis_podname=$(kubectl -n kubeflow get pods --field-selector=status.phase=Running | grep ml-pipeline-visualizationserver | awk '{print $1}')
-
-    kubectl cp chart-${TIMESTAMP}.png $vis_podname:/src -n kubeflow
-
-    mv chart*.png ./backup
    
    
 else
     sed -i "s/momentum.*/momentum=${MOMENTUM}/g" cfg/${CFG_FILE}
     sed -i "s/decay.*/decay=${DECAY}/g" cfg/${CFG_FILE}
 
-    # Training
-    darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${GPUS} -dont_show > /var/log/katib/training.log
-       
+    if [[ ${WEIGHTS} = 'None' || ${WEIGHTS} = 'none' ]]
+    then
+
+        # Training from scratch
+        darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} -gpus ${GPUS} -dont_show > /var/log/katib/training.log
+    else
+        # Training with pre-trained weights
+        darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${GPUS} -dont_show > /var/log/katib/training.log
+    fi
+
     cat /var/log/katib/training.log
     avg_loss=$(tail -2 /var/log/katib/training.log | head -1 | awk '{ print $3 }')
     echo "loss=${avg_loss}"
