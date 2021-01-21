@@ -10,7 +10,7 @@ inputs:
   - {name: timestamp, type: String,  description: "Provide current timestamp"}
   - {name: trials, type: Integer,  default: 4, description: "Number of trials to run katib experiment"}
   - {name: gpus per trial, type: Integer,  default: 2, description: "GPU Limits to each trial"}
-  - {name: user_namespace, type: String, default: "anonymous",description: "Provide user's namespace"}
+  - {name: user_namespace, type: String, default: "anonymous", description: "Provide user's namespace"}
 
 implementation:
   container:

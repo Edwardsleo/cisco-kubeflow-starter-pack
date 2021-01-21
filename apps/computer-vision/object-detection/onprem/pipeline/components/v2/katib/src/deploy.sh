@@ -190,6 +190,8 @@ sleep 1
 # Check katib experiment
 kubectl get experiment -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE}
 
+sleep 5
+
 kubectl rollout status deploy/$(kubectl get deploy -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE} | awk 'FNR==2{print $1}') -n ${USER_NAMESPACE}
 
 # Wait for katib experiment to succeed

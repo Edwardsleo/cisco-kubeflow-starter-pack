@@ -11,6 +11,7 @@ inputs:
   - {name: decay, type: String, default: "0.005", description: "decay"}
   - {name: component, type: String, default: "train", description: "Which component you are running"}
   - {name: timestamp, type: String,  description: "Provide current timestamp"}
+  - {name: user_namespace, type: String, default: "anonymous",description: "Provide user's namespace"}
 
 implementation:
   container:
@@ -26,5 +27,6 @@ implementation:
       --momentum, {inputValue: momentum},
       --decay, {inputValue: decay},
       --component, {inputValue: component},
-      --timestamp, {inputValue: timestamp}
+      --timestamp, {inputValue: timestamp},
+      --user_namespace, {inputValue: user_namespace}
     ]
