@@ -230,7 +230,7 @@ Currently, the hyperparameters chosen are momentum and decay.
 #### **Note**:
 To customize the hyperparameters used for tuning, refer [here](./Katib.md).
 
-### <a name='Features with Darknet training'></a>**Additional features with Darknet training**
+### <a name='FeatureswithDarknettraining'></a>**Additional features with Darknet training**
 
 Certain features have been added to the training component of this pipeline to aid your darknet model training to be better and safe. They are mentioned as below along with usage.
 
@@ -246,7 +246,7 @@ Darknet training is visualised on-the-fly by plotting average loss and accuracy 
 
 * The exact URL to access the dynamically plotted mAP chart can be obtained from `access_loss_chart.txt` that will be pushed to S3 bucket just before the start of the actual darknet training as shown below.
 
-![Object Detection Pipeline](pictures/26-access-loss-chart.png)
+![Object Detection Pipeline](pictures/26-access-loss-chart.PNG)
 
 * It can also be viewed in the logs of the training component as shown below.
 
@@ -262,7 +262,7 @@ Darknet training is visualised on-the-fly by plotting average loss and accuracy 
 
 This feature enables you to take a look at the completed mAP chart even after the object detection pipeline has completed it's execution. The mAP chart will be a static one.
 
-For more information on how to make use of, please refer [here](object-detection-visualisation/README.md)
+For more information on how to make use of, please refer [here](object-detection-visualisation/README.md).
 
 #### <a name='Virtualservice'></a>***Virtual service implementation***
 
@@ -272,7 +272,7 @@ Virtual service provides a way to utilize the node's ingress IP and ingress node
 
 Implementation of virtual service in training component is shown below:
 
-![Object Detection Pipeline](pictures/28-virtual-service.png)
+![Object Detection Pipeline](pictures/28-virtual-service.PNG)
 
 ### <a name='Inferencing'></a>**Model Inference from Notebook**
 
