@@ -240,7 +240,7 @@ Darknet training is visualised on-the-fly by plotting average loss and accuracy 
 
 ##### How to access the dynamic mAP chart
 
-* The chart can be accessed only during the execution of the training component. Start your running the object detection pipeline and wait to reach the beginning of training component execution. Sample dynamical mAP chart as shown below.
+* The chart can be accessed only during the execution of the training component. Start running the object detection pipeline and wait reach till the training component execution begins. Sample dynamical mAP chart as shown below.
 
 ![Object Detection Pipeline](pictures/25-map-chart.png)
 
