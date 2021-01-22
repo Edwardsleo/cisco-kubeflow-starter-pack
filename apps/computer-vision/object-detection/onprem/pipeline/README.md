@@ -18,6 +18,10 @@
 	* [Run Object Detection Pipeline](#RunPipeline)
 	* [KF Pipeline Dashboard](#PipelineDashboard)
 	* [Katib Dashboard](#KatibDashboard)
+    * [Additional features with Darknet training](#FeatureswithDarknettraining)
+        * [Dynamic mAP chart](#Dynamicplot)
+        * [Static mAP chart](#Staticplot)
+        * [Virtual service implementation](#Virtualservice)            
 	* [Model Inference](#Inferencing)
 <!-- vscode-markdown-toc-config
 	numbering=false
@@ -226,6 +230,50 @@ Currently, the hyperparameters chosen are momentum and decay.
 #### **Note**:
 To customize the hyperparameters used for tuning, refer [here](./Katib.md).
 
+### <a name='FeatureswithDarknettraining'></a>**Additional features with Darknet training**
+
+Certain features have been added to the training component of this pipeline to aid your darknet model training to be better and safe. They are mentioned as below along with usage.
+
+#### <a name='Dynamicplot'></a>***Dynamically plotted loss cum mAP(Mean Average Precision) chart***
+
+Darknet training is visualised on-the-fly by plotting average loss and accuracy mAP(Mean Average Precision) values against the number of iterations. It helps in tracking the training trajectory and taking the required actions in case of any discrepancy noticed during on-going training.
+
+##### How to access the dynamic mAP chart
+
+* The chart can be accessed only during the execution of the training component. Start running the object detection pipeline and wait reach till the training component execution begins. Sample dynamical mAP chart as shown below.
+
+![Object Detection Pipeline](pictures/25-map-chart.png)
+
+* The exact URL to access the dynamically plotted mAP chart can be obtained from `access_loss_chart.txt` that will be pushed to S3 bucket just before the start of the actual darknet training as shown below.
+
+![Object Detection Pipeline](pictures/26-access-loss-chart.PNG)
+
+* It can also be viewed in the logs of the training component as shown below.
+
+![Object Detection Pipeline](pictures/27-training-log.png)
+
+* Basically the URL is of the following format.
+
+ `http://<INGRESS_IP>:<INGRESS_NODEPORT>/<user's namespace>/mapchart/<timestamp of your pipeline run>`
+
+* The dynamic access of the mAP chart will end once the training is done, and the chart will be saved within your timestamp folder. Consequently it will pushed to the S3 bucket.
+
+#### <a name='Staticplot'></a>***Static mAP chart viewing***
+
+This feature enables you to take a look at the completed mAP chart even after the object detection pipeline has completed it's execution. The mAP chart will be a static one.
+
+For more information on how to make use of, please refer [here](object-detection-visualisation/README.md).
+
+#### <a name='Virtualservice'></a>***Virtual service implementation***
+
+This feature enables you to safely view the dynamically plotted mAP chart externally without exposing any node port to outside world. The cluster may prove to be vulnerable to unwanted attacks if in any case the exposed node port or the related service is failed to be deleted after use due to any pipeline related or any other issue.
+
+Virtual service provides a way to utilize the node's ingress IP and ingress nodeport along with a specific URI to view the dynamic chart without exposing any new nodeport.
+
+Implementation of virtual service in training component is shown below:
+
+![Object Detection Pipeline](pictures/28-virtual-service.PNG)
+
 ### <a name='Inferencing'></a>**Model Inference from Notebook**
 
 Create an inference service & check whether it is ready. 
@@ -243,5 +291,4 @@ Create an inference service & check whether it is ready.
 
 ### How to build component's Docker image 
 To build any component docker image in general, go to the [components folder](./components/v2/) and build the respective component's docker image and push into your Docker Hub
-
 

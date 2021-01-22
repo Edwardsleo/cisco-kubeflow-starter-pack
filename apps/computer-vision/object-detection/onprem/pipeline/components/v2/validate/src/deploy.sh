@@ -52,8 +52,11 @@ cd ${NFS_PATH}
 
 mkdir results
 
+backup_folder=$(awk '/backup/{print}' cfg/${CFG_DATA} | awk '{print$3}')
+
+
 #Validation
-darknet detector valid cfg/${CFG_DATA} cfg/${CFG_FILE} backup/${TRAINED_WEIGHTS} -dont_show
+darknet detector valid cfg/${CFG_DATA} cfg/${CFG_FILE} ${backup_folder}/${TRAINED_WEIGHTS} -dont_show
 
 #Create directory with timestamp
 mkdir -p validation-results
@@ -63,4 +66,3 @@ cp results/* validation-results
 
 #Push validation results to S3 bucket
 aws s3 cp validation-results  ${S3_PATH}/validation-results --recursive
-

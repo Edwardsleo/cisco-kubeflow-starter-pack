@@ -3,6 +3,7 @@ description: Convert Darknet model to NCNN
 inputs:
   - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
   - {name: cfg file, type: String, default: "yolov3-voc.cfg", description: "model cfg file"}
+  - {name: cfg_data, type: String, default: "voc.data", description: "data file"}
   - {name: weight file, type: String, default: "yolov3-voc_final.weights", description: "model weight file"}
   - {name: output, type: String, default: "backup", description: "output"}
   - {name: patch params, type: String, default: "YoloDetectionOutput 2=0.01f 3=0.2f", description: "patch file parameters"}
@@ -13,11 +14,12 @@ inputs:
 
 implementation:
   container:
-    image: docker.io/poornimadevii/conversion_ncnn:0.4
+    image: docker.io/poornimadevii/conversion_ncnn:0.5
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},
       --cfg-file, {inputValue: cfg file},
+      --cfg_data, {inputValue: cfg_data},
       --weight-file, {inputValue: weight file},
       --output, {inputValue: output},
       --patch-params, {inputValue: patch params},

@@ -11,10 +11,11 @@ inputs:
   - {name: decay, type: String, default: "0.005", description: "decay"}
   - {name: component, type: String, default: "train", description: "Which component you are running"}
   - {name: timestamp, type: String,  description: "Provide current timestamp"}
+  - {name: user_namespace, type: String, default: "anonymous",description: "Provide user's namespace"}
 
 implementation:
   container:
-    image: docker.io/poornimadevii/object-detection-train:0.7
+    image: docker.io/poornimadevii/object-detection-train:0.9
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},
@@ -26,5 +27,6 @@ implementation:
       --momentum, {inputValue: momentum},
       --decay, {inputValue: decay},
       --component, {inputValue: component},
-      --timestamp, {inputValue: timestamp}
+      --timestamp, {inputValue: timestamp},
+      --user_namespace, {inputValue: user_namespace}
     ]

@@ -167,12 +167,18 @@ sed -i "s/TIMESTAMP/ts-$TIMESTAMP/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/NUMBER-OF-TRIALS/$TRIALS/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s|docker.io|$IMAGE|g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s#/mnt/#$NFS_PATH/#g" object-detection-katib-$TIMESTAMP.yaml
-sed -i "s/PRETRAINED-WEIGHTS/$WEIGHTS/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/CONFIG-DATA/$CFG_DATA/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/CONFIG-FILE/$CFG_FILE/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/GPUS/$gpus/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/COMPONENT-TYPE/$COMPONENT/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/GPU-PER-TRIAL/$GPUS/g" object-detection-katib-$TIMESTAMP.yaml
+
+if [[ $WEIGHTS = 'None' || $WEIGHTS = 'none' ]]
+then
+     sed -i '/- "PRETRAINED-WEIGHTS"/d;/- "--weights"/d' object-detection-katib-$TIMESTAMP.yaml
+else
+     sed -i "s/PRETRAINED-WEIGHTS/$WEIGHTS/g" object-detection-katib-$TIMESTAMP.yaml
+fi
 
 
 # Creating katib experiment
@@ -183,6 +189,8 @@ sleep 1
 
 # Check katib experiment
 kubectl get experiment -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE}
+
+sleep 5
 
 kubectl rollout status deploy/$(kubectl get deploy -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE} | awk 'FNR==2{print $1}') -n ${USER_NAMESPACE}
 
