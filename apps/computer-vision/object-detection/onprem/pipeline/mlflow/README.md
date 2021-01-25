@@ -4,13 +4,13 @@
 * [MLFlow](#mlflow)
     * [MLFlow tracking](#mlflowtracking)
         * [MLFlow setup on UCS](#mlflowsetup)
-            * [MySQL database setup](#deploysecret)
-                 * [Deploy MySQL service](#deployservice)
-                 * [Deploy MLFLow tracking server](#deployserver)
+            * [MySQL database setup](#mysqlsetup)
+	         * [Create MySQL secret](#mysqlsecret) 
+                 * [Create MySQL deployment & service](#createmysqlservice)
+            * [Deploy MLFLow tracking server](#deployserver)
         * [MLFlow procedure of use](#mlflowuse)
             * [Log MLFlow runs](#logruns)
-            * [Cleanup MLFlow on UCS](#cleanupmlflow)
-            * [Cleanup MLFlow logged experiment](#cleanupmlflowexperiment)
+            * [Cleanup MLFlow setup on UCS](#cleanupmlflow)
 <!-- vscode-markdown-toc-config
 	numbering=false
 	autoSave=true
@@ -21,7 +21,7 @@
 
 MLflow is an open source platform for managing end-to-end machine learning lifecycle.
 
-## <a name='mlflowtracking'></a>**MLFlow Tracking**
+### <a name='mlflowtracking'></a>**MLFlow Tracking**
 
 MLflow tracking component is an API and UI for logging parameters, code versions, metrics, and output files when running your machine learning code and for later visualizing the results.
 
@@ -31,12 +31,12 @@ In order to log the object detection pipeline runs using MLFlow, there is a need
 
 The setup steps are as follows:
 
-## <a name='deploysecret'></a>***Setup MySQL Database***  
+### <a name='mysqlsetup'></a>***Setup MySQL Database***  
 
 MLflow runs can be recorded to local files, to a SQLAlchemy compatible database, or remotely to a tracking server.
 In our case MLflow runs are recorded in MySQL database.
 
-### **Create Secret for MySQL**
+#### <a name='mysqlsecret'></a> **Create Secret for MySQL**
 
 Create a secret consisting of database name, user name and password of the MySQL database using this [YAML configuration](mysql-secret.yaml) using the following command.
 
@@ -47,7 +47,7 @@ Create a secret consisting of database name, user name and password of the MySQL
   secret/mysqldb-secret created
 ```
 
-### <a name='deployservice'></a>**Create MySQL deployment, service & PVC**
+#### <a name='createmysqlservice'></a>**Create MySQL deployment, service & PVC**
 
 The database is deployed to UCS as a Kubernetes deployment using this [YAML configuration](mysql-server-deployment.yaml) using the following command.
 
@@ -60,7 +60,7 @@ deployment.apps/mysql-deployment created
 service/mysql-service created
 ```
 
-### **Check MySQL deployment**
+#### **Check MySQL deployment**
 
 Verify MySQL deployment using the following command.
 
@@ -83,7 +83,7 @@ deployment.apps/mlflow-deployment created
 service/mlflow-service created
 ```
 
-### **Check MLFlow tracking server deployment & service**
+#### **Check MLFlow tracking server deployment & service**
 
 * Verify MLFlow tracking server deployment using the following command.
 
@@ -102,7 +102,7 @@ mlflow-deployment-68788c5fb4-cdc88 1/1 Running 0 98m
 Expected Output
 mlflow-service NodePort 10.101.97.115 <none> 5000:30781/TCP 115m
 ```
-### **Access MLFlow Dashboard**
+#### **Access MLFlow Dashboard**
 
 Access MLflow dashboard UI using URL in the following format:
 
@@ -110,14 +110,14 @@ Access MLflow dashboard UI using URL in the following format:
 
 ![Mlfow](pictures/vis0.PNG)
 
-### <a name='mlflowuse'></a>**MLFlow procedure of use**
+## <a name='mlflowuse'></a>**MLFlow procedure of use**
 
 Upload, open and start executing [object-detection-pipeline-deployment-ncnn.ipynb](../object-detection-pipeline-deployment-ncnn.ipynb) till ```Tracking using MLFlow``` cell is reached as shown below.
 
 ![Mlfow](pictures/jp1.PNG)
 
 
-#### ***Log MLFlow runs***
+### <a name='logruns'></a>***Log MLFlow runs***
 
 Metrics and/or parameters corresponding to the MLFlow run are logged from the pipeline notebook using MLflow Tracking server URI which looks like:
 
