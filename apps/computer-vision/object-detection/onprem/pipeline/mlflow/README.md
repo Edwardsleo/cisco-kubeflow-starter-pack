@@ -31,14 +31,14 @@ In order to log the object detection pipeline runs using MLFlow, there is a need
 
 The setup steps are as follows:
 
-### <a name='deploysecret'></a>***Setup MySQL Database***  
+## <a name='deploysecret'></a>***Setup MySQL Database***  
 
 MLflow runs can be recorded to local files, to a SQLAlchemy compatible database, or remotely to a tracking server.
 In our case MLflow runs are recorded in MySQL database.
 
-#### **Create Secret for MySQL**
+### **Create Secret for MySQL**
 
-Create a secret consisting of database name, user name and password of the MySQL database using this [YAML configuration]() using the following command.
+Create a secret consisting of database name, user name and password of the MySQL database using this [YAML configuration](mysql-secret.yaml) using the following command.
 
 ```$ kubectl apply -f mysql-secret.yaml -n kubeflow```
 
@@ -49,7 +49,7 @@ Create a secret consisting of database name, user name and password of the MySQL
 
 ### <a name='deployservice'></a>**Create MySQL deployment, service & PVC**
 
-The database is deployed to UCS as a Kubernetes deployment using this [YAML configuration](mlflow/mysql-server-deployment.yaml) using the following command.
+The database is deployed to UCS as a Kubernetes deployment using this [YAML configuration](mysql-server-deployment.yaml) using the following command.
 
 ```$ kubectl apply -f mysql-server-deployment.yaml -n kubeflow```
 
@@ -60,7 +60,7 @@ deployment.apps/mysql-deployment created
 service/mysql-service created
 ```
 
-#### **Check MySQL deployment**
+### **Check MySQL deployment**
 
 Verify MySQL deployment using the following command.
 
@@ -71,9 +71,9 @@ Expected Output
 mysql-deployment-d9c65fdfd-gdpbx 1/1 Running 0 7m30s
 ```
 
-#### <a name='deployserver'></a>**Create MLFlow tracking server deployment & service**
+### <a name='deployserver'></a>**Create MLFlow tracking server deployment & service**
 
-Create a deployment and service for MLFlow tracking server using this [YAML configuration](mlflow/mlflow_tracking_server.yaml) with the following command.
+Create a deployment and service for MLFlow tracking server using this [YAML configuration](mlflow_tracking_server.yaml) with the following command.
 
 ```$ kubectl apply -f mlflow_tracking_server.yaml -n kubeflow```
 
@@ -83,7 +83,7 @@ deployment.apps/mlflow-deployment created
 service/mlflow-service created
 ```
 
-#### **Check MLFlow tracking server deployment & service**
+### **Check MLFlow tracking server deployment & service**
 
 * Verify MLFlow tracking server deployment using the following command.
 
@@ -102,19 +102,19 @@ mlflow-deployment-68788c5fb4-cdc88 1/1 Running 0 98m
 Expected Output
 mlflow-service NodePort 10.101.97.115 <none> 5000:30781/TCP 115m
 ```
-#### **Access MLFlow Dashboard**
+### **Access MLFlow Dashboard**
 
 Access MLflow dashboard UI using URL in the following format:
 
 ```http://<INGRESS IP>:<MLFLOW service nodeport>```
 
-![Mlfow](mlflow/pictures/vis0.PNG)
+![Mlfow](pictures/vis0.PNG)
 
 ### <a name='mlflowuse'></a>**MLFlow procedure of use**
 
-Upload, open and start executing [object-detection-pipeline-deployment-ncnn.ipynb]() till ```Tracking using MLFlow``` cell is reached as shown below.
+Upload, open and start executing [object-detection-pipeline-deployment-ncnn.ipynb](../object-detection-pipeline-deployment-ncnn.ipynb) till ```Tracking using MLFlow``` cell is reached as shown below.
 
-![Mlfow](mlflow/pictures/jp1.PNG)
+![Mlfow](pictures/jp1.PNG)
 
 
 #### ***Log MLFlow runs***
@@ -123,8 +123,8 @@ Metrics and/or parameters corresponding to the MLFlow run are logged from the pi
 
 ```http://<mlflow-service-name>.<namespace>.svc.cluster.local:5000```
 
-![Mlfow](mlflow/pictures/vis1.PNG)
-[Mlfow](mlflow/pictures/vis2.PNG)
+![Mlfow](pictures/vis1.PNG)
+![Mlfow](pictures/vis2.PNG)
 
 ### <a name='cleanupmlflow'></a>**Cleanup MLFlow on UCS**
 
