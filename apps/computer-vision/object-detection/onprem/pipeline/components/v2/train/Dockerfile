@@ -1,6 +1,6 @@
 FROM daisukekobayashi/darknet:gpu-cv-cc75
 RUN apt update
-RUN apt install curl python3 python3-pip -y
+RUN apt install curl python3 python3-pip bsdmainutils -y
 
 # Install awscli
 RUN pip3 install awscli

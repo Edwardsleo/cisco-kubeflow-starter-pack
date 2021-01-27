@@ -6,15 +6,16 @@ inputs:
   - {name: cfg_data, type: String, default: "voc.data", description: "data file"}
   - {name: cfg_file, type: String, default: "yolov3-voc.cfg", description: "cfg file"}
   - {name: component, type: String, default: "katib", description: "Which component you are running"}
-  - {name: image, type: String,  default: "docker.io/poornimadevii/object-detection-train:0.9", description: "Provide image to run katib experiment"}
+  - {name: image, type: String,  default: "docker.io/poornimadevii/object-detection-train:1.0", description: "Provide image to run katib experiment"}
   - {name: timestamp, type: String,  description: "Provide current timestamp"}
   - {name: trials, type: Integer,  default: 4, description: "Number of trials to run katib experiment"}
   - {name: gpus per trial, type: Integer,  default: 2, description: "GPU Limits to each trial"}
   - {name: user_namespace, type: String, default: "anonymous", description: "Provide user's namespace"}
+  - {name: max_batches, type: Integer, default: 51000, description: "Provide max batches"}
 
 implementation:
   container:
-    image: docker.io/poornimadevii/object-detection-katib:0.8
+    image: docker.io/poornimadevii/object-detection-katib:1.0
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},
@@ -26,5 +27,6 @@ implementation:
       --timestamp, {inputValue: timestamp},
       --trials, {inputValue: trials},
       --gpus_per_trial, {inputValue: gpus per trial},
-      --user_namespace, {inputValue: user_namespace}
+      --user_namespace, {inputValue: user_namespace},
+      --max_batches, {inputValue: max_batches}
     ]

@@ -1,0 +1,27 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: clean-up
+  namespace: kubeflow
+spec:
+  schedule: "0 0 */3 * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cleanup
+            image: samba07/cronjob:0.2
+            imagePullPolicy: IfNotPresent
+            args: ["--age",  "40d",
+                   "--days", "10"
+                  ]
+            volumeMounts:
+            - mountPath: "/var/run"
+              name: docker-daemon
+          restartPolicy: OnFailure
+          volumes:
+          - name: docker-daemon
+            hostPath:
+              path: /var/run
+              type: Directory
