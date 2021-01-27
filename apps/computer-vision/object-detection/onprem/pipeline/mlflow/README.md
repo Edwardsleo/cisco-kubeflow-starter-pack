@@ -121,7 +121,7 @@ Upload, open and start executing [object-detection-pipeline-deployment-ncnn.ipyn
 
 ### <a name='logruns'></a>***Log MLFlow runs***
 
-Metrics and/or parameters corresponding to the MLFlow run are logged from the pipeline notebook using MLflow Tracking server URI which looks like:
+By executing ```Tracking using MLFlow``` cells, metrics and/or parameters corresponding to the MLFlow run are logged from the pipeline notebook using MLflow Tracking server URI which looks like:
 
 ```http://<mlflow-service-name>.<namespace>.svc.cluster.local:5000```
 
