@@ -2,15 +2,16 @@
 
 <!-- vscode-markdown-toc -->
 * [MLFlow](#mlflow)
-    * [MLFlow tracking](#mlflowtracking)
-        * [MLFlow setup on UCS](#mlflowsetup)
-            * [MySQL database setup](#mysqlsetup)
-	         * [Create MySQL secret](#mysqlsecret) 
+     * [MLFlow tracking](#mlflowtracking)
+          * [MLFlow setup on UCS](#mlflowsetup)
+             * [MySQL database setup](#mysqlsetup)
+	             * [Create MySQL secret](#mysqlsecret) 
                  * [Create MySQL deployment & service](#createmysqlservice)
-            * [Deploy MLFLow tracking server](#deployserver)
-        * [MLFlow procedure of use](#mlflowuse)
-            * [Log MLFlow runs](#logruns)
-            * [Cleanup MLFlow setup on UCS](#cleanupmlflow)
+	         * [MLFlow tracking server setup](#serversetup)
+                 * [Deploy MLFLow tracking server](#deployserver)
+          * [MLFlow procedure of use](#mlflowuse)
+             * [Log MLFlow runs](#logruns)
+             * [Cleanup MLFlow setup on UCS](#cleanupmlflow)
 <!-- vscode-markdown-toc-config
 	numbering=false
 	autoSave=true
@@ -70,8 +71,9 @@ Verify MySQL deployment using the following command.
 Expected Output
 mysql-deployment-d9c65fdfd-gdpbx 1/1 Running 0 7m30s
 ```
+### <a name='serversetup'></a>***MLFlow tracking server setup***  
 
-### <a name='deployserver'></a>**Create MLFlow tracking server deployment & service**
+#### <a name='deployserver'></a>**Create MLFlow tracking server deployment & service**
 
 Create a deployment and service for MLFlow tracking server using this [YAML configuration](mlflow_tracking_server.yaml) with the following command.
 
