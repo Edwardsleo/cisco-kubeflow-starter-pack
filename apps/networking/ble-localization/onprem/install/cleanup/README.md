@@ -1,4 +1,4 @@
-# CronJob 
+# Resource cleanup 
 
 ## Creating a Cron Job
 
