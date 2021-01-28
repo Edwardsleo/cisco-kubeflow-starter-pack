@@ -39,7 +39,7 @@ In our case MLflow runs are recorded in MySQL database.
 
 #### <a name='mysqlsecret'></a> **Create Secret for MySQL**
 
-Create a secret consisting of database name, user name and password of the MySQL database using this [YAML configuration](mysql-secret.yaml) using the following command.
+Create a secret using base64 encoding for custom database name, user name and password for your MySQL database similar to [YAML configuration](mysql-secret.yaml), which has base64 encodings for a set of default values listed at the top of manifest file, and apply it to the cluster using the following command. 
 
 ```$ kubectl apply -f mysql-secret.yaml -n kubeflow```
 
