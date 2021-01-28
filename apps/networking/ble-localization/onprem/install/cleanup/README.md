@@ -1,10 +1,11 @@
-# Resource cleanup 
+# Resource Cleanup 
+
+We are deleting unused docker images, stopped containers and deleting files from nfs volume, katib experiments, workflows that are older than 'X' days.
+Cron job approach was shown below, though one may try other approaches.
 
 ## Creating a Cron Job
 
 CronJob runs a job periodically on a given schedule, written in Cron format.
-
-We are deleting unused docker images, stopped containers and deleting files from nfs volume, katib experiments, workflows are older than 'X' days.
 
 Create a Cron job using [cronjob.yaml](cronjob.yaml) config file
 
