@@ -102,7 +102,7 @@ mlflow-deployment-68788c5fb4-cdc88 1/1 Running 0 98m
 
 ```
 Expected Output
-mlflow-service NodePort 10.101.97.115 <none> 5000:30781/TCP 115m
+mlflow-service NodePort 10.101.97.115 <none> 9002:30781/TCP 115m
 ```
 #### **Access MLFlow Dashboard**
 
@@ -114,16 +114,18 @@ Access MLflow dashboard UI using URL in the following format:
 
 ## <a name='mlflowuse'></a>**MLFlow procedure of use**
 
-Upload, open and start executing [object-detection-pipeline-deployment-ncnn.ipynb](../object-detection-pipeline-deployment-ncnn.ipynb) till ```Tracking using MLFlow``` cell is reached as shown below.
+Upload, open and start executing [object-detection-pipeline-deployment-ncnn.ipynb](../object-detection-pipeline-deployment-ncnn.ipynb) till ```Pipeline parameters/metrics logging using MLFlow``` cells are reached as shown below.
 
 ![Mlfow](pictures/jp1.PNG)
+
+![Mlfow](pictures/jp2.PNG)
 
 
 ### <a name='logruns'></a>***Log MLFlow runs***
 
-By executing ```Tracking using MLFlow``` cells, metrics and/or parameters corresponding to the MLFlow run are logged from the pipeline notebook using MLflow Tracking server URI which looks like:
+By executing ```Pipeline parameters/metrics logging using MLFlow``` cells, metrics and/or parameters corresponding to the MLFlow run are logged from the pipeline notebook using MLflow Tracking server URI which looks like:
 
-```http://<mlflow-service-name>.<namespace>.svc.cluster.local:5000```
+```http://<mlflow-service-name>.<namespace>.svc.cluster.local:9002```
 
 ![Mlfow](pictures/vis1.PNG)
 ![Mlfow](pictures/vis2.PNG)
