@@ -114,7 +114,7 @@ Access MLflow dashboard UI using URL in the following format:
 
 ## <a name='mlflowuse'></a>**MLFlow procedure of use**
 
-Upload, open and start executing [object-detection-pipeline-deployment-ncnn.ipynb](../object-detection-pipeline-deployment-ncnn.ipynb) till ```Pipeline parameters/metrics logging using MLFlow``` cells are reached as shown below.
+Upload, open and start executing [object-detection-pipeline-deployment-mlflow.ipynb](../object-detection-pipeline-deployment-mlflow.ipynb) till ```Pipeline parameters/metrics logging using MLFlow``` cells are reached as shown below.
 
 ![Mlfow](pictures/jp1.PNG)
 
