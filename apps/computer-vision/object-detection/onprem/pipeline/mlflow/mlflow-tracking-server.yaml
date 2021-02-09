@@ -19,13 +19,13 @@ spec:
         imagePullPolicy: Always
         args:
         - --host=0.0.0.0
-        - --port=9000
+        - --port=80
         - --backend-store-uri=mysql+pymysql://kf-user:kf-password@mysql-service.kubeflow.svc.cluster.local:3306/kubeflow
         - --default-artifact-root=file:/tmp
         - --workers=2
         ports:
         - name: http
-          containerPort: 9000
+          containerPort: 80
           protocol: TCP
         resources:
           requests:
@@ -37,12 +37,30 @@ kind: Service
 metadata:
   name: mlflow-service
 spec:
-  type: NodePort
   ports:
-    - port: 9002
-      targetPort: 9000
+    - port: 80
       protocol: TCP
       name: http
   selector:
     app: mlflow-deployment
-
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: mlflow-virtualsvc
+spec:
+  gateways:
+  - kubeflow/kubeflow-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        prefix: /mlflow-ui/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: mlflow-service.kubeflow.svc.cluster.local
+        port:
+          number: 80
