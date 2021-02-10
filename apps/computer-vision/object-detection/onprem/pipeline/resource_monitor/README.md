@@ -6,6 +6,7 @@ Monitoring usage of Cpu, Gpu and memory with Prometheus and Grafana
 * [Setup](#setup)
     * [Prometheus Operator](#prometheusOperator)
     * [DCGM EXporter](#dcgmExporter)
+    * [Prometheus Virtual Service](#prometheusVirtualService)
 * [Accessing Metrics](#accessingMetrics)
     * [Prometheus](#prometheusDashboard)
     * [Grafana](#grafana)
@@ -52,7 +53,7 @@ kubectl --namespace kubeflow get pods -l "release=$chartName"
 
 ### <a name='dcgmExporter'></a>DCGM EXporter
 
-Now, we will deploy `dcgm-exporter` to gather GPU telemetry.
+Now, we will deploy [dcgm-exporter](https://github.com/NVIDIA/gpu-monitoring-tools) to gather GPU telemetry.
 
 ```
 kubectl create -f https://raw.githubusercontent.com/NVIDIA/gpu-monitoring-tools/2.0.0-rc.9/dcgm-exporter.yaml -n kubeflow
@@ -64,16 +65,19 @@ kubectl get po -n kubeflow | grep dcgm-exporter
 
 ![MONITORING](pictures/2.dcgm-exporter.PNG)
 
+### <a name='prometheusVirtualService'></a>Prometheus Virtual Service
+
+Create a Prometheus Virtual Service to access Prometheus Dashboard
+
+```
+kubectl apply -f prometheus-vs.yaml
+```
+ 
 ## <a name='accessingMetrics'></a>Accessing Metrics
 
 ### <a name='prometheusDashboard'></a>Prometheus
 
-* To open Prometheus, enter the following command
-```
-kubectl port-forward -n kubeflow svc/prometheus-operated 9090 9090
-```
-* This starts a local proxy of Prometheus on port 9090. For security reasons, the Prometheus UI is exposed only within the cluster.
-* Navigate to the Prometheus UI at http://localhost:9090
+* Navigate to the Prometheus UI at http://<INGRESS_IP>:<INGRESS_PORT>/prometheus
 
 ![MONITORING](pictures/3.prometheus-dashboard.PNG)
 
@@ -108,7 +112,17 @@ kubectl port-forward -n istio-system svc/grafana 3000 3000
 
 * In the URL box, enter `prometheus` url.
 ```
-http://prometheus-operated.kubeflow.svc.cluster.local:9090
+kubectl get svc -l app=prometheus-operator-prometheus -n kubeflow -o jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+```
+Expected Output
+```
+prometheus-operator-161280-prometheus
+```
+![MONITORING](pictures/prometheus-svc-name.PNG)
+
+```
+Usage: http://<prometheus-svc-name>.<namespace>.svc.cluster.local:9090
+Example: http://prometheus-operator-161280-prometheus.kubeflow.svc.cluster.local:9090
 ```
 * Click Save & Test.
 
