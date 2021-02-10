@@ -109,7 +109,7 @@ mlflow-service ClusterIP   10.111.135.88 <none> 80/TCP
 
 Access MLflow dashboard UI using URL in the following format:
 
-```http://INGRESS_IP:INGRESS_IP_PORT/mlflow-dashboard/```
+```http://INGRESS_IP:INGRESS_NODEPORT/mlflow-dashboard/```
 
 ![Mlfow](pictures/vis0.PNG)
 
