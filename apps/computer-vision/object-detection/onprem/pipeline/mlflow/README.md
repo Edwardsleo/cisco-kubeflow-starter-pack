@@ -83,6 +83,7 @@ Create a deployment and service for MLFlow tracking server using this [YAML conf
 Expected Output
 deployment.apps/mlflow-deployment created
 service/mlflow-service created
+virtualservice.networking.istio.io/mlflow-virtualsvc created
 ```
 
 #### **Check MLFlow tracking server deployment & service**
@@ -102,13 +103,13 @@ mlflow-deployment-68788c5fb4-cdc88 1/1 Running 0 98m
 
 ```
 Expected Output
-mlflow-service NodePort 10.101.97.115 <none> 9002:30781/TCP 115m
+mlflow-service ClusterIP   10.111.135.88 <none> 80/TCP
 ```
 #### **Access MLFlow Dashboard**
 
 Access MLflow dashboard UI using URL in the following format:
 
-```http://<INGRESS_IP>:<INGRESS_IP_PORT>```
+```http://INGRESS_IP:INGRESS_IP_PORT/mlflow-dashboard/```
 
 ![Mlfow](pictures/vis0.PNG)
 
@@ -142,6 +143,7 @@ Delete the MLFlow setup on UCS using the following commands.
 Expected Output
 deployment.apps/mlflow-deployment deleted
 service/mlflow-service deleted
+virtualservice.networking.istio.io "mlflow-virtualsvc" deleted
 ```
 
 * Delete MLFlow tracking server deployment, service & PVC.

@@ -56,7 +56,7 @@ spec:
   http:
   - match:
     - uri:
-        prefix: /mlflow-ui/
+        prefix: /mlflow-dashboard/
     rewrite:
       uri: /
     route:
