@@ -198,6 +198,18 @@ EOF
 
     darknet detector map cfg/${CFG_DATA} cfg/${CFG_FILE} ${backup_folder}/$model_file_name > map_result.txt
 
+    # Collect metrics for MLflow logging
+    values_list=$(awk '/recall/{print}' map_result.txt | sed s/,/\\n/g)
+    precision_score=$(echo $values_list | awk '{print $7}')
+    recall_score=$(echo $values_list | awk '{print $10}')
+    f1_score=$(echo $values_list | awk '{print $13}')
+    map_line=$(awk '/mAP@/{print}' map_result.txt)
+    map_value=$(echo $map_line | awk '{print $6}' | rev | cut -c2- | rev)
+
+    echo "{\"metrics\": [{\"name\": \"f1-score\", \"numberValue\": ${f1_score}},{\"name\": \"precision-score\", \"numberValue\": ${precision_score}},{\"name\": \"recall-score\", \"numberValue\": ${recall_score}},{\"name\": \"map-score\", \"numberValue\": ${map_value}}]}" > /mlpipeline-metrics.json
+
+    cat /mlpipeline-metrics.json
+    
     if ! [[ -f ${backup_folder}/map_result.txt ]]
 
     then
