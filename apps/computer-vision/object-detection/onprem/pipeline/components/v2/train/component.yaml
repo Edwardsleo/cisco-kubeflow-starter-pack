@@ -18,7 +18,7 @@ outputs:
 
 implementation:
   container:
-    image: docker.io/edward1723/object-detection-train:1.2
+    image: docker.io/samba07/test:train1.1_1
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},

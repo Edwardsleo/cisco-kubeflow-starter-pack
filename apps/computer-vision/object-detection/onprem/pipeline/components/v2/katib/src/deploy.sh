@@ -64,6 +64,11 @@ while (($#)); do
        MAX_BATCHES="$1"
        shift
        ;;
+     "--pvc")
+       shift
+       PVC="$1"
+       shift
+       ;;
      *)
        echo "Unknown argument: '$1'"
        exit 1
@@ -165,7 +170,7 @@ spec:
               volumes:
               - name: nfs-volume
                 persistentVolumeClaim:
-                  claimName: nfs1
+                  claimName: ${PVC}
 EOF
 
 
