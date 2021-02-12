@@ -81,14 +81,13 @@ arrIN=(${CFG_FILE//./ })
 katib_cfg="${arrIN[0]}-${TIMESTAMP}.${arrIN[1]}"
 cp cfg/${CFG_FILE} cfg/${katib_cfg}
 sed -i "s/max_batches.*/max_batches=${MAX_BATCHES}/g" cfg/${katib_cfg}
-cat cfg/${katib_cfg}
 
-copy_from_dir_name=${NFS_PATH#*/*/}
-copy_to_dir_name=$(echo ${NFS_PATH} | awk -F "/" '{print $3}')
-make_dir_name=exports/$copy_from_dir_name
+#copy_from_dir_name=${NFS_PATH#*/*/}
+#copy_to_dir_name=$(echo ${NFS_PATH} | awk -F "/" '{print $3}')
+#make_dir_name=exports/$copy_from_dir_name
 
-podname=$(kubectl -n ${USER_NAMESPACE} get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
-kubectl cp cfg/${katib_cfg} $podname:exports/$copy_from_dir_name/cfg/${CFG_FILE} -n ${USER_NAMESPACE}
+#podname=$(kubectl -n ${USER_NAMESPACE} get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
+#kubectl cp cfg/${katib_cfg} $podname:exports/$copy_from_dir_name/cfg/${CFG_FILE} -n ${USER_NAMESPACE}
 
 touch object-detection-katib-$TIMESTAMP.yaml
 
@@ -175,9 +174,10 @@ sed -i "s/KATIB_NAME/$EXP_NAME/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/TIMESTAMP/ts-$TIMESTAMP/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/NUMBER-OF-TRIALS/$TRIALS/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s|docker.io|$IMAGE|g" object-detection-katib-$TIMESTAMP.yaml
-sed -i "s#/mnt/#$NFS_PATH/#g" object-detection-katib-$TIMESTAMP.yaml
+sed -i "s#/mnt/#$NFS_PATH#g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/CONFIG-DATA/$CFG_DATA/g" object-detection-katib-$TIMESTAMP.yaml
-sed -i "s/CONFIG-FILE/$CFG_FILE/g" object-detection-katib-$TIMESTAMP.yaml
+sed -i "s/CONFIG-FILE/$katib_cfg/g" object-detection-katib-$TIMESTAMP.yaml
+#sed -i "s/CONFIG-FILE/$CFG_FILE/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/GPUS/$GPUS/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/COMPONENT-TYPE/$COMPONENT/g" object-detection-katib-$TIMESTAMP.yaml
 sed -i "s/GPU-PER-TRIAL/$GPUS/g" object-detection-katib-$TIMESTAMP.yaml

@@ -81,13 +81,3 @@ for f in *.tar; do tar xf "$f"; done
 
 # Delete all tar files
 rm -rf *.tar
-
-copy_from_dir_name=${NFS_PATH#*/*/}
-copy_to_dir_name=$(echo ${NFS_PATH} | awk -F "/" '{print $3}')
-make_dir_name=exports/$copy_from_dir_name
-
-# Copy datasets, weights and cfg into nfs-server in user namespace to be used for Katib
-podname=$(kubectl -n ${USER_NAMESPACE} get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
-kubectl exec -n ${USER_NAMESPACE} $podname  -- mkdir -p $make_dir_name
-kubectl cp ${NFS_PATH} $podname:exports/$copy_to_dir_name -n ${USER_NAMESPACE}
-
