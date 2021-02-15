@@ -77,12 +77,13 @@ mysql-deployment-d9c65fdfd-gdpbx 1/1 Running 0 7m30s
 
 Create a deployment and service for MLFlow tracking server using this [YAML configuration](mlflow_tracking_server.yaml) with the following command.
 
-```$ kubectl apply -f mlflow_tracking_server.yaml -n kubeflow```
+```$ kubectl apply -f mlflow-tracking-server.yaml -n kubeflow```
 
 ```
 Expected Output
 deployment.apps/mlflow-deployment created
 service/mlflow-service created
+virtualservice.networking.istio.io/mlflow-virtualsvc created
 ```
 
 #### **Check MLFlow tracking server deployment & service**
@@ -102,13 +103,13 @@ mlflow-deployment-68788c5fb4-cdc88 1/1 Running 0 98m
 
 ```
 Expected Output
-mlflow-service NodePort 10.101.97.115 <none> 9002:30781/TCP 115m
+mlflow-service ClusterIP   10.111.135.88 <none> 80/TCP
 ```
 #### **Access MLFlow Dashboard**
 
 Access MLflow dashboard UI using URL in the following format:
 
-```http://<INGRESS IP>:<MLFLOW service nodeport>```
+```http://INGRESS_IP:INGRESS_NODEPORT/mlflow-dashboard/```
 
 ![Mlfow](pictures/vis0.PNG)
 
@@ -125,7 +126,7 @@ Upload, open and start executing [object-detection-pipeline-deployment-mlflow.ip
 
 By executing ```Pipeline parameters/metrics logging using MLFlow``` cells, metrics and/or parameters corresponding to the MLFlow run are logged from the pipeline notebook using MLflow Tracking server URI which looks like:
 
-```http://<mlflow-service-name>.<namespace>.svc.cluster.local:9002```
+```http://<mlflow-service-name>.<namespace>.svc.cluster.local:port```
 
 ![Mlfow](pictures/vis1.PNG)
 ![Mlfow](pictures/vis2.PNG)
@@ -142,6 +143,7 @@ Delete the MLFlow setup on UCS using the following commands.
 Expected Output
 deployment.apps/mlflow-deployment deleted
 service/mlflow-service deleted
+virtualservice.networking.istio.io "mlflow-virtualsvc" deleted
 ```
 
 * Delete MLFlow tracking server deployment, service & PVC.
