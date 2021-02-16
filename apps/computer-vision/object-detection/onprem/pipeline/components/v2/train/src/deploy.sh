@@ -71,21 +71,6 @@ while (($#)); do
    esac
 done
 
-# Check resources/GPU 
-#namespace=$(kubectl get po --all-namespaces| grep $HOSTNAME | awk '{print $1}')
-#node_name=$(kubectl get po $HOSTNAME -n $namespace -o=jsonpath={.spec.nodeName})
-#node_des=$(kubectl describe node $node_name |  tr -d '\000' | sed -n -e '/^Name/,/Roles/p' -e '/^Capacity/,/Allocatable/p' -e '/^Allocated resources/,/Events/p'  | grep -e Name  -e  nvidia.com  | perl -pe 's/\n//'  |  perl -pe 's/Name:/\n/g' | sed 's/nvidia.com\/gpu:\?//g'  | awk '{print $2, $3}'  | column -t )
-#total_gpus=$(echo $node_des | awk '{print $1}')
-#used_gpus=$(echo $node_des | awk '{print $2}')
-#current_available_gpus=$(expr $total_gpus - $used_gpus)
-#if [[ $GPUS -gt $current_available_gpus ]];then
-#        echo "Total GPU's in $node_name node: $total_gpus"
-#        echo "Toatl used GPU's in $node_name node: $used_gpus"
-#        echo "Current available GPU's in $node_name node:  $current_available_gpus"
-#        echo "Requested $GPUS GPU's are not available in $node_name node."
-#        exit 1
-#fi
-
 NFS_PATH=${NFS_PATH}/${TIMESTAMP}
 
 cd ${NFS_PATH}
@@ -193,7 +178,6 @@ EOF
 
     backup_folder=$(awk '/backup/{print}' cfg/${CFG_DATA} | awk '{print$3}')
 
-    
     model_file_name=$(basename ${backup_folder}/*final.weights)
 
     darknet detector map cfg/${CFG_DATA} cfg/${CFG_FILE} ${backup_folder}/$model_file_name > map_result.txt
@@ -229,11 +213,8 @@ EOF
     if ! [[ -f ${backup_folder}/chart-${TIMESTAMP}.png ]]
 
     then 
-
          mv chart-${TIMESTAMP}.png $backup_folder 
-
     fi
-
 
 else
 
@@ -244,11 +225,9 @@ else
     then
 
         # Training from scratch
-        #darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} -gpus ${gpus} -dont_show > /var/log/katib/metrics.log
         darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} -gpus ${gpus} -dont_show > /var/log/katib/training.log
     else
         # Training with pre-trained weights
-        #darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${gpus} -dont_show > /var/log/katib/metrics.log
         darknet detector train cfg/${CFG_DATA} cfg/${CFG_FILE} pre-trained-weights/${WEIGHTS} -gpus ${gpus} -dont_show > /var/log/katib/training.log
     fi
        
@@ -256,7 +235,6 @@ else
     avg_loss=$(tail -2 /var/log/katib/training.log | head -1 | awk '{ print $3 }')
     echo "loss=${avg_loss}"
     
-
     if [[ -z "$avg_loss" ]]
     then
         echo "Darknet training has failed! Please check Katib trial pod error logs for detailed info at /var/log/katib/error.log"

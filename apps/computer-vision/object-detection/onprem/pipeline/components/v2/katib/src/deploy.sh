@@ -81,18 +81,10 @@ NFS_PATH=${NFS_PATH}/${TIMESTAMP}
 cd ${NFS_PATH}
 
 # update max_batches value in cfg file
-#sed -i "s/max_batches.*/max_batches=$max/g" yolov3-voc.cfg
 arrIN=(${CFG_FILE//./ })
 katib_cfg="${arrIN[0]}-${TIMESTAMP}.${arrIN[1]}"
 cp cfg/${CFG_FILE} cfg/${katib_cfg}
 sed -i "s/max_batches.*/max_batches=${MAX_BATCHES}/g" cfg/${katib_cfg}
-
-#copy_from_dir_name=${NFS_PATH#*/*/}
-#copy_to_dir_name=$(echo ${NFS_PATH} | awk -F "/" '{print $3}')
-#make_dir_name=exports/$copy_from_dir_name
-
-#podname=$(kubectl -n ${USER_NAMESPACE} get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
-#kubectl cp cfg/${katib_cfg} $podname:exports/$copy_from_dir_name/cfg/${CFG_FILE} -n ${USER_NAMESPACE}
 
 touch object-detection-katib-$TIMESTAMP.yaml
 

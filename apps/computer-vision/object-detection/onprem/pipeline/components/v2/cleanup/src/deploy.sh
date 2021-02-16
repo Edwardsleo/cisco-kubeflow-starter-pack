@@ -35,14 +35,8 @@ NFS_PATH=${NFS_PATH}/${TIMESTAMP}
 
 cd ${NFS_PATH}
 
-
 #NFS Cleanup
 del_dir_name=exports/${NFS_PATH#*/*/}
-
-
-#NFS Cleanup in kubeflow namespace
-kubeflow_nfspodname=$(kubectl -n kubeflow  get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
-kubectl exec -n kubeflow  $kubeflow_nfspodname  -- rm -rf $del_dir_name
 
 #NFS Cleanup in user's namespace
 user_nfspodname=$(kubectl -n ${USER_NAMESPACE} get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
