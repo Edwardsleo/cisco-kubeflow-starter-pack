@@ -1,0 +1,21 @@
+#Sample of partial tuning spec YAML configuration
+
+objective:
+  type: minimize
+  goal: 0.4
+  objectiveMetricName: loss
+algorithm:
+  algorithmName: random
+parallelTrialCount: 5
+maxFailedTrialCount: 3
+parameters:
+  - name: '--momentum'
+    parameterType: double
+    feasibleSpace:
+      min: '0.88'
+      max: '0.92'
+  - name: '--decay'
+    parameterType: double
+    feasibleSpace:
+      min: '0.00049'
+      max: '0.00052'
