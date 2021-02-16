@@ -238,7 +238,7 @@ Katib component is designed to accept hyperparameter tuning spec as a JSON objec
    - Convert custom tuning spec in YAML form into JSON form [here](https://codebeautify.org/yaml-to-json-xml-csv).
    - Update the converted custom tuning spec in JSON form in [object detection pipeline notebook](object-detection-pipeline-deployment-mlflow.ipynb) as shown below and start executing the notebook.
 
-   ![Object Detection Pipeline](pictures/29-update-tuning-spec.png)
+   ![Object Detection Pipeline](pictures/29-update-tuning-spec.PNG)
 
 The other part of experiment spec which is ```trialTemplate``` is included in source code and is designed only to take required inputs from the notebook.
 
@@ -246,7 +246,7 @@ The other part of experiment spec which is ```trialTemplate``` is included in so
 
    - Copy ```trialTemplate``` spec from [experiment_launch.py](components/v2/katib/src/experiment_launch.py).
 
-   ![Object Detection Pipeline](pictures/30-copy-trialtemp.png)
+   ![Object Detection Pipeline](pictures/30-copy-trialtemp.PNG)
 
    - Convert the spec in JSON form into YAML form [here](https://codebeautify.org/json-to-yaml).
    - Make the necessary changes and convert back to JSON form [here](https://codebeautify.org/yaml-to-json-xml-csv).
