@@ -2,6 +2,7 @@ name: hp-tuning
 description: create katib experiment
 inputs:
   - {name: nfs path, type: String, default: "/mnt/object_detection", description: "NFS Mount path"}
+  - {name: s3 path, type: String, description: "add s3 bucket url"}
   - {name: weights, type: String, default: "yolov3-voc_50000.weights", description: "pre-trained weights for training"}
   - {name: cfg_data, type: String, default: "voc.data", description: "data file"}
   - {name: cfg_file, type: String, default: "yolov3-voc.cfg", description: "cfg file"}
@@ -11,14 +12,17 @@ inputs:
   - {name: trials, type: Integer,  default: 4, description: "Number of trials to run katib experiment"}
   - {name: gpus per trial, type: Integer,  default: 2, description: "GPU Limits to each trial"}
   - {name: user_namespace, type: String, default: "anonymous", description: "Provide user's namespace"}
-  - {name: max_batches, type: Integer, default: 50200, description: "Provide max batches"}
+  - {name: max_batches, type: Integer, default: 51000, description: "Provide max batches"}
+  - {name: experiment spec, type: JsonObject, default: '{}', description: 'Experiment specification in dict format'}
+  
 
 implementation:
   container:
-    image: docker.io/poornimadevii/object-detection-katib:1.0
+    image: docker.io/poornimadevii/object-detection-katib:1.1
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},
+      --s3-path, {inputValue: s3 path},
       --weights, {inputValue: weights},
       --cfg_data, {inputValue: cfg_data},
       --cfg_file, {inputValue: cfg_file},
@@ -28,5 +32,7 @@ implementation:
       --trials, {inputValue: trials},
       --gpus_per_trial, {inputValue: gpus per trial},
       --user_namespace, {inputValue: user_namespace},
-      --max_batches, {inputValue: max_batches}
+      --max_batches, {inputValue: max_batches},
+      --experiment_spec, {inputValue: experiment spec}
+      
     ]

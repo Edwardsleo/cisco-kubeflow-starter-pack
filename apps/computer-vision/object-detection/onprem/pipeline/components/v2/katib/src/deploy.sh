@@ -14,6 +14,11 @@ while (($#)); do
        NFS_PATH="$1"
        shift
        ;;
+     "--s3-path")
+       shift
+       S3_PATH="$1"
+       shift
+       ;;
      "--weights")
        shift
        WEIGHTS="$1"
@@ -64,6 +69,11 @@ while (($#)); do
        MAX_BATCHES="$1"
        shift
        ;;
+     "--experiment_spec")
+       shift
+       EXPERIMENT_SPEC="$1"
+       shift
+       ;;
      *)
        echo "Unknown argument: '$1'"
        exit 1
@@ -81,7 +91,6 @@ arrIN=(${CFG_FILE//./ })
 katib_cfg="${arrIN[0]}-${TIMESTAMP}.${arrIN[1]}"
 cp cfg/${CFG_FILE} cfg/${katib_cfg}
 sed -i "s/max_batches.*/max_batches=${MAX_BATCHES}/g" cfg/${katib_cfg}
-cat cfg/${katib_cfg}
 
 copy_from_dir_name=${NFS_PATH#*/*/}
 copy_to_dir_name=$(echo ${NFS_PATH} | awk -F "/" '{print $3}')
@@ -90,111 +99,8 @@ make_dir_name=exports/$copy_from_dir_name
 podname=$(kubectl -n ${USER_NAMESPACE} get pods --field-selector=status.phase=Running | grep nfs-server | awk '{print $1}')
 kubectl cp cfg/${katib_cfg} $podname:exports/$copy_from_dir_name/cfg/${CFG_FILE} -n ${USER_NAMESPACE}
 
-touch object-detection-katib-$TIMESTAMP.yaml
 
-cat >> object-detection-katib-$TIMESTAMP.yaml << EOF
-apiVersion: kubeflow.org/v1alpha3
-kind: Experiment
-metadata:
-  namespace: ${USER_NAMESPACE}
-  labels:
-    controller-tools.k8s.io: '1.0'
-    timestamp: TIMESTAMP
-  name: KATIB_NAME
-spec:
-  objective:
-    type: minimize
-    goal: 0.4
-    objectiveMetricName: loss
-  algorithm:
-    algorithmName: random
-  parallelTrialCount: 5
-  maxTrialCount: NUMBER-OF-TRIALS
-  maxFailedTrialCount: 3
-  parameters:
-  - name: "--momentum"
-    parameterType: double
-    feasibleSpace:
-      min: '0.88'
-      max: '0.92'
-  - name: "--decay"
-    parameterType: double
-    feasibleSpace:
-      min: '0.00049'
-      max: '0.00052'
-  trialTemplate:
-    goTemplate:
-      rawTemplate: |-
-        apiVersion: batch/v1
-        kind: Job
-        metadata:
-          name: {{.Trial}}
-          namespace: {{.NameSpace}}
-        spec:
-          template:
-            spec:
-              containers:
-              - name: {{.Trial}}
-                image: docker.io
-                command:
-                - "/opt/deploy.sh"
-                - "--nfs-path"
-                - "/mnt/"
-                - "--weights"
-                - "PRETRAINED-WEIGHTS"
-                - "--cfg_data"
-                - "CONFIG-DATA"
-                - "--cfg_file"
-                - "CONFIG-FILE"
-                - "--gpus"
-                - "GPUS"
-                - "--component"
-                - "COMPONENT-TYPE"
-                {{- with .HyperParameters}}
-                {{- range .}}
-                - "{{.Name}}"
-                - "{{.Value}}"
-                {{- end}}
-                {{- end}}
-                volumeMounts:
-                - mountPath: /mnt
-                  name: nfs-volume
-                resources:
-                  limits:
-                    nvidia.com/gpu: GPU-PER-TRIAL
-              restartPolicy: Never
-              volumes:
-              - name: nfs-volume
-                persistentVolumeClaim:
-                  claimName: nfs1
-EOF
-
-
-EXP_NAME="object-detection-$TIMESTAMP"
-sed -i "s/KATIB_NAME/$EXP_NAME/g" object-detection-katib-$TIMESTAMP.yaml
-sed -i "s/TIMESTAMP/ts-$TIMESTAMP/g" object-detection-katib-$TIMESTAMP.yaml
-sed -i "s/NUMBER-OF-TRIALS/$TRIALS/g" object-detection-katib-$TIMESTAMP.yaml
-sed -i "s|docker.io|$IMAGE|g" object-detection-katib-$TIMESTAMP.yaml
-sed -i "s#/mnt/#$NFS_PATH/#g" object-detection-katib-$TIMESTAMP.yaml
-sed -i "s/CONFIG-DATA/$CFG_DATA/g" object-detection-katib-$TIMESTAMP.yaml
-sed -i "s/CONFIG-FILE/$CFG_FILE/g" object-detection-katib-$TIMESTAMP.yaml
-sed -i "s/GPUS/$GPUS/g" object-detection-katib-$TIMESTAMP.yaml
-sed -i "s/COMPONENT-TYPE/$COMPONENT/g" object-detection-katib-$TIMESTAMP.yaml
-sed -i "s/GPU-PER-TRIAL/$GPUS/g" object-detection-katib-$TIMESTAMP.yaml
-
-if [[ $WEIGHTS = 'None' || $WEIGHTS = 'none' ]]
-then
-     sed -i '/- "PRETRAINED-WEIGHTS"/d;/- "--weights"/d' object-detection-katib-$TIMESTAMP.yaml
-else
-     sed -i "s/PRETRAINED-WEIGHTS/$WEIGHTS/g" object-detection-katib-$TIMESTAMP.yaml
-fi
-
-
-# Creating katib experiment
-
-kubectl apply -f object-detection-katib-$TIMESTAMP.yaml
-
-sleep 1
+python3 ../../../../opt/experiment_launch.py --timestamp $TIMESTAMP --user_namespace $USER_NAMESPACE --image $IMAGE --nfs_path $NFS_PATH --trials $TRIALS --weights $WEIGHTS --cfg_file $CFG_FILE --cfg_data $CFG_DATA --gpus $GPUS --component_type $COMPONENT --experiment_spec $EXPERIMENT_SPEC
 
 # Check katib experiment
 kubectl get experiment -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE}
@@ -203,24 +109,56 @@ sleep 5
 
 kubectl rollout status deploy/$(kubectl get deploy -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE} | awk 'FNR==2{print $1}') -n ${USER_NAMESPACE}
 
+yq r -P object-detection-$TIMESTAMP.yaml 'spec.parameters' > params.yaml
+
+mkdir katib-${TIMESTAMP}
+
+mv object-detection-${TIMESTAMP}.json object-detection-${TIMESTAMP}.yaml katib-${TIMESTAMP}
+
+aws s3 cp katib-${TIMESTAMP} ${S3_PATH}/katib-${TIMESTAMP} --recursive
+
+cat params.yaml | grep "name:" > param_names.txt
+
+while read line
+do
+
+param_name=$(echo $line | awk  '{print $2}' | cut -c 3-)
+param_names+=($param_name)
+
+done <  param_names.txt
+
+param_namelist=${param_names[@]}
+echo "param_namelist ${param_namelist}"
+
+params_count=$(cat params.yaml | grep "name:" | wc -l)
+
 # Wait for katib experiment to succeed
 while true
 do
     status=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE} | awk 'FNR==2{print $2}')
-    if [ $status == "Succeeded" ]
+    if [[ $status == "Succeeded" ]]
     then
-	  momentum=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE} -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[0].value}')
-          decay=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE} -o=jsonpath='{.items[0].status.currentOptimalTrial.parameterAssignments[1].value}')
-	  if [[ -z "$momentum" || -z "$decay" ]]
-	  then
-              echo "Katib has failed! Please check Katib trial pod logs for detailed info"
+ 
+          for ((i=0;i<params_count;i++)); do
+                    param_value=$(kubectl get experiment -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE} -o=jsonpath="{.items[0].status.currentOptimalTrial.parameterAssignments[$i].value}")
+		    param_values+=($param_value)
+          done
+
+          param_valuelist=${param_values[@]}
+	  echo "param_valuelist $param_valuelist"
+
+	  actual_params_cnt=${#param_values[@]}
+
+	  if [[ $actual_params_cnt < $params_count ]]
+          then
+              echo "Katib tuning has failed! Please check Katib trial pod logs for detailed info"
               exit 2
           else			
 	      echo "Experiment: $status"
 	      break
 	  fi
     else
-	if [ -z "$status" ]
+	if [[ -z "$status" ]]
         then
              echo "Status of Katib experiment not to be found!!"
 	     exit 3
@@ -232,10 +170,15 @@ do
     fi
 done
 
+for i in ${!param_names[@]}
+do
+  echo "${param_names[i]} : ${param_values[i]}" >> param_result.txt
 
-echo "MOMENTUM: $momentum"
-echo "DECAY: $decay"
+  sed -i "s/${param_names[i]}.*/${param_names[i]}=${param_values[i]}/g" cfg/${CFG_FILE}
 
-# Update momentun and decay in cfg file
-sed -i "s/momentum.*/momentum=${momentum}/g" cfg/${CFG_FILE}
-sed -i "s/decay.*/decay=${decay}/g" cfg/${CFG_FILE}
+  echo "${param_names[i]} : ${param_values[i]}"
+done  
+
+#Cleanup
+
+rm -rf katib-${TIMESTAMP} params.yaml param_names.txt param_result.txt
