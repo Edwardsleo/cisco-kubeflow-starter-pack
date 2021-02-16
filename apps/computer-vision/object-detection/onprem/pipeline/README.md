@@ -18,6 +18,7 @@
 	* [Run Object Detection Pipeline](#RunPipeline)
 	* [KF Pipeline Dashboard](#PipelineDashboard)
 	* [Katib Dashboard](#KatibDashboard)
+  * [Custom Katib hyperparams injection](#CustomKatib)
     * [Additional features with Darknet training](#FeatureswithDarknettraining)
         * [Dynamic mAP chart](#Dynamicplot)
         * [Static mAP chart](#Staticplot)
@@ -227,8 +228,30 @@ Pipeline components screenshots & logs can be viewed as below
 To track HP tuning created by pipeline, you need to go Katib dashboard from KF Central dashboard's left panel. 
 Currently, the hyperparameters chosen are momentum and decay.
 
-#### **Note**:
-To customize the hyperparameters used for tuning, refer [here](./Katib.md).
+### <a name='CustomKatib'></a>**Custom Katib hyperparameters injection**
+
+Katib component is designed to accept hyperparameter tuning spec as a JSON object. The tuning spec is not a complete one but a customizable part of the whole experiment spec.
+
+* Customize & feed the tuning spec by following steps below:
+
+   - Refer [sample tuning spec](sample_tuning_spec.yaml) and build your own custom tuning spec.
+   - Convert custom tuning spec in YAML form into JSON form [here](https://codebeautify.org/yaml-to-json-xml-csv).
+   - Update the converted custom tuning spec in JSON form in [object detection pipeline notebook](object-detection-pipeline-deployment-mlflow.ipynb) as shown below and start executing the notebook.
+
+   ![Object Detection Pipeline](pictures/29-update-tuning-spec.png)
+
+The other part of experiment spec which is ```trialTemplate``` is included in source code and is designed only to take required inputs from the notebook.
+
+* Customization of ```trialTemplate``` spec can be done by following steps below, in case of requirement:
+
+   - Copy ```trialTemplate``` spec from [experiment_launch.py](components/v2/katib/src/experiment_launch.py).
+
+   ![Object Detection Pipeline](pictures/30-copy-trialtemp.png)
+
+   - Convert the spec in JSON form into YAML form [here](https://codebeautify.org/json-to-yaml).
+   - Make the necessary changes and convert back to JSON form [here](https://codebeautify.org/yaml-to-json-xml-csv).
+   - Update [experiment_launch.py](components/v2/katib/src/experiment_launch.py) again with ```trialTemplate``` and make other changes if any.
+   - Build a new docker image for Katib component & update [component.yaml](components/v2/katib/component.yaml) & use it.
 
 ### <a name='FeatureswithDarknettraining'></a>**Additional features with Darknet training**
 
@@ -291,4 +314,3 @@ Create an inference service & check whether it is ready.
 
 ### How to build component's Docker image 
 To build any component docker image in general, go to the [components folder](./components/v2/) and build the respective component's docker image and push into your Docker Hub
-
