@@ -86,22 +86,7 @@ fi
 
 mkdir ${NFS_PATH}/ncnn-results
 
-git clone https://github.com/xiangweizeng/darknet2ncnn.git
-
-cd darknet2ncnn
-
-sleep 5
-
-git config --global http.proxy ''
-
-git submodule init
-
-sleep 5
-
-git submodule update
-
-sleep 5
-
+cd ../darknet2ncnn
 
 cd darknet
 make -j8
