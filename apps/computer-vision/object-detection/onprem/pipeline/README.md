@@ -250,7 +250,7 @@ The other part of experiment spec which is ```trialTemplate``` is included in so
 
    - Convert the spec in JSON form into YAML form [here](https://codebeautify.org/json-to-yaml).
    - Make the necessary changes and convert back to JSON form [here](https://codebeautify.org/yaml-to-json-xml-csv).
-   - Update [experiment_launch.py](components/v2/katib/src/experiment_launch.py) again with ```trialTemplate``` and make other changes if any.
+   - Update [experiment_launch.py](components/v2/katib/src/experiment_launch.py) again with ```trialTemplate```.
    - Build a new docker image for Katib component & update [component.yaml](components/v2/katib/component.yaml) & use it.
 
 ### <a name='FeatureswithDarknettraining'></a>**Additional features with Darknet training**
