@@ -99,7 +99,7 @@ mlflow-deployment-68788c5fb4-cdc88 1/1 Running 0 98m
 ```
 * Verify MLFlow tracking server service using the following command.
 
-```$ kubectl get svc -n kubeflow | grep mlflow-deployment```
+```$ kubectl get svc -n kubeflow | grep mlflow-service```
 
 ```
 Expected Output
