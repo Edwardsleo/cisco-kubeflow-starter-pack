@@ -22,6 +22,8 @@ spec:
       app: mysql
   template:
     metadata:
+      annotations:
+           sidecar.istio.io/inject: "false"
       labels:
         app: mysql
     spec:

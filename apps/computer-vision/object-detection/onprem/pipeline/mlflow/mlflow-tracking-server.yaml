@@ -10,6 +10,8 @@ spec:
       app: mlflow-deployment
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/inject: "false"
       labels:
         app: mlflow-deployment
     spec:
@@ -18,11 +20,16 @@ spec:
         image: ramdoot/mlflow-server:0.1
         imagePullPolicy: Always
         args:
-        - --host=0.0.0.0
-        - --port=80
-        - --backend-store-uri=mysql+pymysql://kf-user:kf-password@mysql-service.kubeflow.svc.cluster.local:3306/kubeflow
-        - --default-artifact-root=file:/tmp
-        - --workers=2
+        - "--host"
+        -  "0.0.0.0"
+        - "--port"
+        - "80"
+        - "--backend-store-uri"
+        - "mysql+pymysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@mysql-service.kubeflow.svc.cluster.local:3306/kubeflow"
+        - "--default-artifact-root"
+        - "file:/tmp"
+        - "--workers"
+        - "2"
         ports:
         - name: http
           containerPort: 80
@@ -31,6 +38,18 @@ spec:
           requests:
             cpu: "2"
             memory: "2Gi"
+        env: 
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: mysqldb-secret
+                key: mysql-user
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysqldb-secret
+                key: mysql-password
+
 ---
 apiVersion: v1
 kind: Service
