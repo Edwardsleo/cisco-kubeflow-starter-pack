@@ -12,8 +12,6 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-       sidecar.istio.io/inject: "false"
   name: mysql-deployment
   labels:
     app: mysql
