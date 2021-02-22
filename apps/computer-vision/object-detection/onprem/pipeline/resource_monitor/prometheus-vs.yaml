@@ -18,7 +18,7 @@ spec:
       uri: /graph
     route:
     - destination:
-        host: prometheus-operator-161280-prometheus.kubeflow.svc.cluster.local
+        host: prometheus.istio-system.svc.cluster.local
         port:
           number: 9090
   - match:
@@ -32,6 +32,6 @@ spec:
         regex: '^.*\.(ico|png|jpg)$'
     route:
     - destination:
-        host: prometheus-operator-161280-prometheus.kubeflow.svc.cluster.local
+        host: prometheus.istio-system.svc.cluster.local
         port:
           number: 9090
