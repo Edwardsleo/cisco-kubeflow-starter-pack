@@ -54,8 +54,6 @@ Update the Helm repo
 helm repo update
 ```
 
-we can deploy the `Node Exporter` using the `stable/prometheus-node-exporter` chart via Helm
-
 ```
 helm install node-exporter stable/prometheus-node-exporter --namespace=kubeflow
 ```
