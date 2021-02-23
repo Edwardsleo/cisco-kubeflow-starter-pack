@@ -85,6 +85,20 @@ data:
         path: /var/lib/grafana/dashboards/istio-services
       orgId: 1
       type: file
+    - disableDeletion: false
+      folder: ""
+      name: dcgm-exporter
+      options:
+        path: /var/lib/grafana/dashboards/dcgm-exporter
+      orgId: 1
+      type: file
+    - disableDeletion: false
+      folder: ""
+      name: node-exporter
+      options:
+        path: /var/lib/grafana/dashboards/node-exporter
+      orgId: 1
+      type: file
 ---
 # Source: grafana/templates/service.yaml
 apiVersion: v1
@@ -143,7 +157,7 @@ spec:
         checksum/sc-dashboard-provider-config: 01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b
         sidecar.istio.io/inject: "false"
     spec:
-      
+
       serviceAccountName: grafana
       securityContext:
         fsGroup: 472
@@ -163,9 +177,9 @@ spec:
               mountPath: "/var/lib/grafana/dashboards/istio"
             - name: dashboards-istio-services
               mountPath: "/var/lib/grafana/dashboards/istio-services"
-            - name: dcgm-exporter-dashboard
+            - name: dcgm-exporter
               mountPath: "/var/lib/grafana/dashboards/dcgm-exporter"
-            - name: node-exporter-dashboard
+            - name: node-exporter
               mountPath: "/var/lib/grafana/dashboards/node-exporter"
             - name: config
               mountPath: "/etc/grafana/provisioning/datasources/datasources.yaml"
@@ -181,7 +195,7 @@ spec:
               containerPort: 3000
               protocol: TCP
           env:
-            
+
             - name: "GF_AUTH_ANONYMOUS_ENABLED"
               value: "true"
             - name: "GF_AUTH_ANONYMOUS_ORG_ROLE"
@@ -209,7 +223,6 @@ spec:
         - name: config
           configMap:
             name: grafana
-          
         - name: dashboards-istio
           configMap:
             name: istio-grafana-dashboards
@@ -1119,4 +1132,3 @@ metadata:
   creationTimestamp: null
   name: istio-services-grafana-dashboards
   namespace: istio-system
-

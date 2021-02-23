@@ -3,6 +3,8 @@
 Monitoring usage of Cpu, Gpu and memory with Prometheus and Grafana
 
 * [Prerequisites](#Prerequisites)
+* [UCS Setup](#UCSSetup)
+    * [Retrieve Ingress IP](#RetrieveIngressIP)
 * [Setup](#setup)
     * [DCGM EXporter](#dcgmExporter)
     * [NODE EXporter](#nodeExporter)
@@ -18,6 +20,30 @@ Monitoring usage of Cpu, Gpu and memory with Prometheus and Grafana
 
 - [ ] Kubernetes Cluster
 - [ ] [helm](https://helm.sh/docs/intro/install/)
+
+## <a name='UCSSetup'></a>UCS Setup
+
+To install Kubeflow, follow the instructions [here](../../../../../../install)
+
+### <a name='RetrieveIngressIP'></a>Retrieve Ingress IP
+
+For installation, we need to know the external IP of the 'istio-ingressgateway' service. This can be retrieved by the following steps.
+
+```
+kubectl get service -n istio-system istio-ingressgateway
+```
+
+If your service is of LoadBalancer Type, use the 'EXTERNAL-IP' of this service.
+
+Or else, if your service is of NodePort Type - run the following command:
+
+```
+kubectl get nodes -o wide
+```
+
+Use either of 'EXTERNAL-IP' or 'INTERNAL-IP' of any of the nodes based on which IP is accessible in your network.
+
+This IP will be referred to as INGRESS_IP from here on.
 
 ## <a name='setup'></a>Setup
 
