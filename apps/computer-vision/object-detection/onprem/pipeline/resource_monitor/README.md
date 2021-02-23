@@ -79,7 +79,14 @@ kubectl apply -f prometheus-vs.yaml
 Now, we can deploy `Grafana` to visualize metrics
 
 ```
+kubectl create -f dcgm-node-exporter-dashboard-config.yaml
 kubectl create -f grafana.yaml
+```
+Update Grafana Virtual Service
+```
+kubectl get vs grafana-vs -n kubeflow -o yaml > grafana-vs.yaml
+sed -i "s/exact.*/regex: GET|POST|PUT|DELETE/g" grafana-vs.yaml
+kubectl apply -f grafana-vs.yaml
 ```
 
 ## <a name='accessingMetrics'></a>Accessing Metrics
@@ -100,42 +107,21 @@ kubectl create -f grafana.yaml
 
 ### DCGM Dashboard
 
-* To access the dashboard, navigate from the Grafana home page to Dashboards -> Manage -> Import
+* To access DCGM dashboard, click on `HOME` drop down and select `NVIDIA DCGM Exporter Dashboard`
 
-![MONITORING](pictures/5.grafana-manage.PNG)
+![MONITORING](pictures/grafana-home-dropdwn.PNG)
 
-![MONITORING](pictures/6.grafana-dcgm-exporter-import.png)
-
-* Copy & Paste the NVIDIA dashboard Json from [NVIDIA_DCGM_Exporter_Dashboard.json](NVIDIA_DCGM_Exporter_Dashboard.json) and click Load.
-
-![MONITORING](pictures/12.grafana-dcgm-json-import.PNG)
-
-* choose Prometheus-kubeflow as the data source in the drop down
-
-* Click Import
-
-![MONITORING](pictures/6.grafana-dcgm-exporter-import1.PNG)
+![MONITORING](pictures/grafana-dcgm-dashboard.PNG)
 
 ![MONITORING](pictures/7.grafana-nvidia-dcgm-dashboard.PNG)
 
 ### Node Exporter Dashboard
 
-* To access the dashboard, navigate from the Grafana home page to Dashboards -> Manage -> Import
+* To access DCGM dashboard, click on `HOME` drop down and select `Node Exporter`
 
-![MONITORING](pictures/5.grafana-manage.PNG)
+![MONITORING](pictures/grafana-home-dropdwn.PNG)
 
-![MONITORING](pictures/6.grafana-dcgm-exporter-import.png)
-
-* Copy & Paste the Node Exporter dashboard Json from [Node_Exporter_Dashboard.json](Node_Exporter_Dashboard.json) and click Load.
-
-![MONITORING](pictures/12.grafana-node-json-import.PNG)
-
-* choose Prometheus-kubeflow as the data source in the drop down
-
-* Click Import
-
-
-![MONITORING](pictures/8.grafana-node-exporter.PNG)
+![MONITORING](pictures/grafana-dcgm-dashboard.PNG)
 
 ![MONITORING](pictures/9.grafana-node-exporter-dashboard.PNG)
 
@@ -160,4 +146,5 @@ kubectl delete -f https://raw.githubusercontent.com/NVIDIA/gpu-monitoring-tools/
 Uninstall `Grafana`
 ```
 kubectl delete -f grafana.yaml
+kubectl delete -f dcgm-node-exporter-dashboard-config.yaml
 ```

@@ -51,6 +51,10 @@ data:
     logs = /var/log/grafana
     plugins = /var/lib/grafana/plugins
     provisioning = /etc/grafana/provisioning
+    [server]
+    domain = 10.23.222.165
+    root_url = %(protocol)s://%(domain)s:%(http_port)s/istio/grafana/
+    serve_from_sub_path = true
 
   datasources.yaml: |
     apiVersion: 1
@@ -147,7 +151,7 @@ spec:
         runAsUser: 472
       containers:
         - name: grafana
-          image: "grafana/grafana:7.2.1"
+          image: "grafana/grafana:6.0.2"
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: config
@@ -159,6 +163,10 @@ spec:
               mountPath: "/var/lib/grafana/dashboards/istio"
             - name: dashboards-istio-services
               mountPath: "/var/lib/grafana/dashboards/istio-services"
+            - name: dcgm-exporter-dashboard
+              mountPath: "/var/lib/grafana/dashboards/dcgm-exporter"
+            - name: node-exporter-dashboard
+              mountPath: "/var/lib/grafana/dashboards/node-exporter"
             - name: config
               mountPath: "/etc/grafana/provisioning/datasources/datasources.yaml"
               subPath: datasources.yaml
@@ -208,6 +216,12 @@ spec:
         - name: dashboards-istio-services
           configMap:
             name: istio-services-grafana-dashboards
+        - name: dcgm-exporter
+          configMap:
+            name: dcgm-exporter-dashboard
+        - name: node-exporter
+          configMap:
+            name: node-exporter-dashboard
         - name: storage
           persistentVolumeClaim:
             claimName: grafana
