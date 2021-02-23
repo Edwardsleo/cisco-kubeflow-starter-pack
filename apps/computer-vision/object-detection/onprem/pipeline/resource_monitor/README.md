@@ -133,15 +133,11 @@ chartName=`helm ls -n kubeflow | grep node-exporter | head -n1 | awk '{print $1;
 helm delete $chartName -n kubeflow
 ```
 
-![MONITORING](pictures/10.uninstall-prometheus-operator.PNG)
-
 Uninstall `DCGM Exporter`
 ```
 kubectl delete -f https://raw.githubusercontent.com/NVIDIA/gpu-monitoring-tools/2.0.0-rc.9/dcgm-exporter.yaml -n kubeflow
 kubectl delete -f https://raw.githubusercontent.com/NVIDIA/gpu-monitoring-tools/2.0.0-rc.9/service-monitor.yaml -n kubeflow
 ```
-
-![MONITORING](pictures/11.Uninstall-dcgm-exporter.PNG)
 
 Uninstall `Grafana`
 ```
