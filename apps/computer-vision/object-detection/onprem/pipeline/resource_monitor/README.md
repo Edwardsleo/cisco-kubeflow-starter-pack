@@ -105,7 +105,7 @@ kubectl apply -f prometheus-vs.yaml
 Now, we can deploy `Grafana` to visualize metrics
 
 ```
-kubectl create -f dcgm-node-exporter-dashboard-config.yaml
+kubectl create configmap grafana-exporter-dashoards --from-file=node-exporter-dashboard.json --from-file=dcgm-exporter-dashboard.json -n istio-system
 kubectl create -f grafana.yaml
 ```
 Update Grafana Virtual Service

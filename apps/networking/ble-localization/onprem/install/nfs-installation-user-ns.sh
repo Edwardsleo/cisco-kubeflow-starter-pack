@@ -75,7 +75,6 @@ for profile in $existing_users; do
 done
 
 kubectl get configmap dex -n auth -o jsonpath='{.data.config\.yaml}' > dex-config.yaml
-apt install apache2-utils -y
 
 #Clear basic auth setup of  non-requested static users
 existing_auths=$(cat dex-config.yaml | grep username: | awk '{print $2}')

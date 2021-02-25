@@ -29,6 +29,7 @@ Update and install common libraries
 sudo apt-get update
 sudo apt-get install -y \
     apt-transport-https \
+    apache2-utils \
     ca-certificates \
     curl \
     software-properties-common \
