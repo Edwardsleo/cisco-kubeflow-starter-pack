@@ -19,7 +19,7 @@
 
 4. Grafana
      - grafana pod is running in istio-system ns, and able to render metrics from prometheues installed in kubeflow
-     - virtual service didnt work - https://github.com/kubeflow/kubeflow/issues/5051, resolved with grafana-vs ini, matching method regex: GET|POST
+     - virtual service didnt work - https://github.com/kubeflow/kubeflow/issues/5051, resolved with grafana-vs ini, matching method regex: GET|POST|PUT|DELETE
      - port forwarding also worked.
      
 5.  Mlflow
