@@ -28,7 +28,21 @@
 
 6. TF SSD Mobilenet v2 based pipeline
      - model inference graph script isn't working, debug in progress
-     - meraki folks had completed a TF pipeline, not SSD?
+     - inference on model built of checkpoints is working
+     - tflite based inferencing needs to be verified.
+     - meraki folks had completed a TF pipeline, not SSD.
+ 
+ 7. AWS RDS prototype
+     - basic things are working, but only from lab access issues - could be firewall issue, try with different port.
+     - componentization
+     - ApertureDB ??
+ 8. Gitlab code move/CI
+     - first cut done
+     - compiling pipelines and uploading code is done
+     - webhooks/Gitlab CI exploration
+     - verifying pipelines with Gitlab CI?
+ 
+
 
 # Non-Dex/Regular 1.1 
 
@@ -87,19 +101,19 @@
      
 2. NFS/Profiles/namespaces/resourcequota
      - nfs/profiles provisioning scripts completed.
-     - Not able to mount NFS volumes with dex 1.0 in user namespace - Resolved with istio-injection disabled in user namespace
-     - should this code be moved?
+     - Not able to mount NFS volumes with dex 1.1 in user namespace - Resolved with istio-injection disabled in user namespace? by default enabled.
+     - the code is in dex1.1 branch
 
 3. Notebooks
-      - Dex 1.0 & 1.1 - Working
+      - Dex 1.1 - Working
 
 4. Pipelines
-     - local path PV for components - ?
-     - Dex 1.1 - pipelines not working, RBAC issue hit - #
+     - local path PV for components - working
+     - Dex 1.1 - pipelines not working, RBAC issue hit - #, resolved using servicerolebinding & envoyfilter
 
 5. Katib 
-     - Dex + 1.0/1.1 -
-     - local path PV - ?
+     - Dex + 1.0/1.1 - working
+     - local path PV - working
      - Tekton Pipelines?
            
 6. Grafana
@@ -113,5 +127,8 @@
 8. https/TLS
      - https redirect not working on KF 1.0 + Dex
 
-9. Argo Workflows
+9. test servicerolebinding/.. scripts from inside the notebook, multi user - double check testing.
+9. Argo Workflows??
+
+
      
