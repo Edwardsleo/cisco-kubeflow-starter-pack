@@ -14,7 +14,7 @@
      
 3. Katib 
      - Refactor component to enable all possible hyperparameter tuning - katib component changes are done, backward compatible
-     - train component changes for accepting all possible hyperparameters is pending?
+     - train component changes for accepting possible hyperparameters is complete
      - nfs install move to computer-vision app & update Readme
 
 4. Grafana
