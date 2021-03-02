@@ -44,6 +44,16 @@ while (($#)); do
        DECAY="$1"
        shift
        ;;
+     "--batch")
+       shift
+       BATCH="$1"
+       shift
+       ;;
+     "--learning_rate")
+       shift
+       LEARNING_RATE="$1"
+       shift
+       ;; 
      "--component")
        shift
        COMPONENT="$1"
@@ -221,9 +231,23 @@ EOF
 
 
 else
+    param_list=momentum,decay,batch,learning_rate
 
-    sed -i "s/momentum.*/momentum=${MOMENTUM}/g" cfg/${CFG_FILE}
-    sed -i "s/decay.*/decay=${DECAY}/g" cfg/${CFG_FILE}
+    IFS=','
+    read -a param_arr <<< "$param_list"
+
+    for param in ${param_arr[@]}
+    do
+       uppercase_param=${param^^}
+
+       if [[ -n "${!uppercase_param}" ]]
+       then
+            sed -i "s/^${param}.*/${param}=${!uppercase_param}/g" cfg/${CFG_FILE}
+       fi
+    done
+	    
+    #sed -i "s/momentum.*/momentum=${MOMENTUM}/g" cfg/${CFG_FILE}
+    #sed -i "s/decay.*/decay=${DECAY}/g" cfg/${CFG_FILE}
 
     if [[ ${WEIGHTS} = 'None' || ${WEIGHTS} = 'none' ]]
     then

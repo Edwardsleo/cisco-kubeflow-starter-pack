@@ -59,6 +59,11 @@ while (($#)); do
        GPUS="$1"
        shift
        ;;
+     "--pvc_name")
+       shift
+       PVC_NAME="$1"
+       shift
+       ;;  
      "--user_namespace")
        shift
        USER_NAMESPACE="$1"
@@ -100,7 +105,7 @@ podname=$(kubectl -n ${USER_NAMESPACE} get pods --field-selector=status.phase=Ru
 kubectl cp cfg/${katib_cfg} $podname:exports/$copy_from_dir_name/cfg/${CFG_FILE} -n ${USER_NAMESPACE}
 
 
-python3 ../../../../opt/experiment_launch.py --timestamp $TIMESTAMP --user_namespace $USER_NAMESPACE --image $IMAGE --nfs_path $NFS_PATH --trials $TRIALS --weights $WEIGHTS --cfg_file $CFG_FILE --cfg_data $CFG_DATA --gpus $GPUS --component_type $COMPONENT --experiment_spec $EXPERIMENT_SPEC
+python3 ../../../../opt/experiment_launch.py --timestamp $TIMESTAMP --user_namespace $USER_NAMESPACE --image $IMAGE --nfs_path $NFS_PATH --trials $TRIALS --weights $WEIGHTS --cfg_file $CFG_FILE --cfg_data $CFG_DATA --gpus $GPUS --pvc_name $PVC_NAME --component_type $COMPONENT --experiment_spec $EXPERIMENT_SPEC
 
 # Check katib experiment
 kubectl get experiment -l timestamp=ts-$TIMESTAMP -n ${USER_NAMESPACE}
