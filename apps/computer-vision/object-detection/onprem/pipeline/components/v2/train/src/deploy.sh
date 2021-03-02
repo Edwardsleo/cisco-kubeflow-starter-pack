@@ -246,8 +246,6 @@ else
        fi
     done
 	    
-    #sed -i "s/momentum.*/momentum=${MOMENTUM}/g" cfg/${CFG_FILE}
-    #sed -i "s/decay.*/decay=${DECAY}/g" cfg/${CFG_FILE}
 
     if [[ ${WEIGHTS} = 'None' || ${WEIGHTS} = 'none' ]]
     then
