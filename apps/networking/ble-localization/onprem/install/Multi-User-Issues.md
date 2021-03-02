@@ -27,13 +27,14 @@
      - virtual svc done, code merged.
 
 6. TF SSD Mobilenet v2 based pipeline
-     - model inference graph script isn't working, debug in progress
-     - inference on model built of checkpoints is working
-     - tflite based inferencing needs to be verified.
+     - model inference graph script, export_tflite_graph_tf2.py, working
+     - inference on model built of checkpoints is working, inference_tf2_colab.ipynb
+     - tflite based inferencing verified.
      - meraki folks had completed a TF pipeline, not SSD.
+     - pipeline in progress
  
  7. AWS RDS prototype
-     - basic things are working, but only from lab access issues - could be firewall issue, try with different port.
+     - basic things are working, but from lab access issues are observed - could be firewall issue, try with different port.
      - componentization
      - ApertureDB ??
  8. Gitlab code move/CI
@@ -41,6 +42,8 @@
      - compiling pipelines and uploading code is done
      - webhooks/Gitlab CI exploration
      - verifying pipelines with Gitlab CI?
+ 
+ 9. cert-manager?
  
 
 
