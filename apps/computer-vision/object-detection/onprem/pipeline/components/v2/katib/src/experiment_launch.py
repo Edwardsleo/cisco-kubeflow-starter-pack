@@ -39,6 +39,9 @@ if __name__ == '__main__':
 						
     parser.add_argument('--gpus', type=int, 
                         help='No of GPUs utilized to run a trial')
+
+    parser.add_argument('--pvc_name', type=str,
+                        help='Name of persistent volume claim')
 					
 					
     parser.add_argument('--component_type', type=str, 
@@ -53,12 +56,11 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
 
-   
-    trial_template={"trialTemplate":{"goTemplate":{"rawTemplate":"apiVersion: batch/v1\nkind: Job\nmetadata:\n  name: {{.Trial}}\n  namespace: {{.NameSpace}}\nspec:\n  template:\n    spec:\n      containers:\n      - name: {{.Trial}}\n        image: %s\n        command:\n        - \"/opt/deploy.sh\"\n        - \"--nfs-path\"\n        - \"%s\"\n        - \"--weights\"\n        - \"%s\"\n        - \"--cfg_data\"\n        - \"%s\"\n        - \"--cfg_file\"\n        - \"%s\"\n        - \"--gpus\"\n        - \"%s\"\n        - \"--component\"\n        - \"%s\"\n        {{- with .HyperParameters}}\n        {{- range .}}\n        - \"{{.Name}}\"\n        - \"{{.Value}}\"\n        {{- end}}\n        {{- end}}\n        volumeMounts:\n        - mountPath: /mnt\n          name: nfs-volume\n        resources:\n          limits:\n            nvidia.com/gpu: %s\n      restartPolicy: Never\n      volumes:\n      - name: nfs-volume\n        persistentVolumeClaim:\n          claimName: nfs1"}}}
+    trial_template={"trialTemplate":{"goTemplate":{"rawTemplate":"apiVersion: batch/v1\nkind: Job\nmetadata:\n  name: {{.Trial}}\n  namespace: {{.NameSpace}}\nspec:\n  template:\n    spec:\n      containers:\n      - name: {{.Trial}}\n        image: %s\n        command:\n        - \"/opt/deploy.sh\"\n        - \"--nfs-path\"\n        - \"%s\"\n        - \"--weights\"\n        - \"%s\"\n        - \"--cfg_data\"\n        - \"%s\"\n        - \"--cfg_file\"\n        - \"%s\"\n        - \"--gpus\"\n        - \"%s\"\n        - \"--component\"\n        - \"%s\"\n        {{- with .HyperParameters}}\n        {{- range .}}\n        - \"{{.Name}}\"\n        - \"{{.Value}}\"\n        {{- end}}\n        {{- end}}\n        volumeMounts:\n        - mountPath: /mnt\n          name: nfs-volume\n        resources:\n          limits:\n            nvidia.com/gpu: %s\n      restartPolicy: Never\n      volumes:\n      - name: nfs-volume\n        persistentVolumeClaim:\n          claimName: %s"}}}   
 
     raw_temp = trial_template['trialTemplate']['goTemplate']['rawTemplate']
      
-    mod_raw_temp = raw_temp %(args.image, args.nfs_path,args.weights, args.cfg_data, args.cfg_file, args.gpus, args.component_type, args.gpus)
+    mod_raw_temp = raw_temp %(args.image, args.nfs_path,args.weights, args.cfg_data, args.cfg_file, args.gpus, args.component_type, args.gpus,args.pvc_name)
     
     trial_template['trialTemplate']['goTemplate']['rawTemplate'] = mod_raw_temp
 
