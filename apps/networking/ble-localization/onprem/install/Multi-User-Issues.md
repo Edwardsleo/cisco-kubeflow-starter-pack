@@ -105,7 +105,7 @@
      
 2. NFS/Profiles/namespaces/resourcequota
      - nfs/profiles provisioning scripts completed.
-     - Not able to mount NFS volumes with dex 1.1 in user namespace - Resolved with istio-injection disabled in user namespace? by default enabled.
+     - **Not able to mount NFS volumes with dex 1.1 in user namespace - Resolved with istio-injection disabled in user namespace? by default enabled.**
      - the code is in dex1.1 branch
 
 3. Notebooks
