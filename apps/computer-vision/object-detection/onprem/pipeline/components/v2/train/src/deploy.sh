@@ -245,7 +245,7 @@ else
             sed -i "s/^${param}.*/${param}=${!uppercase_param}/g" cfg/${CFG_FILE}
        fi
     done
-	    
+    unset IFS    
 
     if [[ ${WEIGHTS} = 'None' || ${WEIGHTS} = 'none' ]]
     then
