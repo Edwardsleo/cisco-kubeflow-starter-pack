@@ -31,7 +31,7 @@
      - inference on model built of checkpoints is working, inference_tf2_colab.ipynb
      - tflite based inferencing verified.
      - meraki folks had completed a TF pipeline, not SSD.
-     - pipeline in progress
+     - **pipeline in progress**
  
  7. AWS RDS prototype
      - basic things are working, but from lab access issues are observed - could be firewall issue, try with different port.
@@ -41,9 +41,9 @@
      - first cut done
      - compiling pipelines and uploading code is done
      - webhooks/Gitlab CI exploration
-     - verifying pipelines with Gitlab CI?
+     - **verifying pipelines with Gitlab CI**
  
- 9. cert-manager?
+ 9. **cert-manager**
  
 
 
