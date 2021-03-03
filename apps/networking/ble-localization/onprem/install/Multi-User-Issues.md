@@ -35,7 +35,7 @@
  
  7. AWS RDS prototype
      - basic things are working, but from lab access issues are observed - could be firewall issue, try with different port.
-     - componentization
+     - componentization?
      - ApertureDB ??
  8. Gitlab code move/CI
      - first cut done
@@ -44,6 +44,7 @@
      - **verifying pipelines with Gitlab CI**
  
  9. **cert-manager**
+     - **generate certs and test https**
  
 
 
@@ -58,7 +59,7 @@
      - changed the pipeline components download, katib, train to enable them run in user namespace
      - kubeflow nfs is no more required.
      - custom visualization is also served from anonymous namespace
-     - visulization virtual service is also working.
+     - visualization virtual service is also working.
      - local path PV also works
      
 2. Notebooks are working
@@ -88,7 +89,7 @@
      - exploration for intra service connections - mTLS??
      - we use openssl certificates as secrets for external connections?? investigation
      
-11. Istio
+10. Istio
      - api-server config required for 1.1?
      ```
      --service-account-signing-key-file=/etc/kubernetes/pki/sa.key - --service-account-issuer=kubernetes.default.svc needs to be added to /etc/kubernetes/manifests/kube-apiserver.yaml
@@ -130,8 +131,8 @@
 8. https/TLS
      - https redirect not working on KF 1.0 + Dex
 
-9. test servicerolebinding/.. scripts from inside the notebook, multi user - double check testing.
-9. Argo Workflows??
+9. **test servicerolebinding/.. scripts from inside the notebook, multi user - double check testing.**
+10. Argo Workflows??
 
 
      
