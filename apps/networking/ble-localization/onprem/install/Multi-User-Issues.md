@@ -43,8 +43,8 @@
      - webhooks/Gitlab CI exploration
      - **verifying pipelines with Gitlab CI**
  
- 9. **cert-manager**
-     - **generate certs and test https**
+ 9. cert-manager
+     - generated self signed certs of istio ingress gateway and tested https
  
 
 
