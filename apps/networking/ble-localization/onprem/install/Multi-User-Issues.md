@@ -45,7 +45,7 @@
  
  9. cert-manager
      - generated self signed certs of istio ingress gateway and tested https
-     - **check CA based certificate, let's encrypt, https://cert-manager.io/docs/tutorials/acme/ingress/ **
+     - **check CA based certificate, let's encrypt**, https://cert-manager.io/docs/tutorials/acme/ingress/ 
  
 
 
