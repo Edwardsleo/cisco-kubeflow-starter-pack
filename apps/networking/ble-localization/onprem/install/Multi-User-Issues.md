@@ -1,5 +1,18 @@
 # List of issues/resolutions for KF 1.0 & 1.1.    
-     
+
+## MSDL items
+
+1. cert-manager
+     - generated self signed certs of istio ingress gateway and tested https
+     - **check CA based certificate, let's encrypt**, https://cert-manager.io/docs/tutorials/acme/ingress/ 
+     - investigation for DNS/HTTP validation
+2. Artifactory based docker images
+     - docker login worked
+     - docker pull/push worked
+     - image pull secrets on dummy pod worked
+     - **mount image pull secrets to pipeline either using service account or change in SDK**
+3. LDAP 
+     - check LDAP server on istio dex
 
 # Non-Dex/Regular 1.0 
 
@@ -43,9 +56,6 @@
      - webhooks/Gitlab CI exploration
      - **verifying pipelines with Gitlab CI**
  
- 9. cert-manager
-     - generated self signed certs of istio ingress gateway and tested https
-     - **check CA based certificate, let's encrypt**, https://cert-manager.io/docs/tutorials/acme/ingress/ 
  
 
 
@@ -86,9 +96,7 @@
      - try regular istio instead of istio crd/install 1.3?
      - try our own custom dashboard.json
 
-9. Cert-manager
-     - exploration for intra service connections - mTLS??
-     - we use openssl certificates as secrets for external connections?? investigation
+
      
 10. Istio
      - api-server config required for 1.1?
@@ -133,16 +141,7 @@
      - https redirect not working on KF 1.0 + Dex
 
 9. **tested servicerolebinding/.. from inside the notebook, script is pending, multi user - double check testing.**
-10. cert-manager
-     - generated self signed certs of istio ingress gateway and tested https
-     - **check CA based certificate, let's encrypt, https://cert-manager.io/docs/tutorials/acme/ingress/ **
-     - investigation for DNS/HTTP validation
-11. Artifactory based docker images
-     - docker login worked
-     - docker pull/push worked
-     - image pull secrets on dummy pod worked
-     - **mount image pull secrets to pipeline either using service account or change in SDK**
+
      
 
 
-     
