@@ -10,9 +10,9 @@
      - docker login worked
      - docker pull/push worked
      - image pull secrets on dummy pod worked
-     - **mount image pull secrets to pipeline either using service account or change in SDK**
+     - mounting image pull secrets to pipeline using service account worked
 3. LDAP 
-     - check LDAP server on istio dex
+     - **check LDAP server on istio dex**
 
 # Non-Dex/Regular 1.0 
 
@@ -140,7 +140,8 @@
 8. https/TLS
      - https redirect not working on KF 1.0 + Dex
 
-9. **tested servicerolebinding/.. from inside the notebook, script is pending, multi user - double check testing.**
+9. tested servicerolebinding/.. from inside user's notebook, script is done, 
+10. **multi user - double check testing.**
 
      
 
