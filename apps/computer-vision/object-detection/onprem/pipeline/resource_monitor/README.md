@@ -168,5 +168,4 @@ kubectl delete -f https://raw.githubusercontent.com/NVIDIA/gpu-monitoring-tools/
 Uninstall `Grafana`
 ```
 kubectl delete -f grafana.yaml
-kubectl delete -f dcgm-node-exporter-dashboard-config.yaml
 ```
