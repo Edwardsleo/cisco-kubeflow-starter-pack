@@ -1,0 +1,14 @@
+name: tensorboard
+description: object detection tensorboard
+inputs:
+  - {name: timestamp, type: String,  description: "Provide current timestamp"}
+  - {name: nfs path, type: String, default: "/mnt/tf-object-detection", description: "NFS Mount path"}
+  
+implementation:
+  container:
+    image: docker.io/edward1723/object-detection-tensorboard:0.1
+    command: ["/opt/deploy.sh"]
+    args: [
+      --timestamp, {inputValue: timestamp},
+      --nfs-path, {inputValue: nfs path}
+    ]

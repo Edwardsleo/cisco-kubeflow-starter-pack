@@ -1,0 +1,18 @@
+name: Train
+description: train object detection
+inputs:
+  - {name: timestamp, type: String}
+  - {name: nfs path, type: String, default: "/mnt/tf-object-detection", description: "url"}
+  - {name: num_train_steps, type: String, default: "50", description: "Number of training steps"}
+  - {name: sample_1_of_n_eval_examples, type: String, default: "1", description: "Number of evaluation"}
+
+implementation:
+  container:
+    image: docker.io/edward1723/object-detection-train:0.1
+    command: ["/opt/deploy.sh"]
+    args: [
+      --timestamp, {inputValue: timestamp},
+      --nfs-path, {inputValue: nfs path},
+      --num_train_steps, {inputValue: num_train_steps},
+      --sample_1_of_n_eval_examples, {inputValue: sample_1_of_n_eval_examples} 
+    ]

@@ -1,0 +1,14 @@
+name: Inference
+description: Inference
+inputs:
+  - {name: timestamp, type: String}
+  - {name: nfs path, type: String, default: "/mnt/tf-object-detection", description: "NFS Mount path"}
+
+implementation:
+  container:
+    image: docker.io/edward1723/object-detection-inference:0.1
+    command: ["/opt/deploy.sh"]
+    args: [
+      --timestamp, {inputValue: timestamp},
+      --nfs-path, {inputValue: nfs path}
+    ]
