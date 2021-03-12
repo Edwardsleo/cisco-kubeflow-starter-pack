@@ -57,7 +57,7 @@ Click on the latest experiment which is created
 
 ![Object Detection Pipeline](pictures/tfboard_comp.PNG)
 
-After the successfull completion of tensorboard component, view the Tensorboard using        
+* After the successfull completion of tensorboard component, view the Tensorboard using        
 url http://{ingress-ip}:{ingress-ip-port}/{timestamp}/tensorboard/
 
 #### Training component:
@@ -68,7 +68,7 @@ url http://{ingress-ip}:{ingress-ip-port}/{timestamp}/tensorboard/
 
 #### Inference component:
 
-Converts checkpoint to tflite inference
+* Converts checkpoint to tflite inference
 
 ![Object Detection Pipeline](pictures/infern_comp.PNG)
 
