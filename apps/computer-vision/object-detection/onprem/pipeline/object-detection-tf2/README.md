@@ -1,4 +1,4 @@
-# **TensorFlow Object Detection Workflow using Kubeflow Pipeline
+# TensorFlow Object Detection Workflow using Kubeflow Pipeline
 
 Creating accurate machine learning models capable of localizing and identifying multiple objects in a single image remains a core challenge in computer vision. The TensorFlow Object Detection API is an open source framework built on top of TensorFlow that makes it easy to construct, train and deploy object detection models. At Google we’ve certainly found this codebase to be useful for our computer vision needs, and we hope that you will as well.
 
@@ -18,14 +18,14 @@ Cisco UCS - C240M5 and C480ML
 
 ## <a name='UCSSetup'></a>**UCS Setup**
 
-* Install Kubeflow from [here](../../../../../install)
-* Install NFS server (if not installed) from [here](../../../../../install)
-* Create Jupyter Notebook Server from [here](../../../../../install)
-* Create Kubernetes secret to access S3 from [here](../../../../../install)
+* Install Kubeflow from [here](../../../../../../install)
+* Install NFS server (if not installed) from [here](../#ucs-setup)
+* Create Jupyter Notebook Server from [here](../#create-jupyter-notebook-server)
+* Create Kubernetes secret to access S3 from [here](../#create-kubernetes-secret-to-access-s3)
 
 ### <a name='UploadNotebookfile'></a>**Upload Object Detection Pipeline Notebook file**
 
-Upload [object-detection-pipeline-deployment.ipynb](object-detection-pipeline-deployment.ipynb)
+Upload [object-detection-pipeline-deployment-tf2.ipynb](object-detection-pipeline-deployment-tf2.ipynb)
 
 ### <a name='RunPipeline'></a>**Run Object Detection Pipeline**
 
@@ -51,21 +51,22 @@ Click on the latest experiment which is created
 
 ![Object Detection Pipeline](pictures/experim.PNG)
 
-Pipeline components screenshots & logs can be viewed as below
+### Pipeline components screenshots & logs can be viewed as below
 
-* Tensorboard Component:
+#### Tensorboard Component:
 
 ![Object Detection Pipeline](pictures/tfboard_comp.PNG)
 
-After the successfull completion of tensorboard component, view the Tensorboard using url http://{ingress-ip}:{ingress-ip-port}/{timestamp}/tensorboard/
+After the successfull completion of tensorboard component, view the Tensorboard using        
+url http://{ingress-ip}:{ingress-ip-port}/{timestamp}/tensorboard/
 
-* Training component:
+#### Training component:
 
 ![Object Detection Pipeline](pictures/train-comp.PNG)
 
 * Training metrics are tracked in Tensorboard visualization at the time of training
 
-* Inference component:
+#### Inference component:
 
 Converts checkpoint to tflite inference
 
@@ -73,9 +74,9 @@ Converts checkpoint to tflite inference
 
 ### <a name='ModelInference'></a>**Model Inference from Notebook**
 
-Upload [tf-object-detection-inference-tflite.ipynb](tf-object-detection-inference-tflite.ipynb)
+Upload [object-detection-inference-tflite.ipynb](object-detection-inference-tflite.ipynb)
 
-Dependencies files required
+#### Dependencies files required
 * tflite model
 * mscoco_label_map.pbtxt
 * mobilenet_v2.ckpt-1.index
