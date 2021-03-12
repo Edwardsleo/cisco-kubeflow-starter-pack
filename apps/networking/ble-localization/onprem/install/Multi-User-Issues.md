@@ -107,7 +107,7 @@
 
 
 1. Istio
-     - api-server config required for Dex 1.0 & 1.1
+     - api-server config required for Dex 1.0 & 1.1 - https://github.com/kubeflow/manifests/issues/959
      ```
      --service-account-signing-key-file=/etc/kubernetes/pki/sa.key - --service-account-issuer=kubernetes.default.svc needs to be added to /etc/kubernetes/manifests/kube-apiserver.yaml
      ```
