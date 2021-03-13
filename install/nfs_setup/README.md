@@ -7,7 +7,7 @@ This manual will guide you to install and setup NFS to be used on Kubeflow v1.1 
 
 * K8s & Kubeflow v1.1 installed.
 
-#### Note: Please refer [here](../) to install prerequisites.
+**Note:** Please refer [here](../) to install prerequisites.
 ## NFS installation
 
 The NFS installation performs the following tasks:
