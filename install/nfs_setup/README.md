@@ -1,4 +1,4 @@
-<h1 style="color:pink;" align="center">NFS installation on Kubeflow v1.1</h1>
+<h1 align="center">NFS installation on Kubeflow v1.1</h1>
 
 
 This manual will guide you to install and setup NFS to be used on Kubeflow v1.1 installed UCS machine. Generally NFS are used to share data between different K8s objects. They are useful during Kubeflow pipeline executions.
@@ -7,7 +7,7 @@ This manual will guide you to install and setup NFS to be used on Kubeflow v1.1 
 
 * K8s & Kubeflow v1.1 installed.
 
-#### Note: Please refer (here)[] to install prerequisites.
+#### Note: Please refer [here](../) to install prerequisites.
 ## NFS installation
 
 The NFS installation performs the following tasks:
@@ -27,7 +27,7 @@ The NFS installation performs the following tasks:
 
 * Add the inputs corresponding to desired users/profiles to the ```users.txt``` file. Note that each user will represent a separate namespace each. The inputs will be user/profile name and PVC storage request as shown below.
 
-![KF1.1 Install](1b-show-userstxt.png)
+![KF1.1 Install](1b_show_userstxt.PNG)
 
 * Execute ```nfs-installation-user-ns.sh``` script to create users, add them to Dex auth, create NFS-server, PV & PVC for respective users.
 
@@ -56,7 +56,7 @@ kubectl edit deployment nfs-server -n <<namespace>>
 ```
 Press ```:wq``` once done with editing.
 
-![KF1.1 Install](2b-modify-nfs-server.png)
+![KF1.1 Install](2b_modify_nfs_server.PNG)
 
 
 References:
