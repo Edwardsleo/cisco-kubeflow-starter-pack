@@ -7,7 +7,7 @@ inputs:
 
 implementation:
   container:
-    image: docker.io/poornimadevii/cleanup:0.2
+    image: docker.io/samba07/test:cleanup1.1_1
     command: ["/opt/deploy.sh"]
     args: [
       --nfs-path, {inputValue: nfs path},

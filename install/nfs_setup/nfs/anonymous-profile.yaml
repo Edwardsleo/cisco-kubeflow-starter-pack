@@ -1,0 +1,8 @@
+apiVersion: kubeflow.org/v1beta1
+kind: Profile
+metadata:
+  name: anonymous   # replace with the name of profile you want, this will be user's namespace name
+spec:
+  owner:
+    kind: User
+    name: anonymous@kubeflow.org   # replace with the email of the user
