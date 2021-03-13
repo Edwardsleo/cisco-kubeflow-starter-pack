@@ -27,12 +27,12 @@ The NFS installation performs the following tasks:
 
 * Add the inputs corresponding to desired users/profiles to the ```users.txt``` file. Note that each user will represent a separate namespace each. The inputs will be user/profile name and PVC storage request as shown below.
 
-![KF1.1 Install](1b_show_userstxt.PNG)
+![KF1.1 Install](../pictures/2a_show_userstxt.PNG)
 
-* Execute ```nfs-installation-user-ns.sh``` script to create users, add them to Dex auth, create NFS-server, PV & PVC for respective users.
+* Execute ```nfs_install_user_ns.sh``` script to create users, add them to Dex auth, create NFS-server, PV & PVC for respective users.
 
 ```
-bash nfs-installation-user-ns.sh
+bash nfs_install_user_ns.sh
 ```
 
 Once executed, you will be prompted to enter mail ID and password for every user being created. This will be added to Dex auth configmap with the password encrypted using Bcrypt.
@@ -56,7 +56,7 @@ kubectl edit deployment nfs-server -n <<namespace>>
 ```
 Press ```:wq``` once done with editing.
 
-![KF1.1 Install](2b_modify_nfs_server.PNG)
+![KF1.1 Install](../pictures/2b_modify_nfs_server.PNG)
 
 
 References:
