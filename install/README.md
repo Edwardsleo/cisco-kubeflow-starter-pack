@@ -51,6 +51,7 @@ Before you start installing Kubeflow v1.1.0, please update the necessary configu
 
 **kfctl release tag URL** : *https://github.com/kubeflow/kfctl/tree/v1.1-branch*
 
+### Procedure:
 
 Install Kubeflow v1.1.0 following the steps below:
 
