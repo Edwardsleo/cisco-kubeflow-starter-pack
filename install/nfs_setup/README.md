@@ -27,7 +27,7 @@ The NFS installation script performs the tasks as listed below:
 
 * Add the inputs corresponding to desired users/profiles to the ```users.txt``` file. Note that each user will represent a separate namespace each. The inputs will be user/profile name and PVC storage request as shown below.
 
-![KF1.1 Install](../pictures/2a_show_userstxt.PNG)
+     ![KF1.1 Install](../pictures/2a_show_userstxt.PNG)
 
 * Execute ```nfs_install_user_ns.sh``` script to create users, add them to Dex auth, create NFS-server, PV & PVC for respective users.
 
