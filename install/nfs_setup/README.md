@@ -59,7 +59,7 @@ Press ```:wq``` once done with editing.
 ![KF1.1 Install](../pictures/2b_modify_nfs_server.PNG)
 
 
-References:
+## References:
 
 To know more about Kubernetes profiles:
    
