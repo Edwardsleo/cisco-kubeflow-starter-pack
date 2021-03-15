@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Clear basic auth setup of  non-requested static users
+#Clear basic auth setup of non-requested static users
 existing_auths=$(cat dex-config.yaml | grep username: | awk '{print $2}')
 for profile in $existing_auths; do
        if ! [[ $profile = 'admin' ]]
@@ -16,7 +16,6 @@ done
 
 # Update dex config-map with static user basic auth credentials and apply
 
-#while read usrdata
 for username in $username_list
 do
      if grep -q "username: $username" dex-config.yaml
