@@ -74,7 +74,8 @@ for profile in $existing_users; do
     then     
         if ! [[ $username_list =~ (^|[[:space:]])$profile($|[[:space:]]) ]]
         then  
-	      kubectl delete experiment -n $profile --all	
+	      kubectl delete experiment -n $profile --all
+              kubectl delete statefulsets -n $profile --all	      
               kubectl delete pvc -n $profile --all 
                 
               if [[ `kubectl get pv --template  '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' | grep 'nfs-'$profile` = 'nfs-'$profile ]]
@@ -86,7 +87,7 @@ for profile in $existing_users; do
                
               #Profile cleanup
               kubectl delete profile $profile 
-                  echo "Profile $profile is deleted!"
+              echo "Profile $profile is deleted!"
             
               
          else
@@ -115,8 +116,6 @@ do
     
     username=$(echo $usrdata | awk '{print $1}')
     storage=$(echo $usrdata | awk '{print $2}')
-    #user_email=''
-    #export user_email
 
     for email in $email_list
     do
@@ -128,13 +127,12 @@ do
 
     if [[ `kubectl get profiles | grep $username | head -n1 | awk '{print $1;}'` = $username ]]
     then
-    if [[ ! -z "$username" ]]
-    then        
+       if [[ ! -z "$username" ]]
+       then        
              echo "User profile $username already created/exists"
-        else
-         #echo "User profile name is null!"
-         exit 1
-        fi       
+       else
+             exit 1
+       fi       
     else 
         echo "Creating user profile $username"
 
@@ -151,115 +149,121 @@ EOF
     
         kubectl create -f user-profile.yaml
     
-    if [ $? -eq 0 ]; then
-        echo "$username profile created successfully"
-    else
-        echo "$username profile not created successfully"
-        #rm -rf user-profile.yaml
-        exit 1
-    fi
-    sleep 10
+        if [ $? -eq 0 ]; then
+           echo "$username profile created successfully"
+        else
+           echo "$username profile not created successfully"
+           exit 1
+        fi
+        sleep 10
 
         rm -rf user-profile.yaml
 
-    USER_NAMESPACE=`kubectl get namespace | grep $username | head -n1 | awk '{print $1;}'`
-    if [[ "$USER_NAMESPACE" = $username ]]; then
-        echo "$username namespace exists"
-    else
-        echo "$username namespace not created successfully and exiting"
-                exit 1
-    fi
-    fi
-        if ! [[ `kubectl get pods -n $username | grep nfs-server | awk '{print $1;}'` = 'nfs-server'* ]]
-        then
-           echo "Creating NFS server for $username namespace..."
-       # Create nfs-server in user namespace
-       kubectl apply -f nfs/nfs-server.yaml -n $username
-       if [ $? -eq 0 ]; then
-        echo "NFS server created successfully in $username namespace"
-       else
-        echo "NFS server not created successfully in $username namespace"
-       fi
-       sleep 5
+        USER_NAMESPACE=`kubectl get namespace | grep $username | head -n1 | awk '{print $1;}'`
+        if [[ "$USER_NAMESPACE" = $username ]]; then
+             echo "$username namespace exists"
         else
-           echo "NFS server already exists in $username namespace"
+             echo "$username namespace not created successfully and exiting"
+             exit 1
         fi
+    fi
+
+        
+    if ! [[ `kubectl get pods -n $username | grep nfs-server | awk '{print $1;}'` = 'nfs-server'* ]]
+    then
+           echo "Creating NFS server for $username namespace..."
+           # Create nfs-server in user namespace
+       
+	   kubectl apply -f nfs/nfs-server.yaml -n $username
+           if [ $? -eq 0 ]; then
+               echo "NFS server created successfully in $username namespace"
+           else
+               echo "NFS server not created successfully in $username namespace"
+           fi
+
+           sleep 5
+
+    else
+           echo "NFS server already exists in $username namespace"
+    fi
 
     # Get NFS server ClusterIP
     NFS_USER_CLUSTER_IP=`kubectl -n $username get svc/nfs-server --output=jsonpath={.spec.clusterIP}`
     echo $NFS_USER_CLUSTER_IP
+
     if [ -z "${NFS_USER_CLUSTER_IP}" ]; then
         echo "NFS server svc in $username namespace is not created or assigned successfully"
         exit 1
     fi
 
-        if ! [[ `kubectl get pv | grep nfs-${username} | awk '{print $1;}'` = 'nfs-'$username ]]
+        
+    if ! [[ `kubectl get pv | grep nfs-${username} | awk '{print $1;}'` = 'nfs-'$username ]]
     then
             echo "Creating PV for $username namespace"
-        cp nfs/nfs-pv.yaml nfs-user-pv.yaml
+            cp nfs/nfs-pv.yaml nfs-user-pv.yaml
 
-            #Replace IP
-        # Updated sed command portable with linux(ubuntu) and macos
-        sed -i.bak -e "s/nfs-cluster-ip/$NFS_USER_CLUSTER_IP/g; s/name: nfs/name: nfs-${username}/g; s/storage: 1Gi/storage: ${storage}/g" nfs-user-pv.yaml
+            # Updated sed command portable with linux(ubuntu) and macos
+            sed -i.bak -e "s/nfs-cluster-ip/$NFS_USER_CLUSTER_IP/g; s/name: nfs/name: nfs-${username}/g; s/storage: 1Gi/storage: ${storage}/g" nfs-user-pv.yaml
 
 
-        # Create NFS PV in user namespace
-        kubectl apply -f nfs-user-pv.yaml
-        if [ $? -eq 0 ]; then
-        echo "PV for NFS server created successfully"
-        else
-        echo "PV for NFS server not created successfully"
-        #revert_back
-        exit 1
-        fi
-        sleep 5
+            # Create NFS PV in user namespace
+            kubectl apply -f nfs-user-pv.yaml
+            if [ $? -eq 0 ]; then
+                 echo "PV for NFS server created successfully"
+            else
+                 echo "PV for NFS server not created successfully"
+                 exit 1
+            fi
+
+            sleep 5
             
-        rm -rf nfs-user-pv.yaml.bak nfs-user-pv.yaml
+            rm -rf nfs-user-pv.yaml.bak nfs-user-pv.yaml
 
-        # Verify created PV
-        kubectl get pv
+            # Verify created PV
+            kubectl get pv
  
     else
-           echo "PV for $username namespace already exists!!"
-        fi
+           
+	    echo "PV for $username namespace already exists!!"
+    fi
     
-        if ! [[ `kubectl get pvc -n $username | grep nfs-$username | awk '{print $1;}'` = 'nfs-'$username ]]
-        then
-            echo "Creating PVC for $username namespace..."
+    
+    if ! [[ `kubectl get pvc -n $username | grep nfs-$username | awk '{print $1;}'` = 'nfs-'$username ]]
+    then
+           echo "Creating PVC for $username namespace..."
  
-            #Replace PVC name
-            cp nfs/nfs-pvc.yaml nfs-user-pvc.yaml
-        sed -i.bak -e "s/name: nfs/name: nfs-${username}/g; s/storage: 1Gi/storage: ${storage}/g" nfs-user-pvc.yaml
+           #Replace PVC name
+           cp nfs/nfs-pvc.yaml nfs-user-pvc.yaml
+           sed -i.bak -e "s/name: nfs/name: nfs-${username}/g; s/storage: 1Gi/storage: ${storage}/g" nfs-user-pvc.yaml
     
+           
+	   # Create NFS PVC in user namespace
+           kubectl apply -f nfs-user-pvc.yaml -n $username
+           if [ $? -eq 0 ]; then
+                echo "PVC for NFS server created successfully in $username namespace"
+           else
+                echo "PVC for NFS server not created successfully in $username namespace"
+                exit 1
+           fi
+
+           sleep 5
+    
+           rm -rf nfs-user-pvc.yaml.bak nfs-user-pvc.yaml
     
 
-        # Create NFS PVC in user namespace
-        kubectl apply -f nfs-user-pvc.yaml -n $username
-        if [ $? -eq 0 ]; then
-         echo "PVC for NFS server created successfully in $username namespace"
-        else
-         echo "PVC for NFS server not created successfully in $username namespace"
-         #revert_back
-         exit 1
-        fi
-        sleep 5
-    
-        rm -rf nfs-user-pvc.yaml.bak nfs-user-pvc.yaml
-    
+           # Verify PVC in user namespace
+           kubectl get pvc -n $username
+    else
 
-        # Verify PVC in user namespace
-        kubectl get pvc -n $username
-         else
-            echo "PVC for $username namespace already exists!!"
-         fi 
+           echo "PVC for $username namespace already exists!!"
+    fi 
 
-     echo "NFS PV and PVC created in $username namespace"
+    echo "NFS PV and PVC created in $username namespace"
 
 done < users.txt
 
 #Cleanup
 
 rm -rf dex-config-numbered.yaml dex-config.yaml
-
 
 
