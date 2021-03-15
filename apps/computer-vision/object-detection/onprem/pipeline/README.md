@@ -124,7 +124,7 @@ Follow the [steps](../notebook#create--connect-to-jupyter-notebook-server) to cr
 
 ### <a name='pipelineprerequisite'></a>**Prerequisites for Pipeline execution**
 
-#### <a name='pipelineaccess'></a>***Apply RBAC configuration application from notebook server***
+#### <a name='pipelineaccess'></a>***Apply RBAC configuration from notebook server***
 
 Once the notebook server is created, it is essential to apply certain RBAC related configurations to it for successful execution of KF pipeline. This includes creating ```serviceRoleBinding``` and ```envoyFilter```.
 
