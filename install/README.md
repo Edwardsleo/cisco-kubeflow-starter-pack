@@ -67,7 +67,7 @@ Install Kubeflow v1.1.0 following the steps below:
    ```
    kubectl get pods --all-namespaces
    ```
-***Expected Output:***
+   ***Expected Output:***
 
    ```
    NAMESPACE            NAME                                                         READY   STATUS      RESTARTS   AGE
