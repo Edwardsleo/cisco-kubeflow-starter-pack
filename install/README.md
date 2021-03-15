@@ -15,7 +15,7 @@ Either of the following infrastructure can be used for KF implementation:
 * Default Kubernetes storage class that can dynamically provision volumes
 
 ## [Internal] Prerequisites Reference setup
-[This]() is a reference guide for creating a test Kubernetes cluster with a dynamic storage class.
+[This](k8_setup.md) is a reference guide for creating a test Kubernetes cluster with a dynamic storage class.
 
 Note: This is not part of the kubeflow-starter-pack. It is meant for internal development and testing. This serves as a reference for kubeflow-starter-pack users and not recommended as a golden path for setting up prerequisites.
 
@@ -38,18 +38,18 @@ Before you start installing Kubeflow v1.1.0, please update the necessary configu
     - --service-account-signing-key-file=/etc/kubernetes/pki/sa.key
     - --service-account-issuer=kubernetes.default.svc
     ```
-    ![KF1.1 Install](1a-add-config.png)
+    ![KF1.1 Install](pictures/1a_add_config.png)
 
 
 ## Kubeflow Installation 
 
-**Version : Kubeflow v1.1.0**
+**Version** : *Kubeflow v1.1.0*
 
-**Flavour : Multi-user, auth-enabled with kfctl_istio_dex**
+**Flavour** : *Multi-user, auth-enabled with kfctl_istio_dex*
 
-**Kubeflow manifests release tag URL : https://github.com/kubeflow/manifests/tree/v1.1-branch**
+**Kubeflow manifests release tag URL** : *https://github.com/kubeflow/manifests/tree/v1.1-branch*
 
-**kfctl release tag URL : https://github.com/kubeflow/kfctl/tree/v1.1-branch**
+**kfctl release tag URL** : *https://github.com/kubeflow/kfctl/tree/v1.1-branch*
 
 
 Install Kubeflow v1.1.0 following the steps below:
