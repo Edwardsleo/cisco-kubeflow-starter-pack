@@ -12,8 +12,11 @@
 		* [Retrieve Ingress IP](#RetrieveIngressIP)
 		* [Install NFS server, PVs and PVCs](#InstallNFSserverPV)
     * [Create Jupyter Notebook Server](#CreateJupyterNotebookServer)
-	* [Create Kubernetes secret](#KubernetesSecret)
-	* [Create Label for Kubeflow namespace](#CreateLabel)
+	* [Prerequisites for Pipeline execution](#pipelineprerequisite)
+	    * [RBAC configuration application](#pipelineaccess)
+		* [Setup private Docker registry auth](#Privatedocker)
+		* [Create Kubernetes secret](#KubernetesSecret)
+		* [Create Label for Kubeflow namespace](#CreateLabel)
 	* [Upload Object Detection Pipeline Notebook file](#UploadNotebookfile)
 	* [Run Object Detection Pipeline](#RunPipeline)
 	* [KF Pipeline Dashboard](#PipelineDashboard)
@@ -42,11 +45,14 @@
 
 ## <a name='InfrastructureUsed'></a>**Infrastructure Used**
 
-* Cisco UCS - C240M5 and C480ML
+Either of the following infrastructure is used.
+
+* Cisco UCS - C240M5
+* Cisco UCS - C480ML
 
 ## <a name='Prerequisites'></a>**Prerequisites**
 
-* UCS machine with [Kubeflow](https://www.kubeflow.org/) 1.0 installed
+* UCS machine with [Kubeflow](https://www.kubeflow.org/) v1.1.0 installed
 * S3 bucket with read/write permissions & with specified layout
 
 ## <a name='AWSSetup'></a>**S3 Bucket Layout**
@@ -85,17 +91,17 @@ To install Kubeflow, follow the instructions from [here](../../../../../install)
 
 ### <a name='InstallNFS'></a>**Install NFS server (if not installed)**
 
-To install NFS server follow steps below.
+To install NFS server please follow steps below.
 
 #### <a name='RetrieveIngressIP'></a>*Retrieve Ingress IP*
 
-For installation, we need to know the external IP of the 'istio-ingressgateway' service. This can be retrieved by the following steps.  
+For installation, we need to know the external IP of the ```istio-ingressgateway``` service. This can be retrieved by the following steps.  
 
 ```
 kubectl get service -n istio-system istio-ingressgateway
 ```
 
-If your service is of LoadBalancer Type, use the 'EXTERNAL-IP' of this service.  
+If your service is of LoadBalancer Type, use the ```EXTERNAL-IP``` of this service.  
 
 Or else, if your service is of NodePort Type - run the following command:  
 
@@ -103,20 +109,48 @@ Or else, if your service is of NodePort Type - run the following command:
 kubectl get nodes -o wide
 ```
 
-Use either of 'EXTERNAL-IP' or 'INTERNAL-IP' of any of the nodes based on which IP is accessible in your network.  
+Use either of ```EXTERNAL-IP``` or ```INTERNAL-IP``` of any of the nodes based on which IP is accessible in your network.  
 
 This IP will be referred to as INGRESS_IP from here on.
 
 #### <a name='InstallNFSserverPV'></a>*Install NFS server, PVs and PVCs*
 
-Follow the [steps](./../../../../networking/ble-localization/onprem/install) to install NFS server, PVs and PVCs.
+Refer [here](../../../../../install/nfs_setup) to install NFS server, PVs and PVCs.
 
 
 ### <a name='CreateJupyterNotebookServer'></a>**Create Jupyter Notebook Server**
 
-Follow the [steps](https://github.com/CiscoAI/cisco-kubeflow-starter-pack/tree/master/apps/networking/ble-localization/onprem/notebook#create--connect-to-jupyter-notebook-server) to create & connect to Jupyter Notebook Server in Kubeflow
+Follow the [steps](../notebook#create--connect-to-jupyter-notebook-server) to create & connect to Jupyter Notebook Server in Kubeflow
 
-### <a name='KubernetesSecret'></a>**Create Kubernetes secret to access S3**
+### <a name='pipelineprerequisite'></a>**Prerequisites for Pipeline execution**
+
+#### <a name='pipelineaccess'></a>***Apply RBAC configuration application from notebook server***
+
+Once the notebook server is created, it is essential to apply certain RBAC related configurations to it for successful execution of KF pipeline. This includes creating ```serviceRoleBinding``` and ```envoyFilter```.
+
+Open the ```terminal``` of your notebook server and execute ```pipeline_access.sh``` using:
+
+```
+bash pipeline_access.sh
+```
+
+You will be prompted to enter the user mail ID of your usernamespace as shown below.
+
+![Object Detection Pipeline](pictures/3a_pipeline_access.png)
+
+**Note:** Please enter the same user mail ID which was provided during user profile creation using [nfs_setup](../../../../../install/nfs_setup).
+
+#### <a name='Privatedocker'></a>***Setup private Docker registry authentication***
+
+To authenticate the pull of Docker images from your private Docker registry, Docker credentials are applied on the service account ```default-editor`` of the specific namespace, which will be directly effect image pulls of pipeline components running in the namespace.  
+
+```
+kubectl create secret docker-registry docker-cred --docker-server=<<docker server URL>> --docker-username=<<username>> --docker-password=<<password>> -n <<user-namespace>>
+
+kubectl patch serviceaccount default-editor -p '{"imagePullSecrets": [{"name": "docker-cred"}]}' -n <<user-namespace>>
+```
+
+#### <a name='KubernetesSecret'></a>***Create Kubernetes secret to access S3***
 
 Create secret for AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY along with kubeflow deployment to access S3 bucket.
 
@@ -291,4 +325,3 @@ Create an inference service & check whether it is ready.
 
 ### How to build component's Docker image 
 To build any component docker image in general, go to the [components folder](./components/v2/) and build the respective component's docker image and push into your Docker Hub
-

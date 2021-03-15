@@ -38,7 +38,7 @@ Before you start installing Kubeflow v1.1.0, please update the necessary configu
     - --service-account-signing-key-file=/etc/kubernetes/pki/sa.key
     - --service-account-issuer=kubernetes.default.svc
     ```
-    ![KF1.1 Install](pictures/1a_add_config.png)
+    ![KF1.1 Install](pictures/1a_add_kube_config.png)
 
 
 ## Kubeflow Installation 
@@ -144,6 +144,61 @@ Install Kubeflow v1.1.0 following the steps below:
     local-path-storage   local-path-provisioner-7d78476b7f-hmrs8                      1/1     Running     0          125m
 ```
 
+## Secure Kubeflow
+
+The connection with Kubeflow Central dashboard can be done securely through HTTPS too. To enable secure connection with Kubeflow, Please follow the steps as below:
+
+* Change the ```kubeflow-gateway``` Istio gateway object in ```kubeflow``` namespace to edit mode using the following command:
+
+```
+kubectl edit gateways.networking.istio.io kubeflow-gateway -n kubeflow 
+```
+
+* Add the following configuration as shown to the ```kubeflow-gateway``` configuration.
+
+```
+- hosts:
+    - '*'
+    port:
+      name: https
+      number: 443
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      privateKey: /etc/istio/ingressgateway-certs/tls.key
+      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+``` 
+
+![KF1.1 Install](pictures/1b_add_https_config.png)
+
+* Install [kustomize](https://kustomize.io/) on your machine & add it to global paths environment variable by executing the following.
+
+```
+curl -s "https://raw.githubusercontent.com/\
+kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+export PATH=$PATH:$PWD
+```
+
+* Change directory to the configuration files related to setting up of ingress gateway self-signed certificate for HTTPS access using the following command:
+
+```
+cd kf-app/.cache/manifests/manifests-1.1-branch/istio/ingressgateway-self-signed-cert/base
+```
+Here ```kf-app``` refers to the name of the directory for storing files such as Istio dex config yaml and kfctl configuration files. This directory is created after running ```kubeflow.bash``` script.
+
+* Use [kustomize](https://kustomize.io/) to apply the configurations as shown.
+
+```
+kustomize build . | kubectl apply -f -
+```
+
+![KF1.1 Install](pictures/1c_add_cert_config.PNG)
+
+* Load Kubeflow central dashboard using the URL:
+
+```
+https://<INGRESS_IP>:<INGRESS_PORT>:31390
+```
 
 ## References
 
