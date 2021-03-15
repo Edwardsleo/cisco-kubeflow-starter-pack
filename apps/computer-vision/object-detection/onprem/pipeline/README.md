@@ -128,7 +128,7 @@ Follow the [steps](../notebook#create--connect-to-jupyter-notebook-server) to cr
 
 Once the notebook server is created, it is essential to apply certain RBAC related configurations to it for successful execution of KF pipeline. This includes creating ```serviceRoleBinding``` and ```envoyFilter```.
 
-Open the ```terminal``` of your notebook server and execute ```pipeline_access.sh``` using:
+Open the terminal of your notebook server and execute ```pipeline_access.sh``` using:
 
 ```
 bash pipeline_access.sh
@@ -142,7 +142,7 @@ You will be prompted to enter the user mail ID of your usernamespace as shown be
 
 #### <a name='Privatedocker'></a>***Setup private Docker registry authentication***
 
-To authenticate the pull of Docker images from your private Docker registry, Docker credentials are applied on the service account ```default-editor`` of the specific namespace, which will be directly effect image pulls of pipeline components running in the namespace.  
+To authenticate the pull of Docker images from your private Docker registry, Docker credentials are applied on the service account ```default-editor``` of the specific namespace, which will directly effect corresponding image pulls of the pipeline components running in the namespace.  
 
 ```
 kubectl create secret docker-registry docker-cred --docker-server=<<docker server URL>> --docker-username=<<username>> --docker-password=<<password>> -n <<user-namespace>>
