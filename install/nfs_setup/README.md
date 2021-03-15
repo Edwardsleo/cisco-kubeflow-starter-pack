@@ -10,13 +10,18 @@ This manual will guide you to install and setup NFS to be used on Kubeflow v1.1 
 **Note:** Please refer [here](../) to install prerequisites.
 ## NFS installation
 
-The NFS installation performs the following tasks:
+The NFS installation scripts perform the tasks as listed below:
 
-* Profile/Namespace creation for every user
-* User credentials integration with Dex auth as static users
-* NFS server deployment creation
-* Persistent Volume(PV) & Persistent Volume Claim(PVC) creation
+- ```nfs_install_user_ns.sh```
 
+       * Profile/Namespace creation for every user
+       * NFS server deployment creation
+       * Persistent Volume(PV) & Persistent Volume Claim(PVC) creation
+       
+- ```add_static_users.sh```
+
+       * User credentials integration with Dex auth as static users
+        
 ### Procedure
 
 * Install the apt package to install NFS server on the machine.
