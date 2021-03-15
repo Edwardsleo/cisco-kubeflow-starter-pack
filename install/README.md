@@ -32,7 +32,7 @@ Before you start installing Kubeflow v1.1.0, please update the necessary configu
     #Change directory
     cd /etc/kubernetes/manifests
     ```
-- Edit ```kube-apiserver.yaml``` to add the following configuration under the ```command:``` tag in the yaml file as shown:
+- Edit ```kube-apiserver.yaml``` to add the following configuration under the ```command:``` tag as shown:
 
     ```
     - --service-account-signing-key-file=/etc/kubernetes/pki/sa.key
@@ -146,9 +146,9 @@ Install Kubeflow v1.1.0 following the steps below:
 
 ## Secure Kubeflow
 
-The connection with Kubeflow Central dashboard can be done securely through HTTPS too. To enable secure connection with Kubeflow, Please follow the steps as below:
+The connection with Kubeflow Central dashboard can be done securely through HTTPS. To enable secure connection with Kubeflow, please follow the steps as below:
 
-* Change the ```kubeflow-gateway``` Istio gateway object in ```kubeflow``` namespace to edit mode using the following command:
+* Change ```kubeflow-gateway``` Istio gateway object in ```kubeflow``` namespace to edit mode using the following command:
 
 ```
 kubectl edit gateways.networking.istio.io kubeflow-gateway -n kubeflow 
@@ -171,14 +171,14 @@ kubectl edit gateways.networking.istio.io kubeflow-gateway -n kubeflow
 
 ![KF1.1 Install](pictures/1b_add_https_config.png)
 
-* Install [kustomize](https://kustomize.io/) on your machine & add it to global paths environment variable by executing the following.
+* Install [kustomize](https://kustomize.io/) on your machine & add it to global paths environment variable by executing the following:
 
 ```
 curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
 export PATH=$PATH:$PWD
 ```
 
-* Change directory to the configuration files related to setting up of ingress gateway self-signed certificate for HTTPS access using the following command:
+* Change directory to configuration file directory which contains configuration files related to setting up of ingress gateway self-signed certificate for HTTPS access using the following command:
 
 ```
 cd kf-app/.cache/manifests/manifests-1.1-branch/istio/ingressgateway-self-signed-cert/base
