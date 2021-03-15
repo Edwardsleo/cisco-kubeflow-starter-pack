@@ -136,7 +136,7 @@ bash pipeline_access.sh
 
 You will be prompted to enter the user mail ID of your usernamespace as shown below.
 
-![Object Detection Pipeline](pictures/3a_pipeline_access.png)
+![Object Detection Pipeline](pictures/3a_pipeline_access.PNG)
 
 **Note:** Please enter the same user mail ID which was provided during user profile creation using [nfs_setup](../../../../../install/nfs_setup).
 
