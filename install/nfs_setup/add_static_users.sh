@@ -26,7 +26,6 @@ do
         echo "Registering user $username credentials....."
         echo "User name is $username"
 
-        #mail=${username}@cisco.org
         read -p "Enter Email ID for user $username: " email < /dev/tty
         echo "Email ID for user $username is $email"
 
