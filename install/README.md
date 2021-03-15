@@ -174,8 +174,7 @@ kubectl edit gateways.networking.istio.io kubeflow-gateway -n kubeflow
 * Install [kustomize](https://kustomize.io/) on your machine & add it to global paths environment variable by executing the following.
 
 ```
-curl -s "https://raw.githubusercontent.com/\
-kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
 export PATH=$PATH:$PWD
 ```
 
