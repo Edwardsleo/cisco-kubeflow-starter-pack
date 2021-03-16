@@ -58,7 +58,7 @@ Click on the latest experiment which is created
 
 ![Object Detection Pipeline](pictures/tfboard_comp.PNG)
 
-* After the successfull completion of tensorboard component, view the Tensorboard from   
+* After the successful completion of tensorboard component, view the Tensorboard from   
    http://<INGRESS_IP>:<INGRESS_PORT>/${TIMESTAMP}/tensorboard/"
 
 #### Training component:
