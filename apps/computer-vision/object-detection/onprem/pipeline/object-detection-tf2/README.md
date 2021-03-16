@@ -43,8 +43,8 @@ Open the uploaded notebook and start executing cells, screenshots of which are c
 
 ![Object Detection Pipeline](pictures/compile.PNG)
 
-*Once the pipeline is executed, a run link will be generated and displayed. 
-If you click the link, you will directed to Kubeflow Pipeline Dashboard*
+Once the pipeline is executed, a run link will be generated and displayed. 
+If you click the link, you will directed to Kubeflow Pipeline Dashboard
 
 ### <a name='PipelineDashboard'></a>**KF Pipeline Dashboard**
 
@@ -58,7 +58,8 @@ Click on the latest experiment which is created
 
 ![Object Detection Pipeline](pictures/tfboard_comp.PNG)
 
-* After the successfull completion of tensorboard component, view the Tensorboard from http://<INGRESS_IP>:<INGRESS_PORT>/${TIMESTAMP}/tensorboard/"
+* After the successfull completion of tensorboard component, view the Tensorboard from   
+   http://<INGRESS_IP>:<INGRESS_PORT>/${TIMESTAMP}/tensorboard/"
 
 #### Training component:
 
