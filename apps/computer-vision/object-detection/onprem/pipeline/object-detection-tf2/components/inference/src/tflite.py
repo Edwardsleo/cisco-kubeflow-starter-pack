@@ -1,5 +1,4 @@
 import tensorflow as tf
-
 from absl import app
 from absl import flags
 FLAGS = flags.FLAGS
@@ -7,8 +6,6 @@ FLAGS = flags.FLAGS
 flags.DEFINE_string(
     'saved_model_path', None,
     'Path to saved model')
-#flags.DEFINE_string('tf_lite_path', None,
-#                    'Path to tf-lite model')
 
 def main(argv):
 

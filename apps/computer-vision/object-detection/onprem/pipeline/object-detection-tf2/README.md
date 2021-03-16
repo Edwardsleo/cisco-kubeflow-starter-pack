@@ -1,7 +1,8 @@
 # TensorFlow Object Detection Workflow using Kubeflow Pipeline
 
-Creating accurate machine learning models capable of localizing and identifying multiple objects in a single image remains a core challenge in computer vision. The TensorFlow Object Detection API is an open source framework built on top of TensorFlow that makes it easy to construct, train and deploy object detection models. At Google we’ve certainly found this codebase to be useful for our computer vision needs, and we hope that you will as well.
+Creating accurate machine learning models capable of localizing and identifying multiple objects in a single image remains a core challenge in computer vision. The TensorFlow Object Detection API is an open source framework built on top of TensorFlow that makes it easy to construct, train and deploy object detection models.
 
+## Pipeline components
 * Download coco datasets , mobilenet_v2.ckpt , mscoco_label_map.pbtxt and ssd_mobilenet_v2_320x320_coco17_tpu config from object storage.  
 * Train an tensorflow object detection model using coco dataset and ssd_mobilenet_v2_320x320_coco17_tpu configuration.
 * Convert the checkpoints to tflite and upload to object storage.
@@ -57,8 +58,7 @@ Click on the latest experiment which is created
 
 ![Object Detection Pipeline](pictures/tfboard_comp.PNG)
 
-* After the successfull completion of tensorboard component, view the Tensorboard using        
-url http://{ingress-ip}:{ingress-ip-port}/{timestamp}/tensorboard/
+* After the successfull completion of tensorboard component, view the Tensorboard from http://<INGRESS_IP>:<INGRESS_PORT>/${TIMESTAMP}/tensorboard/"
 
 #### Training component:
 
@@ -68,7 +68,7 @@ url http://{ingress-ip}:{ingress-ip-port}/{timestamp}/tensorboard/
 
 #### Inference component:
 
-* Converts checkpoint to tflite inference
+* Exports tflite model using trained checkpoints and inferences using tflite model
 
 ![Object Detection Pipeline](pictures/infern_comp.PNG)
 
@@ -86,7 +86,7 @@ Upload [object-detection-inference-tflite.ipynb](object-detection-inference-tfli
 
 ![Object Detection Pipeline](pictures/input_image.PNG)
 
-![Object Detection Pipeline](pictures/result.PNG)
+![Object Detection Pipeline](pictures/test_image.PNG)
 
 
 

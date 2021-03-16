@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -x
 
 while (($#)); do
@@ -17,11 +16,11 @@ while (($#)); do
        esac
 done
 
+MODEL_PATH=${NFS_PATH}/${TIMESTAMP}
+
 cd ${NFS_PATH}
-
-export NFS_PATH=${NFS_PATH}/${TIMESTAMP}
-
-echo $NFS_PATH
+mkdir ${TIMESTAMP}
+cd ${TIMESTAMP}
 
 touch object-detection-tensorboard-$TIMESTAMP.yaml
 
@@ -48,7 +47,7 @@ spec:
         imagePullPolicy: Always
         command:
         - /usr/local/bin/tensorboard
-        - --logdir=$NFS_PATH
+        - --logdir=$MODEL_PATH
         - --port=80
         ports:
         - name: http
@@ -102,8 +101,8 @@ spec:
 
 EOF
 
-# Creating katib experiment
 
 kubectl apply -f object-detection-tensorboard-$TIMESTAMP.yaml -n kubeflow
 
-sleep 5
+
+echo "Please access Tensorboard from http://<INGRESS_IP>:<INGRESS_PORT>/${TIMESTAMP}/tensorboard/"

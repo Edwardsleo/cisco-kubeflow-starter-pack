@@ -1,5 +1,4 @@
 FROM tensorflow/tensorflow:2.2.0-gpu
-
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install apt dependencies
@@ -17,15 +16,14 @@ RUN apt-get update && apt-get install -y \
 RUN git clone https://github.com/tensorflow/models.git
 RUN (cd models/research/ && protoc object_detection/protos/*.proto --python_out=.)
 WORKDIR models/research/
+
 RUN cp object_detection/packages/tf2/setup.py ./
-#ENV PATH="/home/tensorflow/.local/bin:${PATH}"
 RUN python -m pip install -U pip
 RUN python -m pip install .
-ENV TF_CPP_MIN_LOG_LEVEL 3
 
+ENV TF_CPP_MIN_LOG_LEVEL 3
 ADD src/tflite.py /opt
 ADD src/deploy.sh /opt
 RUN chmod +x /opt/tflite.py
 RUN chmod +x /opt/deploy.sh
-
 ENTRYPOINT ["/opt/deploy.sh"]
