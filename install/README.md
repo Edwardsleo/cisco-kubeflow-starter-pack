@@ -1,4 +1,4 @@
-# **Kubeflow 1.1 Setup on UCS**
+# Kubeflow v1.1.0 Setup on UCS
 
 This manual guides you through the installation of Kubeflow v1.1.0 in a detailed manner.
 
