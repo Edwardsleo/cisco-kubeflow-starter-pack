@@ -12,7 +12,8 @@
      - image pull secrets on dummy pod worked
      - mounting image pull secrets to pipeline using service account worked
 3. LDAP 
-     - **check LDAP server on istio dex**
+     - LDAP server on istio dex working
+4. **multi user - double check testing.**
 
 # Non-Dex/Regular 1.0 
 
@@ -44,7 +45,7 @@
      - inference on model built of checkpoints is working, inference_tf2_colab.ipynb
      - tflite based inferencing verified.
      - meraki folks had completed a TF pipeline, not SSD.
-     - **pipeline in progress**
+     - pipeline done
  
  7. AWS RDS prototype
      - basic things are working, but from lab access issues are observed - could be firewall issue, try with different port.
@@ -54,7 +55,7 @@
      - first cut done
      - compiling pipelines and uploading code is done
      - webhooks/Gitlab CI exploration
-     - **verifying pipelines with Gitlab CI**
+     - verified pipelines with Gitlab CI
  
  
 
