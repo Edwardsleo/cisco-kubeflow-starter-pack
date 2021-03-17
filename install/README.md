@@ -43,13 +43,13 @@ Before installing Kubeflow v1.1.0, please update the necessary configurations fo
 
 ## **Kubeflow Installation**
 
-*Version* : *Kubeflow v1.1.0*
+*Version*                            : *Kubeflow v1.1.0*
 
-*Flavour* : *Multi-user, auth-enabled with kfctl_istio_dex*
+*Flavour*                            : *Multi-user, auth-enabled with kfctl_istio_dex*
 
 *Kubeflow manifests release tag URL* : *https://github.com/kubeflow/manifests/tree/v1.1-branch*
 
-*kfctl release tag URL* : *https://github.com/kubeflow/kfctl/tree/v1.1-branch*
+*kfctl release tag URL*              : *https://github.com/kubeflow/kfctl/tree/v1.1-branch*
 
 ### **Procedure**
 
