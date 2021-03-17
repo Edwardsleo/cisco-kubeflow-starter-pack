@@ -67,6 +67,9 @@ Click on the latest experiment which is created
 
 * Training metrics are tracked in Tensorboard visualization at the time of training
 
+![Object Detection Pipeline](pictures/tensorboard.PNG)
+
+
 #### Inference component:
 
 * Exports tflite model using trained checkpoints and inferences using tflite model
