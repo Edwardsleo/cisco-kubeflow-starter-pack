@@ -1,27 +1,27 @@
-# Kubeflow 1.1 Setup on UCS
+# **Kubeflow 1.1 Setup on UCS**
 
 This manual guides you through the installation of Kubeflow v1.1.0 in a detailed manner.
 
-## Infrastructure
+## **Infrastructure**
 
 Either of the following infrastructure can be used for KF implementation:
 
 * Cisco Unified Computing System(UCS) - C240M5 
 * Cisco UCS - C480ML
 
-## Prerequisites
+## **Prerequisites**
 
 * Kubernetes v1.15.x
 * Default Kubernetes storage class that can dynamically provision volumes
 
-## [Internal] Prerequisites Reference setup
+## [Internal] **Prerequisites Reference setup**
 [This](k8_setup.md) is a reference guide for creating a test Kubernetes cluster with a dynamic storage class.
 
 Note: This is not part of the kubeflow-starter-pack. It is meant for internal development and testing. This serves as a reference for kubeflow-starter-pack users and not recommended as a golden path for setting up prerequisites.
 
-## Kubeflow Pre-installation step
+## **Kubernetes customization**
 
-Before you start installing Kubeflow v1.1.0, please update the necessary configurations for ```kubeadm``` created clusters as detailed below. 
+Before installing Kubeflow v1.1.0, please update the necessary configurations for ```kubeadm``` created clusters as detailed below. 
 
 - Change directory to ```/etc/kubernetes/manifests``` path.
 
@@ -41,7 +41,7 @@ Before you start installing Kubeflow v1.1.0, please update the necessary configu
     ![KF1.1 Install](pictures/1a_add_kube_config.png)
 
 
-## Kubeflow Installation 
+## **Kubeflow Installation **
 
 **Version** : *Kubeflow v1.1.0*
 
@@ -51,7 +51,7 @@ Before you start installing Kubeflow v1.1.0, please update the necessary configu
 
 **kfctl release tag URL** : *https://github.com/kubeflow/kfctl/tree/v1.1-branch*
 
-### Procedure:
+### **Procedure**
 
 Install Kubeflow v1.1.0 following the steps below:
 
@@ -144,62 +144,33 @@ Install Kubeflow v1.1.0 following the steps below:
     local-path-storage   local-path-provisioner-7d78476b7f-hmrs8                      1/1     Running     0          125m
 ```
 
-## Secure Kubeflow
+## **Secure Kubeflow**
 
-The connection with Kubeflow Central dashboard can be done securely through HTTPS. To enable secure connection with Kubeflow, please follow the steps as below:
+The connection with Kubeflow Central dashboard can be done securely through HTTPS.
 
-* Change ```kubeflow-gateway``` Istio gateway object in ```kubeflow``` namespace to edit mode using the following command:
+### **Setup**
 
-```
-kubectl edit gateways.networking.istio.io kubeflow-gateway -n kubeflow 
-```
+- Listed below are the steps performed to access Kubeflow through HTTPS protocol for your reference.
 
-* Add the following configuration as shown to the ```kubeflow-gateway``` configuration.
+  * Exposing the port 443 with HTTPS by updating the Istio's      gateway object in Kubeflow namespace.
+  * Creating a self-signed certificate and a configmap for storing the ingress gateway self-signed certificate parameters by applying required YAML configurations using [kustomize](https://kustomize.io/).
 
-```
-- hosts:
-    - '*'
-    port:
-      name: https
-      number: 443
-      protocol: HTTPS
-    tls:
-      mode: SIMPLE
-      privateKey: /etc/istio/ingressgateway-certs/tls.key
-      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
-``` 
-
-![KF1.1 Install](pictures/1b_add_https_config.png)
-
-* Install [kustomize](https://kustomize.io/) on your machine & add it to global paths environment variable by executing the following:
+- To perform the above mentioned steps, please execute the script ```kf_https_setup.sh``` using the following command:
 
 ```
-curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
-export PATH=$PATH:$PWD
+bash kf_https_setup.sh
 ```
+Enter the absolute path of the Kubeflow installation folder when prompted as shown below:
 
-* Change directory to configuration file directory which contains configuration files related to setting up of ingress gateway self-signed certificate for HTTPS access using the following command:
+![KF1.1 Install](pictures/1b_prompt_https.PNG)
 
-```
-cd kf-app/.cache/manifests/manifests-1.1-branch/istio/ingressgateway-self-signed-cert/base
-```
-Here ```kf-app``` refers to the name of the directory for storing files such as Istio dex config yaml and kfctl configuration files. This directory is created after running ```kubeflow.bash``` script.
-
-* Use [kustomize](https://kustomize.io/) to apply the configurations as shown.
+- Connect to Kubeflow's Central dashboard securely using the following URL.
 
 ```
-kustomize build . | kubectl apply -f -
+https://<INGRESS_IP>:31390
 ```
 
-![KF1.1 Install](pictures/1c_add_cert_config.PNG)
-
-* Load Kubeflow central dashboard using the URL:
-
-```
-https://<INGRESS_IP>:<INGRESS_PORT>:31390
-```
-
-## References
+## **References**
 
 * https://www.kubeflow.org/docs/started/k8s/kfctl-istio-dex/
 
