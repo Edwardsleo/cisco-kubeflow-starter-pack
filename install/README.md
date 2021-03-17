@@ -157,9 +157,9 @@ The connection with Kubeflow Central dashboard can be done securely through HTTP
 
 - To perform the above mentioned steps, please execute the script ```kf_https_setup.sh``` using the following command:
 
-```
-bash kf_https_setup.sh
-```
+   ```
+   bash kf_https_setup.sh
+   ```
 Enter the absolute path of the Kubeflow installation folder when prompted as shown below:
 
 ![KF1.1 Install](pictures/1b_prompt_https.PNG)
