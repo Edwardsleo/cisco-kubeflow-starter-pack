@@ -1,4 +1,4 @@
-# Kubeflow v1.1.0 Setup on UCS
+# **Kubeflow v1.1.0 Setup on UCS**
 
 This manual guides you through the installation of Kubeflow v1.1.0 in a detailed manner.
 
@@ -41,15 +41,15 @@ Before installing Kubeflow v1.1.0, please update the necessary configurations fo
     ![KF1.1 Install](pictures/1a_add_kube_config.png)
 
 
-## **Kubeflow Installation **
+## **Kubeflow Installation**
 
-**Version** : *Kubeflow v1.1.0*
+*Version* : *Kubeflow v1.1.0*
 
-**Flavour** : *Multi-user, auth-enabled with kfctl_istio_dex*
+*Flavour* : *Multi-user, auth-enabled with kfctl_istio_dex*
 
-**Kubeflow manifests release tag URL** : *https://github.com/kubeflow/manifests/tree/v1.1-branch*
+*Kubeflow manifests release tag URL* : *https://github.com/kubeflow/manifests/tree/v1.1-branch*
 
-**kfctl release tag URL** : *https://github.com/kubeflow/kfctl/tree/v1.1-branch*
+*kfctl release tag URL* : *https://github.com/kubeflow/kfctl/tree/v1.1-branch*
 
 ### **Procedure**
 
